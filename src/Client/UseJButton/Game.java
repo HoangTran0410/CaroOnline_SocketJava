@@ -1,4 +1,4 @@
-package Client;
+package Client.UseJButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,7 +6,7 @@ import java.awt.event.*;
 
 public class Game extends JFrame implements ActionListener {
 
-    Color background_cl = Color.black;
+    Color background_cl = Color.white;
     Color x_cl = Color.red;
     Color y_cl = Color.blue;
     
@@ -31,6 +31,7 @@ public class Game extends JFrame implements ActionListener {
         for (int i = 0; i <= column + 1; i++) {
             for (int j = 0; j <= row + 1; j++) {
                 b[i][j] = new JButton(" ");
+                b[i][j].setFont(new Font("Consolas", Font.BOLD, 25));
                 b[i][j].setActionCommand(i + " " + j);
                 b[i][j].setBackground(background_cl);
                 b[i][j].addActionListener(this);

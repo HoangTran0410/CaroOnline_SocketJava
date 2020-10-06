@@ -31,7 +31,7 @@ public class Game extends JFrame implements ActionListener {
         for (int i = 0; i <= column + 1; i++) {
             for (int j = 0; j <= row + 1; j++) {
                 b[i][j] = new JButton(" ");
-                b[i][j].setFont(new Font("Consolas", Font.BOLD, 25));
+                b[i][j].setFont(new Font("Consolas", Font.BOLD, 20));
                 b[i][j].setActionCommand(i + " " + j);
                 b[i][j].setBackground(background_cl);
                 b[i][j].addActionListener(this);

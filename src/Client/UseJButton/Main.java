@@ -6,9 +6,6 @@ package Client.UseJButton;
  * and open the template in the editor.
  */
 
-import Client.UseJButton.Game;
-
-
 /**
  *
  * @author th016

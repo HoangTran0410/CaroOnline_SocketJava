@@ -1,4 +1,0 @@
-id1	name1	name2
-id2	hahahuhu	name2
-id3	name1	hehehe
-id4	name1	name2

@@ -17,17 +17,8 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        String file = "src/Server/data/Player.txt";
-        
-        ArrayList testdt = new ArrayList();
-        testdt.add("id1;name1;name2");
-        testdt.add("id2;hahahuhu;name2");
-        testdt.add("id3;name1;hehehe");
-        testdt.add("id4;name1;name2");
-        
-        FileController conn = new FileController(file);
-        conn.write(testdt,true);
-        System.out.println(conn.read());
+        // TODO code application logic here
+        MysqlConnector conn = new MysqlConnector();
         
     }
     

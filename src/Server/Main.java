@@ -12,22 +12,14 @@ import java.util.ArrayList;
  *
  * @author nguye
  */
-public class Caro {
+public class Main {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        String file = "src/Server/data/Player.txt";
-        ArrayList testdt = new ArrayList();
-        testdt.add("id1\tname1\tname2");
-        testdt.add("id2\thahahuhu\tname2");
-        testdt.add("id3\tname1\thehehe");
-        testdt.add("id4\tname1\tname2");
-        dataFilesConnect conn = new dataFilesConnect(file);
-        conn.reWrite(testdt,true);
-        System.out.println(conn.read());
+        MysqlConnector conn = new MysqlConnector();
         
     }
     

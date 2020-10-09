@@ -1,0 +1,37 @@
+Player
++ id		  : AUTO_INCREASEMENT
++ username (email): nchar(30)
++ password (hash) : nchar(30)
++ name		  : nchar(50)
++ gender	  : nchar(10) (nam-nữ-ẩn)
++ birthday	  : date
++ score		  : int
++ matchcount	  : int
++ winrate	  : float (vd 60.5%)
++ winstreak	  : int (thắng liên tiếp nhiều nhất)
++ losestreak	  : int (thua liên tiếp nhiều nhất)
++ rank		  : rankID
++ blocked	  : boolean
+
+Match
++ id		  : AUTO_INCREASEMENT
++ user1		  : playerID
++ user2		  : playerID
++ winner	  : playerID (null nếu hòa)
++ starttime	  : datetime
++ playtime	  : int (in seconds)
++ chat		  : file url (lưu chat vào file :))) ) (optional)
+
+Rank (Optional) - Để sau.
+// Bậc xếp hạng, giống lmht, cho ng chơi có mục tiêu phấn đấu :))
++ id		  : AUTO_INCREASEMENT
++ name		  : nchar(20) Đồng-Bạc-Vàng-Bạch Kim- gì gì đó.
++ scorerequired	  : int (điểm cần để thuộc rank này)
++ description	  : nchar(50)
+
+===================================================================
+Friend (optional) - Để sau
++ id		  : AUTO_INCREASEMENT
++ user1		  : playerID
++ user2		  : playerID
++ datemakefriend  : datetime

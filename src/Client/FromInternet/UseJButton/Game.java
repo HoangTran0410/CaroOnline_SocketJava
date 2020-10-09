@@ -1,4 +1,4 @@
-package Client.UseJButton;
+package Client.FromInternet.UseJButton;
 
 import javax.swing.*;
 import java.awt.*;

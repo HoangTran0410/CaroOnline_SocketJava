@@ -10,5 +10,7 @@ package Server.data.DataObjectLayer;
  * @author nguye
  */
 public class Friend {
-    
+    int ID;
+    String userID;
+    String friendID;
 }

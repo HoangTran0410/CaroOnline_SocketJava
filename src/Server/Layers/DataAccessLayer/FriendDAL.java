@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Server.data.DataAccessLayer;
+package Server.Layers.DataAccessLayer;
 
 /**
  *
  * @author nguye
  */
-public class HistoryDAL {
+public class FriendDAL {
     
 }

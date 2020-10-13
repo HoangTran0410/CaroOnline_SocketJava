@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Server.Layers.DataAccessLayer;
+package Server.Layers.DAL;
 
 /**
  *
  * @author nguye
  */
-public class HistoryDAL {
+public class RankDAL {
     
 }

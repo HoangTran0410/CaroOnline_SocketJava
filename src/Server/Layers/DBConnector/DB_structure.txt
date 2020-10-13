@@ -2,14 +2,13 @@ Player
 + id		  : AUTO_INCREASEMENT
 + username (email): nchar(30)
 + password (hash) : nchar(30)
-+ name		  : nchar(50)
++ displayname	  : nchar(50)
 + gender	  : nchar(10) (nam-nữ-ẩn)
 + birthday	  : date
 + score		  : int
 + matchcount	  : int
 + winrate	  : float (vd 60.5%)
-+ winstreak	  : int (thắng liên tiếp nhiều nhất)
-+ losestreak	  : int (thua liên tiếp nhiều nhất)
++ winstreak	  : int ( chuỗi thắng liên tiếp đến thời điểm hiện tại)
 + rank		  : rankID
 + blocked	  : boolean
 

@@ -30,7 +30,7 @@ public class Player {
     public Player() {
 
     }
-
+    // Constructor tạo player mới hoàn toàn để thêm vào db
     public Player(String username, String password, String displayName, String gender, LocalDate dateOfBirth) {
         this.username = username;
         this.password = password;
@@ -42,9 +42,10 @@ public class Player {
         this.winRate = 0;
         this.winStreak = 0; 
         this.blocked = false;
-        this.rankID = "";
+        this.rankID = "none";
     }
-
+    
+    //Constructor để tạo Player chứa dữ liệu từ db
     public Player(int ID, String username, String password, String displayName, String gender, String rankID, LocalDate dateOfBirth, int score, int matchCount, float winRate, int winStreak, boolean blocked) {
         this.ID = ID;
         this.username = username;

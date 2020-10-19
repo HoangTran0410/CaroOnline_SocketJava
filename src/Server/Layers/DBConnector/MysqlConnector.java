@@ -97,7 +97,8 @@ public class MysqlConnector {
                 return true;
             } catch (SQLException e) {
 //                e.printStackTrace();
-                System.err.println("Gia tri cua khoa vua nhap khong ton tai !!");
+//                System.err.println("Gia tri cua khoa vua nhap khong ton tai !!");
+                System.err.println(e);
             }
         }
         return false;

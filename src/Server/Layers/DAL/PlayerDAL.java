@@ -55,17 +55,17 @@ public class PlayerDAL {
     }
 
     public boolean add(Player p) {
-        String qry = "insert into Player(Username,Password,DisplayName,Gender,DateOfBirth,Score,MatchCount,WinRate,WinStreak,Blocked,,RankID) "
+        String qry = "insert into Player(Username,Password,DisplayName,Gender,DateOfBirth,Score,MatchCount,WinRate,WinStreak,Blocked,RankID) "
                 + "values('"
                 + p.getUsername() + "','"
                 + p.getPassword() + "','"
                 + p.getDisplayName() + "','"
                 + p.getGender() + "','"
-                + p.getDateOfBirth() + "','"
-                + p.getScore() + "','"
-                + p.getMatchCount() + "','"
-                + p.getWinRate() + "','"
-                + p.getWinStreak() + "','"
+                + p.getDateOfBirth() + "',"
+                + p.getScore() + ","
+                + p.getMatchCount() + ","
+                + p.getWinRate() + ","
+                + p.getWinStreak() + ",'"
                 + p.getBlockedStatus() + "','"
                 + p.getRankID()
                 + "');";
@@ -91,6 +91,11 @@ public class PlayerDAL {
     
     public boolean delete(Player p){
         String qry = "delete from Player where ID='" + p.getID() + "'";
+        return conn.sqlUpdate(qry);
+    }
+    
+    public boolean delete(String username){
+        String qry = "delete from Player where Username='" + username + "'";
         return conn.sqlUpdate(qry);
     }
     

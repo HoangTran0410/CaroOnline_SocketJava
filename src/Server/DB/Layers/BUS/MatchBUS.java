@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Server.Layers.BUS;
+package Server.DB.Layers.BUS;
 
-import Server.Layers.DAL.MatchDAL;
-import Server.Layers.DTO.Match;
-import Server.Layers.DTO.Player;
+import Server.DB.Layers.DAL.MatchDAL;
+import Server.DB.Layers.DTO.Match;
+import Server.DB.Layers.DTO.Player;
 import java.util.ArrayList;
 
 /**

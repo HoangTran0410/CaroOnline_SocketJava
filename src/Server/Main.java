@@ -5,29 +5,46 @@
  */
 package Server;
 
-import Server.Layers.DAL.PlayerDAL;
-import Server.Layers.DBConnector.MysqlConnector;
-import Server.Layers.DTO.Player;
-import java.time.LocalDate;
-import java.util.ArrayList;
+import Helpers.Json;
+import Server.Controllers.ClientHandler;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import org.json.simple.JSONObject;
 
 /**
  *
- * @author nguye
+ * @author Hoang Tran < hoang at 99.hoangtran@gmail.com >
  */
 public class Main {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
-        PlayerDAL dal = new PlayerDAL();
-        Player p = new Player("Player2", "123abc", "Huu", "Nam", LocalDate.now());
-        
-//        dal.add(p);
-dal.delete("player1");
-        
+    public static void main(String[] args) throws IOException {
+        ServerSocket ss = new ServerSocket(5056);
+
+        while (true) {
+            Socket s = null;
+
+            try {
+                // socket object to receive incoming client requests *
+                s = ss.accept();
+                System.out.println("New Client connected: " + s);
+
+                // obtaining input and out streams 
+                DataInputStream dis = new DataInputStream(s.getInputStream());
+                DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+
+                System.out.println("Assigning new Thread to this client...");
+
+                // create new thread object
+                Thread t = new ClientHandler(s, dis, dos);
+                t.start();
+
+            } catch (IOException e) {
+                s.close();
+                System.err.println("Error. " + e.getMessage());
+            }
+        }
     }
-    
 }

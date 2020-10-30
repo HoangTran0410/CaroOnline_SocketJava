@@ -5,6 +5,10 @@
  */
 package Server;
 
+import Server.Layers.DAL.PlayerDAL;
+import Server.Layers.DBConnector.MysqlConnector;
+import Server.Layers.DTO.Player;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -18,7 +22,11 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        MysqlConnector conn = new MysqlConnector();
+        PlayerDAL dal = new PlayerDAL();
+        Player p = new Player("Player2", "123abc", "Huu", "Nam", LocalDate.now());
+        
+//        dal.add(p);
+dal.delete("player1");
         
     }
     

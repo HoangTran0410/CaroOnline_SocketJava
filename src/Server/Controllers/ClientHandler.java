@@ -74,6 +74,7 @@ public class ClientHandler extends Thread {
                     // change game
                     case Type.CHANGE_GAME:
                         this.room.setGamelogic(new CoTuong());
+                        // TODO: đổi game dựa theo game id của client gửi tới
                         break;
 
                     // dang nhap
@@ -87,7 +88,7 @@ public class ClientHandler extends Thread {
                         }
                         // TODO: return login status to client
                         JSONObject j = new JSONObject();
-                        j.put("type", Type.LOGIN_RESULT);
+                        j.put("type", Type.LOGIN);
                         j.put("status", "ok");
                         dos.writeUTF(j.toJSONString());
                         break;

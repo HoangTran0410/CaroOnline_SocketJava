@@ -5,8 +5,8 @@
  */
 package Server.Games.Caro;
 
-import Helpers.Line;
-import Helpers.Point;
+import Shared.Helpers.Line;
+import Shared.Helpers.Point;
 import Server.Games.GameLogic;
 
 /**

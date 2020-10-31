@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Helpers;
+package Shared.Helpers;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

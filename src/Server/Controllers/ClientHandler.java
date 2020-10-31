@@ -5,7 +5,7 @@
  */
 package Server.Controllers;
 
-import Helpers.Json;
+import Shared.Helpers.Json;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;

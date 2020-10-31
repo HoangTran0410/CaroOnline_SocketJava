@@ -5,7 +5,7 @@
  */
 package Server;
 
-import Helpers.Json;
+import Shared.Helpers.Json;
 import Server.Controllers.ClientHandler;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

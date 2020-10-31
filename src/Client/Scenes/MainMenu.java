@@ -44,15 +44,30 @@ public class MainMenu extends javax.swing.JFrame {
         setType(java.awt.Window.Type.POPUP);
 
         btnOnline.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+        btnOnline.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_globe_24px.png"))); // NOI18N
         btnOnline.setText("ONLINE");
+        btnOnline.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        btnOnline.setMaximumSize(new java.awt.Dimension(120, 40));
+        btnOnline.setMinimumSize(new java.awt.Dimension(120, 40));
+        btnOnline.setPreferredSize(new java.awt.Dimension(120, 40));
 
         btnLocal.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+        btnLocal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_wi-fi_off_24px.png"))); // NOI18N
         btnLocal.setText("LOCAL");
         btnLocal.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnLocal.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        btnLocal.setMaximumSize(new java.awt.Dimension(120, 40));
+        btnLocal.setMinimumSize(new java.awt.Dimension(120, 40));
+        btnLocal.setPreferredSize(new java.awt.Dimension(120, 40));
 
         btnAbout.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+        btnAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_info_24px.png"))); // NOI18N
         btnAbout.setText("ABOUT");
         btnAbout.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnAbout.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        btnAbout.setMaximumSize(new java.awt.Dimension(120, 40));
+        btnAbout.setMinimumSize(new java.awt.Dimension(120, 40));
+        btnAbout.setPreferredSize(new java.awt.Dimension(120, 40));
         btnAbout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAboutActionPerformed(evt);
@@ -66,21 +81,21 @@ public class MainMenu extends javax.swing.JFrame {
             .addGroup(plButtonsLayout.createSequentialGroup()
                 .addGap(125, 125, 125)
                 .addGroup(plButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(btnOnline, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnLocal, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAbout, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(141, Short.MAX_VALUE))
+                    .addComponent(btnOnline, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnLocal, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAbout, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(118, Short.MAX_VALUE))
         );
         plButtonsLayout.setVerticalGroup(
             plButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(plButtonsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnOnline, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(14, 14, 14)
-                .addComponent(btnLocal, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnOnline, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnLocal, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnAbout, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(btnAbout, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());

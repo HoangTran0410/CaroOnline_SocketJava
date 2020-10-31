@@ -25,6 +25,10 @@ public class PlayerBUS {
     public PlayerBUS() {
         readDB();
     }
+    
+    public ArrayList<Player> getList(){
+        return listPlayer;
+    }
 
     public boolean readDB() {
         dal = new PlayerDAL();

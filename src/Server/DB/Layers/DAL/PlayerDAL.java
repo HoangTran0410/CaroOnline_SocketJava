@@ -7,9 +7,12 @@ package Server.DB.Layers.DAL;
 
 import Server.DB.Layers.DBConnector.MysqlConnector;
 import Server.DB.Layers.DTO.Player;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,6 +20,7 @@ import java.util.ArrayList;
  */
 public class PlayerDAL {
 
+    PreparedStatement stm;
     MysqlConnector conn = new MysqlConnector();
 
     public PlayerDAL() {
@@ -27,7 +31,8 @@ public class PlayerDAL {
         ArrayList<Player> result = new ArrayList<>();
         try {
             String qry = "select * from Player;";
-            ResultSet rs = conn.sqlQry(qry);
+            stm = conn.getConnection().prepareStatement(qry);
+            ResultSet rs = conn.sqlQry(stm);
             if (rs != null) {
                 while (rs.next()) {
                     Player p = new Player();
@@ -55,51 +60,78 @@ public class PlayerDAL {
     }
 
     public boolean add(Player p) {
-        String qry = "insert into Player(Username,Password,DisplayName,Gender,DateOfBirth,Score,MatchCount,WinRate,WinStreak,Blocked,RankID) "
-                + "values('"
-                + p.getUsername() + "','"
-                + p.getPassword() + "','"
-                + p.getDisplayName() + "','"
-                + p.getGender() + "','"
-                + p.getDateOfBirth() + "',"
-                + p.getScore() + ","
-                + p.getMatchCount() + ","
-                + p.getWinRate() + ","
-                + p.getWinStreak() + ",'"
-                + p.getBlockedStatus() + "','"
-                + p.getRankID()
-                + "');";
-        return conn.sqlUpdate(qry);
+        try {
+            String qry = "insert into Player(Username,Password,DisplayName,Gender,DateOfBirth,Score,MatchCount,WinRate,WinStreak,Blocked,RankID) "
+                    + "values(?,?,?,?,?,?,?,?,?,?,?)";
+            stm = conn.getConnection().prepareStatement(qry);
+            stm.setString(1, p.getUsername());
+            stm.setString(2, p.getPassword());
+            stm.setString(3, p.getDisplayName());
+            stm.setString(4, p.getGender());
+            stm.setString(5, p.getDateOfBirth().toString());
+            stm.setInt(6, p.getScore());
+            stm.setInt(7, p.getMatchCount());
+            stm.setFloat(8, p.getWinRate());
+            stm.setInt(9, p.getWinStreak());
+            stm.setBoolean(10, p.getBlockedStatus());
+            stm.setString(11, p.getRankID());
+
+            return conn.sqlUpdate(stm);
+        } catch (SQLException ex) {
+            Logger.getLogger(PlayerDAL.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
     }
 
     public boolean update(Player p) {
-        String qry = "update Player set "
-                + "Username='" + p.getUsername() + "',"
-                + "Password='" + p.getPassword() + "',"
-                + "Displayname='" + p.getDisplayName() + "',"
-                + "Gender='" + p.getGender() + "',"
-                + "RankID='" + p.getRankID() + "',"
-                + "DateOfBirth='" + p.getDateOfBirth() + "',"
-                + "Score='" + p.getScore() + "',"
-                + "MatchCount='" + p.getMatchCount() + "',"
-                + "WinRate='" + p.getWinRate() + "',"
-                + "WinStreak='" + p.getWinStreak() + "',"
-                + "Blocked='" + p.getBlockedStatus()
-                + "';";
-        return conn.sqlUpdate(qry);
+        try {
+            String qry = "update Player set "
+                    + "Password=?,"
+                    + "Displayname=?,"
+                    + "Gender=?,"
+                    + "RankID=?,"
+                    + "DateOfBirth=?,"
+                    + "Score=?,"
+                    + "MatchCount=?,"
+                    + "WinRate=?,"
+                    + "WinStreak=?,"
+                    + "Blocked=?"
+                    + " where username=?";
+            stm = conn.getConnection().prepareStatement(qry);
+            stm.setString(11, p.getUsername());
+            stm.setString(1, p.getPassword());
+            stm.setString(2, p.getDisplayName());
+            stm.setString(3, p.getGender());
+            stm.setString(5, p.getDateOfBirth().toString());
+            stm.setInt(6, p.getScore());
+            stm.setInt(7, p.getMatchCount());
+            stm.setFloat(8, p.getWinRate());
+            stm.setInt(9, p.getWinStreak());
+            stm.setBoolean(10, p.getBlockedStatus());
+            stm.setString(4, p.getRankID());
+            return conn.sqlUpdate(stm);
+        } catch (SQLException ex) {
+            Logger.getLogger(PlayerDAL.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
     }
-    
+
     public boolean delete(Player p){
-        String qry = "delete from Player where ID='" + p.getID() + "'";
-        return conn.sqlUpdate(qry);
+        return delete(p.getUsername());
     }
     
     public boolean delete(String username){
-        String qry = "delete from Player where Username='" + username + "'";
-        return conn.sqlUpdate(qry);
+        String qry = "delete from player where username=?";
+        try {
+            stm = conn.getConnection().prepareStatement(qry);
+            stm.setString(1, username);
+        } catch (SQLException ex) {
+            Logger.getLogger(PlayerDAL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return conn.sqlUpdate(stm);
     }
     
-    public boolean closeConnection(){
+    public boolean closeConnection() {
         return conn.closeConnection();
     }
 

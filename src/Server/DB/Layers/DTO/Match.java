@@ -20,20 +20,30 @@ public class Match {
     String winnerID;
     int playTimeInSecond;
     int totalMove;
-    LocalDate startedDate;
-    LocalTime startedTime;
+//    LocalDate startedDate;
+    LocalDateTime startedTime;
 
     public Match() {
     }
 
-    public Match(int ID, String p1, String p2, String winnerID, int playTimeInSecond, int totalMove,LocalDate startedDate , LocalTime startedTime) {
+    public Match(int ID, String p1, String p2, String winnerID, int playTimeInSecond, int totalMove, LocalDateTime startedTime) {
         this.ID = ID;
         this.player1 = p1;
         this.player2 = p2;
         this.winnerID = winnerID;
         this.playTimeInSecond = playTimeInSecond;
         this.totalMove = totalMove;
-        this.startedDate = startedDate;
+//        this.startedDate = startedDate;
+        this.startedTime = startedTime;
+    }
+    //Consstrucor tao moi
+    public Match(String p1, String p2, String winnerID, int playTimeInSecond, int totalMove, LocalDateTime startedTime) {
+        this.player1 = p1;
+        this.player2 = p2;
+        this.winnerID = winnerID;
+        this.playTimeInSecond = playTimeInSecond;
+        this.totalMove = totalMove;
+//        this.startedDate = startedDate;
         this.startedTime = startedTime;
     }
 
@@ -88,20 +98,20 @@ public class Match {
         this.totalMove = totalMove;
     }
 
-    public LocalTime getStartedTime() {
+    public LocalDateTime getStartedTime() {
         return startedTime;
     }
 
-    public void setStartedTime(LocalTime startedTime) {
+    public void setStartedTime(LocalDateTime startedTime) {
         this.startedTime = startedTime;
     }
-    public LocalDate getStartedDate() {
-        return startedDate;
-    }
-
-    public void setStartedDate(LocalDate startedDate) {
-        this.startedDate = startedDate;
-    }
+//    public LocalDate getStartedDate() {
+//        return startedDate;
+//    }
+//
+//    public void setStartedDate(LocalDate startedDate) {
+//        this.startedDate = startedDate;
+//    }
     
     
 }

@@ -5,14 +5,13 @@
  */
 package Server;
 
-import Shared.Helpers.Json;
 import Server.Controllers.ClientHandler;
+import Server.Controllers.Room;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import org.json.simple.JSONObject;
 
 /**
  *
@@ -23,11 +22,13 @@ public class Main {
     public static void main(String[] args) throws IOException {
         ServerSocket ss = new ServerSocket(5056);
 
+        Room roomtest = new Room();
+
         while (true) {
             Socket s = null;
 
             try {
-                // socket object to receive incoming client requests *
+                // socket object to receive incoming client requests
                 s = ss.accept();
                 System.out.println("New Client connected: " + s);
 
@@ -38,8 +39,10 @@ public class Main {
                 System.out.println("Assigning new Thread to this client...");
 
                 // create new thread object
-                Thread t = new ClientHandler(s, dis, dos);
-                t.start();
+                ClientHandler client = new ClientHandler(s, dis, dos);
+                client.start();
+
+                roomtest.addClient(client);
 
             } catch (IOException e) {
                 s.close();

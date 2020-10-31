@@ -8,6 +8,7 @@ package Server.Games.Caro;
 import Shared.Helpers.Line;
 import Shared.Helpers.Point;
 import Server.Games.GameLogic;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -25,6 +26,11 @@ public class Caro extends GameLogic {
                 board[i][j] = ' ';
             }
         }
+    }
+
+    @Override
+    public void receiveDataFromClient(JSONObject rjson) {
+        System.out.println("Game Caro received: " + rjson.get("game_event").toString());
     }
 
     public boolean setValue(char value, int x, int y) {

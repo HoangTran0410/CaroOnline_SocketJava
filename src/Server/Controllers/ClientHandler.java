@@ -5,6 +5,8 @@
  */
 package Server.Controllers;
 
+import Server.Games.CoTuong.CoTuong;
+import Shared.Constants.Type;
 import Shared.Helpers.Json;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -24,6 +26,9 @@ public class ClientHandler extends Thread {
     final DataInputStream dis;
     final DataOutputStream dos;
 
+    String username; // if == null => chua dang nhap
+    Room room; // if == null => chua vao phong nao het
+
     public ClientHandler(Socket s, DataInputStream dis, DataOutputStream dos) {
         this.s = s;
         this.dis = dis;
@@ -35,30 +40,69 @@ public class ClientHandler extends Thread {
 
         String received;
 
+        // listen to dis of server
         while (true) {
             try {
-                // receive the answer from client
+                // receive the request from client
                 received = dis.readUTF();
 
-                JSONObject jreceived = Json.parse(received);
+                // convert to json
+                JSONObject rjson = Json.parse(received);
 
-                // check exit
-                if (jreceived.get("type").equals("Exit")) {
+                // get received type
+                int rtype = ((Long) rjson.get("type")).intValue();
+
+                // exit if received.type == Exit
+                if (rtype == Type.EXIT) {
                     System.out.println("Client " + this.s + " sends exit...");
                     System.out.println("Closing this connection...");
+                    // TODO: leave rooms before close socket
                     this.s.close();
                     System.out.println("Connection closed.");
                     break;
                 }
 
-                // write on output stream based on the 
-                // answer from the client 
-                switch ((String) jreceived.get("type")) {
-                    case "abc":
-                        // do something
+                // write on output stream based on the answer from the client
+                switch (rtype) {
+                    // game events
+                    case Type.GAME_EVENT:
+                        if (this.room != null) {
+                            this.room.getGamelogic().receiveDataFromClient(rjson);
+                        }
                         break;
+
+                    // change game
+                    case Type.CHANGE_GAME:
+                        this.room.setGamelogic(new CoTuong());
+                        break;
+
+                    // dang nhap
+                    case Type.LOGIN:
+                        String u = (String) rjson.get("username");
+                        String p = (String) rjson.get("password");
+                        if (this.login(u, p)) {
+                            // TODO: check database login
+                            this.username = u;
+                            System.out.println(u + " login sucessfully.");
+                        }
+                        // TODO: return login status to client
+                        JSONObject j = new JSONObject();
+                        j.put("type", Type.LOGIN_RESULT);
+                        j.put("status", "ok");
+                        dos.writeUTF(j.toJSONString());
+                        break;
+
+                    // dang xuat
+                    case Type.LOGOUT:
+                        if (this.logout()) {
+                            System.out.println(this.username + " logout sucessfully.");
+                            this.username = null;
+                        }
+                        // TODO: return logout status to client
+                        break;
+
                     default:
-                        dos.writeUTF("Invalid input");
+
                         break;
                 }
 
@@ -78,4 +122,33 @@ public class ClientHandler extends Thread {
         }
     }
 
+    // room handle
+    public boolean joinRoom(Room room) {
+        if (this.room == null) {
+            this.room = room;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean leaveRoom() {
+        this.room = null;
+        return true;
+    }
+
+    // auth handle
+    public boolean login(String username, String password) {
+        // xu ly db
+        return true;
+    }
+
+    public boolean logout() {
+        this.username = null;
+        return true;
+    }
+
+    // get set
+    public String getUsername() {
+        return username;
+    }
 }

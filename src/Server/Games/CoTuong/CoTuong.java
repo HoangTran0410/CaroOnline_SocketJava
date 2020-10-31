@@ -3,21 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Server.Games;
+package Server.Games.CoTuong;
 
+import Server.Games.GameLogic;
 import org.json.simple.JSONObject;
 
 /**
  *
  * @author Hoang Tran < hoang at 99.hoangtran@gmail.com >
  */
-public class GameLogic {
+public class CoTuong extends GameLogic {
 
-    public GameLogic() {
+    public CoTuong() {
+        System.out.println("Co Tuong constructor");
     }
-    
+
+    @Override
     public void receiveDataFromClient(JSONObject rjson) {
-        // TODO: override
+        System.out.println("Game CoTuong received: " + rjson.get("game_event").toString());
     }
-    
 }

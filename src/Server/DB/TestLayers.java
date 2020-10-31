@@ -15,7 +15,6 @@ import java.time.LocalDate;
  */
 public class TestLayers {
     public static void main(String[] args) {
-        // TODO code application logic here
         PlayerDAL dal = new PlayerDAL();
         Player p = new Player("Player2", "123abc", "Huu", "Nam", LocalDate.now());
         

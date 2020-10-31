@@ -45,3 +45,22 @@ Main
    - hashmap ClientHandler
    - CaroLogic extends Game
  - 
+
+
+======================================
+socket:
++ type: 
+	- chung: exit, 
+	- client->server: login, logout, signup
+	- server->client: login_result, logout_result, signup_result
++ data
+
+=======================================
+game events:
+{
+	type: Type.GAME_EVENT,
+	game_event: UNDO, NEWGAME, CLICK, SURRENDER,
+
+	x: 4,
+	y: 5
+}

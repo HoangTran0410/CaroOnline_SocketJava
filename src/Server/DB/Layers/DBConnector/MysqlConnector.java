@@ -10,7 +10,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -56,7 +55,6 @@ public class MysqlConnector {
             Class.forName("com.mysql.jdbc.Driver");
             return true;
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
             System.err.println("Khong tim thay Driver mysql !!");
             return false;
         }
@@ -67,10 +65,9 @@ public class MysqlConnector {
             String url = "jdbc:mysql://" + server + "/" + db;
             conn = DriverManager.getConnection(url, user, pass);
             stm = conn.createStatement();
-            System.out.println("success!");
             return true;
         } catch (SQLException e) {
-            System.err.println("" + e);
+            System.err.println("Loi ket noi DB: " + e.getMessage());
             return false;
         }
     }
@@ -79,10 +76,8 @@ public class MysqlConnector {
         if (checkConnection()) {
             try {
                 rs = stm.executeQuery(qry);
-//                JOptionPane.showMessageDialog(null, "Thuc thi Query thanh cong !!");
                 return rs;
             } catch (SQLException e) {
-                e.printStackTrace();
                 System.err.println("Loi thuc thi query !!");
             }
         }
@@ -93,12 +88,10 @@ public class MysqlConnector {
         if (checkConnection()) {
             try {
                 stm.executeUpdate(qry);
-//                JOptionPane.showMessageDialog(null, "Thuc thi Update thanh cong !!");
                 return true;
             } catch (SQLException e) {
-//                e.printStackTrace();
-//                System.err.println("Gia tri cua khoa vua nhap khong ton tai !!");
-                System.err.println(e);
+                System.err.println("Gia tri cua khoa vua nhap khong ton tai !!");
+                // System.err.println(e);
             }
         }
         return false;
@@ -120,9 +113,8 @@ public class MysqlConnector {
                 stm.close();
             }
             return true;
-//            System.out.println("Success! Đóng kết nối tới '" + dbName + "' thành công.");
+            
         } catch (SQLException e) {
-            e.printStackTrace();
             System.err.println("-- ERROR! Không thể đóng kết nối tới " + db);
             return false;
         }

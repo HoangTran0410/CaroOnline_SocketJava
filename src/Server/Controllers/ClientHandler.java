@@ -123,6 +123,17 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    // send message
+    public boolean sendMessage(String mes) {
+        try {
+            this.dos.writeUTF(mes);
+            return true;
+        } catch (IOException e) {
+            System.err.println("Send message failed to " + this.getEmail());
+            return false;
+        }
+    }
+
     // room handle
     public boolean joinRoom(Room room) {
         if (this.room == null) {
@@ -149,7 +160,7 @@ public class ClientHandler implements Runnable {
     }
 
     // get set
-    public String getUsername() {
+    public String getEmail() {
         return email;
     }
 }

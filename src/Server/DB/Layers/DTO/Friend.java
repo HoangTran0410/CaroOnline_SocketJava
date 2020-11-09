@@ -26,6 +26,12 @@ public class Friend {
         this.user2 = user2;
         this.addedDate = addedDate;
     }
+    
+    public Friend(String user1, String user2, LocalDate addedDate) {
+        this.user1 = user1;
+        this.user2 = user2;
+        this.addedDate = addedDate;
+    }
 
 
 

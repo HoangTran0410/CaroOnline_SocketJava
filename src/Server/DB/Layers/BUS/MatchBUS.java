@@ -27,7 +27,6 @@ public class MatchBUS {
     public boolean readDB() {
         dal = new MatchDAL();
         listMatch = dal.readDB();
-        dal.closeConnection();
         return listMatch != null;
     }
 

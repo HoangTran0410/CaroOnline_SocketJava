@@ -16,6 +16,7 @@ public class MainMenu extends javax.swing.JFrame {
      */
     public MainMenu() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -40,6 +41,11 @@ public class MainMenu extends javax.swing.JFrame {
         btnOnline.setFont(new java.awt.Font("Dialog", 1, 15)); // NOI18N
         btnOnline.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_globe_24px.png"))); // NOI18N
         btnOnline.setText("ONLINE");
+        btnOnline.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnOnlineMouseClicked(evt);
+            }
+        });
 
         btnLocal.setFont(new java.awt.Font("Dialog", 1, 15)); // NOI18N
         btnLocal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_wi-fi_off_24px.png"))); // NOI18N
@@ -92,6 +98,10 @@ public class MainMenu extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnOnlineMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOnlineMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnOnlineMouseClicked
 
     /**
      * @param args the command line arguments

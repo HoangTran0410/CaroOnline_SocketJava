@@ -10,6 +10,7 @@ import Server.DB.Layers.DTO.Player;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,10 +40,10 @@ public class PlayerDAL {
                     p.setID(rs.getInt("ID"));
                     p.setUsername(rs.getString("Username"));
                     p.setPassword(rs.getString("Password"));
-                    p.setDisplayName(rs.getString("DisplayName"));
+                    p.setEmail(rs.getString("Email"));
                     p.setGender(rs.getString("Gender"));
                     p.setRankID(rs.getString("RankID"));
-                    p.setDateOfBirth(rs.getDate("DateOfBirth").toLocalDate());
+                    p.setDateOfBirth(LocalDate.parse(rs.getString("DateOfBirth")));
                     p.setScore(rs.getInt("Score"));
                     p.setMatchCount(rs.getInt("MatchCount"));
                     p.setWinRate(rs.getFloat("WinRate"));
@@ -61,12 +62,12 @@ public class PlayerDAL {
 
     public boolean add(Player p) {
         try {
-            String qry = "insert into Player(Username,Password,DisplayName,Gender,DateOfBirth,Score,MatchCount,WinRate,WinStreak,Blocked,RankID) "
+            String qry = "insert into Player(Username,Password,Email,Gender,DateOfBirth,Score,MatchCount,WinRate,WinStreak,Blocked,RankID) "
                     + "values(?,?,?,?,?,?,?,?,?,?,?)";
             stm = conn.getConnection().prepareStatement(qry);
             stm.setString(1, p.getUsername());
             stm.setString(2, p.getPassword());
-            stm.setString(3, p.getDisplayName());
+            stm.setString(3, p.getEmail());
             stm.setString(4, p.getGender());
             stm.setString(5, p.getDateOfBirth().toString());
             stm.setInt(6, p.getScore());
@@ -87,7 +88,7 @@ public class PlayerDAL {
         try {
             String qry = "update Player set "
                     + "Password=?,"
-                    + "Displayname=?,"
+                    + "Email=?,"
                     + "Gender=?,"
                     + "RankID=?,"
                     + "DateOfBirth=?,"
@@ -100,7 +101,7 @@ public class PlayerDAL {
             stm = conn.getConnection().prepareStatement(qry);
             stm.setString(11, p.getUsername());
             stm.setString(1, p.getPassword());
-            stm.setString(2, p.getDisplayName());
+            stm.setString(2, p.getEmail());
             stm.setString(3, p.getGender());
             stm.setString(5, p.getDateOfBirth().toString());
             stm.setInt(6, p.getScore());

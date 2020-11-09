@@ -14,9 +14,9 @@ import java.time.*;
 public class Player {
 
     int ID;
-    String username;    //  Email, player use this email to login
+    String username;    //  Tên hiển thị trong game
     String password;
-    String displayName;
+    String email;       //  Email, dùng để đăng nhập
     String gender;
     String rankID;
     LocalDate dateOfBirth;
@@ -31,10 +31,10 @@ public class Player {
 
     }
     // Constructor tạo player mới hoàn toàn để thêm vào db
-    public Player(String username, String password, String displayName, String gender, LocalDate dateOfBirth) {
+    public Player(String username, String password, String email, String gender, LocalDate dateOfBirth) {
         this.username = username;
         this.password = password;
-        this.displayName = displayName;
+        this.email = email;
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
         this.score = 0;
@@ -46,11 +46,11 @@ public class Player {
     }
     
     //Constructor để tạo Player chứa dữ liệu từ db
-    public Player(int ID, String username, String password, String displayName, String gender, String rankID, LocalDate dateOfBirth, int score, int matchCount, float winRate, int winStreak, boolean blocked) {
+    public Player(int ID, String username, String password, String email, String gender, String rankID, LocalDate dateOfBirth, int score, int matchCount, float winRate, int winStreak, boolean blocked) {
         this.ID = ID;
         this.username = username;
         this.password = password;
-        this.displayName = displayName;
+        this.email = email;
         this.gender = gender;
         this.rankID = rankID;
         this.dateOfBirth = dateOfBirth;
@@ -142,12 +142,12 @@ public class Player {
         this.password = password;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getEmail() {
+        return email;
     }
 
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getGender() {

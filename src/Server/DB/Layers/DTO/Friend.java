@@ -5,25 +5,29 @@
  */
 package Server.DB.Layers.DTO;
 
+import java.time.LocalDate;
+
 /**
  *
  * @author nguye
  */
 public class Friend {
     int ID;
-    String userID;
-    String friendID;
-    int totalMatchTogether;
+    String user1;
+    String user2;
+    LocalDate addedDate;
 
     public Friend() {
     }
 
-    public Friend(int ID, String userID, String friendID, int totalMatchTogether) {
+    public Friend(int ID, String user1, String user2, LocalDate addedDate) {
         this.ID = ID;
-        this.userID = userID;
-        this.friendID = friendID;
-        this.totalMatchTogether = totalMatchTogether;
+        this.user1 = user1;
+        this.user2 = user2;
+        this.addedDate = addedDate;
     }
+
+
 
     public int getID() {
         return ID;
@@ -33,29 +37,30 @@ public class Friend {
         this.ID = ID;
     }
 
-    public String getUserID() {
-        return userID;
+    public String getUser1() {
+        return user1;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public void setUser1(String user1) {
+        this.user1 = user1;
     }
 
-    public String getFriendID() {
-        return friendID;
+    public String getUser2() {
+        return user2;
     }
 
-    public void setFriendID(String friendID) {
-        this.friendID = friendID;
+    public void setUser2(String user2) {
+        this.user2 = user2;
     }
 
-    public int getTotalMatchTogether() {
-        return totalMatchTogether;
+    public LocalDate getAddedDate() {
+        return addedDate;
     }
 
-    public void setTotalMatchTogether(int totalMatchTogether) {
-        this.totalMatchTogether = totalMatchTogether;
+    public void setAddedDate(LocalDate addedDate) {
+        this.addedDate = addedDate;
     }
+
     
     
 }

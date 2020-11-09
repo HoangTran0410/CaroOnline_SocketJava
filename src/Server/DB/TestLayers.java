@@ -21,7 +21,10 @@ import java.time.LocalDateTime;
 public class TestLayers {
     public static void main(String[] args) {
 
-        Seeds seed = new Seeds();
-        seed.generate();
+//        Seeds seed = new Seeds();
+//        seed.generate();
+        PlayerBUS pbus = new PlayerBUS();
+        for(Player p : pbus.getList())
+            System.out.println(p.getDateOfBirth());
     }
 }

@@ -11,6 +11,7 @@ import Server.DB.Layers.DTO.Match;
 import Server.DB.Layers.DTO.Player;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Random;
 
 /**
  *
@@ -27,14 +28,14 @@ public class Seeds {
             pbus.delete(p.getUsername());
         }
         
-        Player p1 = new Player("user1", "123abc", "Hữu", "Nam", LocalDate.now());
-        Player p2 = new Player("bemeovuive", "123456", "Hoàng", "Nam", LocalDate.now());
-        Player p3 = new Player("BeChoGauGau", "abcxyz", "Anh", "Nam", LocalDate.now());
-        Player p4 = new Player("BeThoQuacQuac", "carotxanh", "Bảo", "Nam", LocalDate.now());
-        Player p5 = new Player("BeGauEcEc", "gaudien", "Nam", "Nữ", LocalDate.now());
-        Player p6 = new Player("BeVitMooMoo", "vittiem", "Trân", "Nữ", LocalDate.now());
-        Player p7 = new Player("ToiletSangChoi", "Vimconvit", "Hải", "Nam", LocalDate.now());
-        Player p8 = new Player("GaConXamTro", "talavit", "Phắt", "Nam", LocalDate.now());
+        Player p1 = new Player("user1", "123abc", "uwu@yahoo.com", "Nam", LocalDate.now());
+        Player p2 = new Player("bemeovuive", "123456", "meomeo@gmail.com", "Nam", LocalDate.now());
+        Player p3 = new Player("BeChoGauGau", "abcxyz", "hasagi@yahoo.com", "Nam", LocalDate.now());
+        Player p4 = new Player("BeThoQuacQuac", "carotxanh", "asayo@skrr.com", "Nam", LocalDate.now());
+        Player p5 = new Player("BeGauEcEc", "gaudien", "ecec@ecec.com", "Nữ", LocalDate.now());
+        Player p6 = new Player("BeVitMooMoo", "vittiem", "haha@yaha.com", "Nữ", LocalDate.now());
+        Player p7 = new Player("ToiletSangChoi", "Vimconvit", "poof@shit.com", "Nam", LocalDate.now());
+        Player p8 = new Player("GaConXamTro", "talavit", "kimochi@jav.con", "Nam", LocalDate.now());
         
         pbus.add(p1);
         pbus.add(p2);

@@ -12,7 +12,7 @@ package Client.Scenes;
 public class MainMenu extends javax.swing.JFrame {
 
     /**
-     * Creates new form MainMenu
+     * Creates new form MainMenuF
      */
     public MainMenu() {
         initComponents();
@@ -27,107 +27,71 @@ public class MainMenu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lbLogo = new javax.swing.JLabel();
         plButtons = new javax.swing.JPanel();
         btnOnline = new javax.swing.JButton();
         btnLocal = new javax.swing.JButton();
         btnAbout = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
-        lbVersion = new javax.swing.JLabel();
-        lbLogo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setLocationByPlatform(true);
-        setMaximumSize(new java.awt.Dimension(376, 444));
-        setMinimumSize(new java.awt.Dimension(376, 444));
-        setName("jfmenu"); // NOI18N
-        setUndecorated(true);
-        setType(java.awt.Window.Type.POPUP);
 
-        btnOnline.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+        lbLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/logo.png"))); // NOI18N
+
+        btnOnline.setFont(new java.awt.Font("Dialog", 1, 15)); // NOI18N
         btnOnline.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_globe_24px.png"))); // NOI18N
         btnOnline.setText("ONLINE");
-        btnOnline.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        btnOnline.setMaximumSize(new java.awt.Dimension(120, 40));
-        btnOnline.setMinimumSize(new java.awt.Dimension(120, 40));
-        btnOnline.setPreferredSize(new java.awt.Dimension(120, 40));
 
-        btnLocal.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+        btnLocal.setFont(new java.awt.Font("Dialog", 1, 15)); // NOI18N
         btnLocal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_wi-fi_off_24px.png"))); // NOI18N
         btnLocal.setText("LOCAL");
-        btnLocal.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnLocal.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        btnLocal.setMaximumSize(new java.awt.Dimension(120, 40));
-        btnLocal.setMinimumSize(new java.awt.Dimension(120, 40));
-        btnLocal.setPreferredSize(new java.awt.Dimension(120, 40));
 
-        btnAbout.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+        btnAbout.setFont(new java.awt.Font("Dialog", 1, 15)); // NOI18N
         btnAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_info_24px.png"))); // NOI18N
         btnAbout.setText("ABOUT");
-        btnAbout.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnAbout.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        btnAbout.setMaximumSize(new java.awt.Dimension(120, 40));
-        btnAbout.setMinimumSize(new java.awt.Dimension(120, 40));
-        btnAbout.setPreferredSize(new java.awt.Dimension(120, 40));
-        btnAbout.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAboutActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout plButtonsLayout = new javax.swing.GroupLayout(plButtons);
         plButtons.setLayout(plButtonsLayout);
         plButtonsLayout.setHorizontalGroup(
             plButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(plButtonsLayout.createSequentialGroup()
-                .addGap(125, 125, 125)
-                .addGroup(plButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(btnOnline, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnLocal, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAbout, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(118, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(plButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(btnAbout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnLocal, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnOnline, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         plButtonsLayout.setVerticalGroup(
             plButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(plButtonsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnOnline, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnLocal, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnAbout, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(btnOnline)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnLocal)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnAbout)
+                .addGap(18, 18, 18))
         );
-
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        lbVersion.setForeground(new java.awt.Color(102, 102, 102));
-        lbVersion.setText("v1.0.0");
-        jPanel1.add(lbVersion, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 130, -1, -1));
-
-        lbLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/logo.png"))); // NOI18N
-        jPanel1.add(lbLogo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(plButtons, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addComponent(lbLogo)
+                .addComponent(plButtons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(plButtons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(lbLogo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(plButtons, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAboutActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnAboutActionPerformed
 
     /**
      * @param args the command line arguments
@@ -155,6 +119,7 @@ public class MainMenu extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(MainMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -168,9 +133,7 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JButton btnAbout;
     private javax.swing.JButton btnLocal;
     private javax.swing.JButton btnOnline;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lbLogo;
-    private javax.swing.JLabel lbVersion;
     private javax.swing.JPanel plButtons;
     // End of variables declaration//GEN-END:variables
 }

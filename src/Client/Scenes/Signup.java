@@ -12,7 +12,7 @@ package Client.Scenes;
 public class Signup extends javax.swing.JFrame {
 
     /**
-     * Creates new form Signup
+     * Creates new form SignupF
      */
     public Signup() {
         initComponents();
@@ -27,21 +27,164 @@ public class Signup extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lbHeaderText = new javax.swing.JLabel();
+        plInput = new javax.swing.JPanel();
+        lbEmail = new javax.swing.JLabel();
+        txEmail = new javax.swing.JTextField();
+        lbUserName = new javax.swing.JLabel();
+        txUserName = new javax.swing.JTextField();
+        lbPassword = new javax.swing.JLabel();
+        txPassword = new javax.swing.JPasswordField();
+        lbGender = new javax.swing.JLabel();
+        cbGender = new javax.swing.JComboBox<>();
+        btnSignup = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        lbHeaderText.setFont(new java.awt.Font("Tahoma", 1, 25)); // NOI18N
+        lbHeaderText.setText("THAM GIA");
+
+        lbEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_email_48px.png"))); // NOI18N
+
+        txEmail.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txEmail.setToolTipText("");
+        txEmail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txEmailActionPerformed(evt);
+            }
+        });
+
+        lbUserName.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_male_user_48px.png"))); // NOI18N
+
+        txUserName.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txUserName.setToolTipText("");
+        txUserName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txUserNameActionPerformed(evt);
+            }
+        });
+
+        lbPassword.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_lock_48px.png"))); // NOI18N
+
+        lbGender.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        lbGender.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_gender_48px.png"))); // NOI18N
+
+        cbGender.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        cbGender.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nam", "Nữ", "Khác" }));
+
+        javax.swing.GroupLayout plInputLayout = new javax.swing.GroupLayout(plInput);
+        plInput.setLayout(plInputLayout);
+        plInputLayout.setHorizontalGroup(
+            plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(plInputLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(plInputLayout.createSequentialGroup()
+                        .addComponent(lbUserName)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txUserName))
+                    .addGroup(plInputLayout.createSequentialGroup()
+                        .addComponent(lbPassword)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(plInputLayout.createSequentialGroup()
+                        .addComponent(lbEmail)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txEmail))
+                    .addGroup(plInputLayout.createSequentialGroup()
+                        .addComponent(lbGender)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbGender, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        plInputLayout.setVerticalGroup(
+            plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(plInputLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lbEmail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lbUserName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbPassword))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(plInputLayout.createSequentialGroup()
+                        .addComponent(lbGender)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(cbGender))
+                .addContainerGap())
+        );
+
+        btnSignup.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
+        btnSignup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_slide_up_32px.png"))); // NOI18N
+        btnSignup.setText("ĐĂNG KÝ");
+        btnSignup.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSignup.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnSignupMouseClicked(evt);
+            }
+        });
+        btnSignup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSignupActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(btnSignup, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(plInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(101, 101, 101)
+                        .addComponent(lbHeaderText)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(lbHeaderText)
+                .addGap(18, 18, 18)
+                .addComponent(plInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnSignup, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void txEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txEmailActionPerformed
+
+    }//GEN-LAST:event_txEmailActionPerformed
+
+    private void txUserNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txUserNameActionPerformed
+
+    }//GEN-LAST:event_txUserNameActionPerformed
+
+    private void btnSignupMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSignupMouseClicked
+        // TODO: input validation check here
+        new Login().setVisible(true);
+    }//GEN-LAST:event_btnSignupMouseClicked
+
+    private void btnSignupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignupActionPerformed
+
+    }//GEN-LAST:event_btnSignupActionPerformed
 
     /**
      * @param args the command line arguments
@@ -69,6 +212,7 @@ public class Signup extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Signup.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -79,5 +223,16 @@ public class Signup extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnSignup;
+    private javax.swing.JComboBox<String> cbGender;
+    private javax.swing.JLabel lbEmail;
+    private javax.swing.JLabel lbGender;
+    private javax.swing.JLabel lbHeaderText;
+    private javax.swing.JLabel lbPassword;
+    private javax.swing.JLabel lbUserName;
+    private javax.swing.JPanel plInput;
+    private javax.swing.JTextField txEmail;
+    private javax.swing.JPasswordField txPassword;
+    private javax.swing.JTextField txUserName;
     // End of variables declaration//GEN-END:variables
 }

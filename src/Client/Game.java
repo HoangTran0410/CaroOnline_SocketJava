@@ -12,7 +12,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import javax.swing.JPanel;
 import org.json.simple.JSONObject;
 
 /**
@@ -42,16 +41,16 @@ public class Game {
             DataInputStream dis = new DataInputStream(s.getInputStream());
             DataOutputStream dos = new DataOutputStream(s.getOutputStream());
 
-//            // test change game
-//            JSONObject j = new JSONObject();
-//            j.put("type", Type.CHANGE_GAME);
-//            dos.writeUTF(j.toJSONString());
-//
-//            // test send game event
-//            JSONObject j2 = new JSONObject();
-//            j2.put("type", Type.GAME_EVENT);
-//            j2.put("game_event", "New Game");
-//            dos.writeUTF(j2.toJSONString());
+            // test change game
+            JSONObject j = new JSONObject();
+            j.put("type", Type.CHANGE_GAME);
+            dos.writeUTF(j.toJSONString());
+
+            // test send game event
+            JSONObject j2 = new JSONObject();
+            j2.put("type", Type.GAME_EVENT);
+            j2.put("game_event", "New Game");
+            dos.writeUTF(j2.toJSONString());
 
             // listen to dis of client
             while (true) {

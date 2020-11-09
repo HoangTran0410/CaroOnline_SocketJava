@@ -17,7 +17,6 @@ public class GameLogic {
     }
     
     public void receiveDataFromClient(JSONObject rjson) {
-        // TODO: override
     }
     
 }

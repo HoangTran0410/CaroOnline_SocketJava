@@ -20,13 +20,13 @@ import org.json.simple.JSONObject;
  *
  * @author Hoang Tran < hoang at 99.hoangtran@gmail.com >
  */
-public class ClientHandler extends Thread {
+public class ClientHandler implements Runnable {
 
     final Socket s;
     final DataInputStream dis;
     final DataOutputStream dos;
 
-    String username; // if == null => chua dang nhap
+    String email; // if == null => chua dang nhap
     Room room; // if == null => chua vao phong nao het
 
     public ClientHandler(Socket s, DataInputStream dis, DataOutputStream dos) {
@@ -83,7 +83,7 @@ public class ClientHandler extends Thread {
                         String p = (String) rjson.get("password");
                         if (this.login(u, p)) {
                             // TODO: check database login
-                            this.username = u;
+                            this.email = u;
                             System.out.println(u + " login sucessfully.");
                         }
                         // TODO: return login status to client
@@ -96,8 +96,8 @@ public class ClientHandler extends Thread {
                     // dang xuat
                     case Type.LOGOUT:
                         if (this.logout()) {
-                            System.out.println(this.username + " logout sucessfully.");
-                            this.username = null;
+                            System.out.println(this.email + " logout sucessfully.");
+                            this.email = null;
                         }
                         // TODO: return logout status to client
                         break;
@@ -144,12 +144,12 @@ public class ClientHandler extends Thread {
     }
 
     public boolean logout() {
-        this.username = null;
+        this.email = null;
         return true;
     }
 
     // get set
     public String getUsername() {
-        return username;
+        return email;
     }
 }

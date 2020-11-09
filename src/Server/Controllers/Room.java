@@ -32,9 +32,9 @@ public class Room {
 
     // add/remove client
     public boolean addClient(ClientHandler client) {
-        String username = client.getUsername();
-        if (!clients.containsKey(username)) {
-            clients.put(username, client);
+        String email = client.getEmail();
+        if (!clients.containsKey(email)) {
+            clients.put(email, client);
             client.joinRoom(this);
             return true;
         }
@@ -43,8 +43,8 @@ public class Room {
     }
 
     public boolean removeClient(ClientHandler client) {
-        String username = client.getUsername();
-        if (this.removeClient(username)) {
+        String email = client.getEmail();
+        if (this.removeClient(email)) {
             client.leaveRoom();
             return true;
         }
@@ -52,9 +52,9 @@ public class Room {
         return false;
     }
 
-    public boolean removeClient(String username) {
-        if (!clients.containsKey(username)) {
-            clients.remove(username);
+    public boolean removeClient(String email) {
+        if (!clients.containsKey(email)) {
+            clients.remove(email);
 
             return true;
         }
@@ -70,20 +70,13 @@ public class Room {
     }
 
     public boolean sendMessage(ClientHandler client, String str) {
-        try {
-            client.dos.writeUTF(str);
-            return true;
-        } catch (IOException e) {
-            System.err.println("Send message failed to " + client.getUsername());
-            return false;
-        }
+        return client.sendMessage(str);
     }
 
     public boolean sendMessage(String username, String str) {
         if (clients.containsKey(username)) {
             ClientHandler client = clients.get(username);
-            boolean status = this.sendMessage(client, str);
-            return status;
+            return this.sendMessage(client, str);
         }
 
         return false;

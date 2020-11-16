@@ -27,7 +27,7 @@ public class RoomManager {
         return true;
     }
 
-    public boolean delete(Room r) {
+    public boolean remove(Room r) {
         if (rooms.contains(r)) {
             rooms.remove(r);
             return true;
@@ -42,6 +42,10 @@ public class RoomManager {
             }
         }
         return null;
+    }
+    
+    public int getSize() {
+        return rooms.size();
     }
 
 }

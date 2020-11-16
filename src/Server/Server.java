@@ -5,19 +5,17 @@
  */
 package Server;
 
-import Server.Controllers.ClientHandler;
-import Server.Controllers.Room;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import Server.Controllers.Client;
+import Server.Controllers.ClientManager;
+import Server.Controllers.RoomManager;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -31,42 +29,49 @@ public class Server {
     int maximumPoolSize = 5;
     int queueCapacity = 8;
 
-    public Server() throws IOException {
+    public static volatile ClientManager clientManager;
+    public static volatile RoomManager roomManager;
 
-        ServerSocket ss = new ServerSocket(port);
-        System.out.println("Created Server at port " + port + ".");
+    public Server() {
+        
+        try {
+            ServerSocket ss = new ServerSocket(port);
+            System.out.println("Created Server at port " + port + ".");
 
-//        Room roomtest = new Room();
-        // create threadpool
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(
-                corePoolSize,
-                maximumPoolSize,
-                10,
-                TimeUnit.SECONDS,
-                new ArrayBlockingQueue<>(queueCapacity)
-        );
+            // init managers
+            clientManager = new ClientManager();
+            roomManager = new RoomManager();
 
-        while (true) {
-            Socket s = null;
+            // create threadpool
+            ThreadPoolExecutor executor = new ThreadPoolExecutor(
+                    corePoolSize,
+                    maximumPoolSize,
+                    10,
+                    TimeUnit.SECONDS,
+                    new ArrayBlockingQueue<>(queueCapacity)
+            );
 
-            try {
-                // socket object to receive incoming client requests
-                s = ss.accept();
-                System.out.println("New Client connected: " + s);
+            while (true) {
+                Socket s = null;
 
-                // obtaining input and out streams 
-                DataInputStream dis = new DataInputStream(s.getInputStream());
-                DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+                try {
+                    // socket object to receive incoming client requests
+                    s = ss.accept();
+                    System.out.println("+ New Client connected: " + s);
 
-                // create new thread object
-                ClientHandler client = new ClientHandler(s, dis, dos);
-//                roomtest.addClient(client);
-                executor.execute(client);
+                    // create new client runnable object
+                    Client c = new Client(s);
+                    clientManager.add(c);
 
-            } catch (IOException e) {
-                s.close();
-                System.err.println("Error. " + e.getMessage());
+                    // execute client
+                    executor.execute(c);
+
+                } catch (IOException ex) {
+                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

@@ -15,29 +15,32 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.simple.JSONObject;
+import Server.Server;
 
 /**
  *
  * @author Hoang Tran < hoang at 99.hoangtran@gmail.com >
  */
-public class ClientHandler implements Runnable {
-
-    final Socket s;
-    final DataInputStream dis;
-    final DataOutputStream dos;
-
+public class Client implements Runnable {
+    
+    Socket s;
+    DataInputStream dis;
+    DataOutputStream dos;
+    
     String email; // if == null => chua dang nhap
     Room room; // if == null => chua vao phong nao het
 
-    public ClientHandler(Socket s, DataInputStream dis, DataOutputStream dos) {
+    public Client(Socket s) throws IOException {
         this.s = s;
-        this.dis = dis;
-        this.dos = dos;
-    }
 
+        // obtaining input and output streams 
+        this.dis = new DataInputStream(s.getInputStream());
+        this.dos = new DataOutputStream(s.getOutputStream());
+    }
+    
     @Override
     public void run() {
-
+        
         String received;
 
         // listen to dis of server
@@ -55,10 +58,7 @@ public class ClientHandler implements Runnable {
                 // exit if received.type == Exit
                 if (rtype == Type.EXIT) {
                     System.out.println("Client " + this.s + " sends exit...");
-                    System.out.println("Closing this connection...");
-                    // TODO: leave rooms before close socket
-                    this.s.close();
-                    System.out.println("Connection closed.");
+                    this.leaveRoom();
                     break;
                 }
 
@@ -70,21 +70,33 @@ public class ClientHandler implements Runnable {
                             this.room.getGamelogic().receiveDataFromClient(rjson);
                         }
                         break;
-
-                    // change game
+                    
                     case Type.CHANGE_GAME:
                         this.room.setGamelogic(new CoTuong());
                         // TODO: đổi game dựa theo game id của client gửi tới
                         break;
 
-                    // dang nhap
+                    // chat
+                    case Type.CHAT_ROOM:
+                        if (this.room != null) {
+                            String msg = (String) rjson.get("message");
+                            this.room.broadcast(msg);
+                        }
+                        break;
+                    
+                    case Type.CHAT_ALL:
+                        String msg = (String) rjson.get("message");
+                        Server.clientManager.broadcast(msg);
+                        break;
+
+                    // auth
                     case Type.LOGIN:
-                        String u = (String) rjson.get("username");
+                        String e = (String) rjson.get("email");
                         String p = (String) rjson.get("password");
-                        if (this.login(u, p)) {
+                        if (this.login(e, p)) {
                             // TODO: check database login
-                            this.email = u;
-                            System.out.println(u + " login sucessfully.");
+                            this.email = e;
+                            System.out.println(e + " login sucessfully.");
                         }
                         // TODO: return login status to client
                         JSONObject j = new JSONObject();
@@ -92,8 +104,7 @@ public class ClientHandler implements Runnable {
                         j.put("status", "ok");
                         dos.writeUTF(j.toJSONString());
                         break;
-
-                    // dang xuat
+                    
                     case Type.LOGOUT:
                         if (this.logout()) {
                             System.out.println(this.email + " logout sucessfully.");
@@ -101,25 +112,27 @@ public class ClientHandler implements Runnable {
                         }
                         // TODO: return logout status to client
                         break;
-
+                    
                     default:
-
+                        
                         break;
                 }
-
+                
             } catch (IOException ex) {
-                Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
                 break;
             }
         }
-
+        
         try {
             // closing resources 
+            this.s.close();
             this.dis.close();
             this.dos.close();
-
+            System.out.println("- Client disconnected: " + s);
+            
         } catch (IOException ex) {
-            Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -137,29 +150,33 @@ public class ClientHandler implements Runnable {
     // room handle
     public boolean joinRoom(Room room) {
         if (this.room == null) {
+            room.addClient(this);
             this.room = room;
             return true;
         }
         return false;
     }
-
+    
     public boolean leaveRoom() {
-        this.room = null;
+        if (this.room != null) {
+            this.room.removeClient(this);
+            this.room = null;
+        }
         return true;
     }
 
-    // auth handle
+    // auth handlers
     public boolean login(String username, String password) {
         // xu ly db
         return true;
     }
-
+    
     public boolean logout() {
         this.email = null;
         return true;
     }
 
-    // get set
+    // gets sets
     public String getEmail() {
         return email;
     }

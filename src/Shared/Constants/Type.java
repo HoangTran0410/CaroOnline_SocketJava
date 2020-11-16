@@ -13,6 +13,10 @@ public class Type {
 
     // shared
     public static final int EXIT = 0;
+    
+    // chat
+    public static final int CHAT_ROOM = 13;
+    public static final int CHAT_ALL = 14;
 
     // auth
     public static final int LOGIN = 1;

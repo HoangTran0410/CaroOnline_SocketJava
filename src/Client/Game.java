@@ -5,14 +5,11 @@
  */
 package Client;
 
-import Shared.Constants.Type;
-import Shared.Helpers.Json;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import org.json.simple.JSONObject;
 
 /**
  *
@@ -20,11 +17,11 @@ import org.json.simple.JSONObject;
  */
 public class Game {
 
+    Socket s;
+    DataInputStream dis;
+    DataOutputStream dos;
+
     public Game() {
-
-    }
-
-    public void initUI() {
 
     }
 
@@ -34,66 +31,28 @@ public class Game {
             InetAddress ip = InetAddress.getByName(addr);
 
             // establish the connection with server port 
-            Socket s = new Socket(ip, port);
+            s = new Socket(ip, port);
             System.out.println("Connected to " + ip + ":" + port);
 
-            // obtaining input and output streams 
-            DataInputStream dis = new DataInputStream(s.getInputStream());
-            DataOutputStream dos = new DataOutputStream(s.getOutputStream());
-
-            // test change game
-            JSONObject j = new JSONObject();
-            j.put("type", Type.CHANGE_GAME);
-            dos.writeUTF(j.toJSONString());
-
-            // test send game event
-            JSONObject j2 = new JSONObject();
-            j2.put("type", Type.GAME_EVENT);
-            j2.put("game_event", "New Game");
-            dos.writeUTF(j2.toJSONString());
-
-            // listen to dis of client
-            while (true) {
-                // read input stream
-                String received = dis.readUTF();
-
-                // convert to json
-                JSONObject rjson = Json.parse(received);
-
-                // get received type
-                int rtype = ((Long) rjson.get("type")).intValue();
-
-                // exit if received.type == Exit
-                if (rtype == Type.EXIT) {
-                    break;
-                }
-
-                // write on output stream based on the answer from the server
-                switch (rtype) {
-                    case Type.LOGIN:
-                        if (rjson.get("status").equals("ok")) {
-                            System.out.println("Login successfully");
-                        } else {
-                            System.out.println("");
-                        }
-                        break;
-
-                    case Type.LOGOUT:
-                        System.out.println("Logout successfully");
-                        break;
-
-                    default:
-                        // do something
-                        break;
-                }
-            }
-
-            // closing resources 
-            dis.close();
-            dos.close();
+            // obtaining input and output streams
+            dis = new DataInputStream(s.getInputStream());
+            dos = new DataOutputStream(s.getOutputStream());
+            
+            new Thread(new Listenner(s, dis, dos)).start();
 
         } catch (IOException e) {
             System.err.println("Loi. " + e.getMessage());
         }
     }
 }
+
+//            // test change game
+//            JSONObject j = new JSONObject();
+//            j.put("type", Type.CHANGE_GAME);
+//            dos.writeUTF(j.toJSONString());
+//
+//            // test send game event
+//            JSONObject j2 = new JSONObject();
+//            j2.put("type", Type.GAME_EVENT);
+//            j2.put("game_event", "New Game");
+//            dos.writeUTF(j2.toJSONString());

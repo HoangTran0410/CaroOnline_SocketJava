@@ -8,6 +8,7 @@ package Server.Controllers;
 import Server.Games.Caro.Caro;
 import Server.Games.GameLogic;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -19,8 +20,8 @@ public class Room {
 
     String id;
     GameLogic gamelogic;
-    HashMap<String, ClientHandler> clients = new HashMap<>();
-    String player1ID, player2ID; // TODO: tách người chơi và người xem
+    ArrayList<Client> clients = new ArrayList<>();
+    Client player1, player2; // TODO: tách người chơi và người xem
 
     public Room() {
         // room id
@@ -31,58 +32,30 @@ public class Room {
     }
 
     // add/remove client
-    public boolean addClient(ClientHandler client) {
-        String email = client.getEmail();
-        if (!clients.containsKey(email)) {
-            clients.put(email, client);
-            client.joinRoom(this);
+    public boolean addClient(Client c) {
+        if (!clients.contains(c)) {
+            clients.add(c);
             return true;
         }
-
         return false;
     }
 
-    public boolean removeClient(ClientHandler client) {
-        String email = client.getEmail();
-        if (this.removeClient(email)) {
-            client.leaveRoom();
+    public boolean removeClient(Client c) {
+        if (clients.contains(c)) {
+            clients.remove(c);
             return true;
         }
-
         return false;
     }
 
-    public boolean removeClient(String email) {
-        if (!clients.containsKey(email)) {
-            clients.remove(email);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    // send messages
-    public void broadcast(String str) {
-        clients.forEach((key, client) -> {
-            this.sendMessage(client, str);
+    // broadcast messages
+    public void broadcast(String msg) {
+        clients.forEach((c) -> {
+            c.sendMessage(msg);
         });
     }
 
-    public boolean sendMessage(ClientHandler client, String str) {
-        return client.sendMessage(str);
-    }
-
-    public boolean sendMessage(String username, String str) {
-        if (clients.containsKey(username)) {
-            ClientHandler client = clients.get(username);
-            return this.sendMessage(client, str);
-        }
-
-        return false;
-    }
-
-    // get set
+    // gets sets
     public String getId() {
         return id;
     }
@@ -98,5 +71,4 @@ public class Room {
     public void setGamelogic(GameLogic gamelogic) {
         this.gamelogic = gamelogic;
     }
-
 }

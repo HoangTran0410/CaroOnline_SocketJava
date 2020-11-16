@@ -14,9 +14,9 @@ import Client.Scenes.MainMenu;
 public class Main {
 
     public static void main(String[] args) {
-//         Game game = new Game();
-//         game.connect("localhost", 5056);
+        Game game = new Game();
+        game.connect("localhost", 5056);
 
-        new MainMenu().setVisible(true);
+//        new MainMenu().setVisible(true);
     }
 }

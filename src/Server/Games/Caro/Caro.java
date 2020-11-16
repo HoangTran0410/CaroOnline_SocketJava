@@ -31,6 +31,7 @@ public class Caro extends GameLogic {
 
     @Override
     public void receiveDataFromClient(JSONObject rjson) {
+        // TODO: return gì đó cho client
         int game_event = (int) rjson.get("game_event");
         
         switch(game_event) {

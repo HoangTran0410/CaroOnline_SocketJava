@@ -13,13 +13,13 @@ import java.util.ArrayList;
  */
 public class ClientManager {
 
-    ArrayList<ClientHandler> clients;
+    ArrayList<Client> clients;
 
     public ClientManager() {
         clients = new ArrayList<>();
     }
 
-    public boolean add(ClientHandler c) {
+    public boolean add(Client c) {
         if (!clients.contains(c)) {
             clients.add(c);
             return true;
@@ -27,7 +27,7 @@ public class ClientManager {
         return true;
     }
 
-    public boolean delete(ClientHandler c) {
+    public boolean remove(Client c) {
         if (clients.contains(c)) {
             clients.remove(c);
             return true;
@@ -35,8 +35,8 @@ public class ClientManager {
         return false;
     }
 
-    public ClientHandler find(String email) {
-        for (ClientHandler c : clients) {
+    public Client find(String email) {
+        for (Client c : clients) {
             if (c.getEmail().equals(email)) {
                 return c;
             }
@@ -44,4 +44,13 @@ public class ClientManager {
         return null;
     }
 
+    public void broadcast(String msg) {
+        clients.forEach((c) -> {
+            c.sendMessage(msg);
+        });
+    }
+    
+    public int getSize() {
+        return clients.size();
+    }
 }

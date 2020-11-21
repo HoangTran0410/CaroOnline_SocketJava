@@ -52,6 +52,16 @@ public class RoomManager {
         return null;
     }
     
+    public boolean update(Room room){
+        for (Room r : rooms) {
+            if (r.getId().equals(room.getId())) {
+                r = room;
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public int getSize() {
         return rooms.size();
     }

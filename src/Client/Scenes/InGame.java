@@ -113,6 +113,15 @@ public class InGame extends JFrame {
         btnGiveUp.setPreferredSize(new Dimension(120, 50));
         pnlGameOptions.add(btnGiveUp);
         btnExit.setPreferredSize(new Dimension(120, 50));
+        btnExit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                JSONObject sjson = new JSONObject();
+                sjson.put("type", Shared.Constants.Type.EXIT);
+                sender.sendData(sjson);
+            }
+        });
+        
         pnlGameOptions.add(btnExit);
 
 //      Clients section, contains Player and guest section
@@ -175,9 +184,7 @@ public class InGame extends JFrame {
             @Override
             public void focusLost(FocusEvent e) {
                 if (txtChatInput.getText().isEmpty()) {
-                    if (txtChatInput.getText().equalsIgnoreCase("Nhập tin nhắn ở đây...")) {
-                        txtChatInput.setText("");
-                    }
+                        txtChatInput.setText("Nhập tin nhắn ở đây...");
                 }
             }
         });

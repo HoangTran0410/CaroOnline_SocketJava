@@ -195,8 +195,12 @@ public class Client implements Runnable {
     public boolean leaveRoom() {
         if (this.room != null) {
             this.room.removeClient(this);
+            roomManager.update(room);
+            System.out.println("A client left, " + this.room.clients.size() + " remaining.");
             this.room = null;
+            return true;
         }
+        System.out.println("Not in a room, cant leave!x");
         return true;
     }
 

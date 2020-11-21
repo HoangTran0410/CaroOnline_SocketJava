@@ -5,6 +5,7 @@
  */
 package Client;
 
+import Client.Scenes.InGame;
 import Shared.Constants.Type;
 import Shared.Helpers.Json;
 import java.io.DataInputStream;
@@ -42,12 +43,14 @@ public class Listenner implements Runnable {
 
                 // convert to json
                 JSONObject rjson = Json.parse(received);
+                System.out.println(received);
 
                 // get received type
                 int rtype = ((Long) rjson.get("type")).intValue();
 
                 // exit if received.type == Exit
                 if (rtype == Type.EXIT) {
+                    Game.ig.dispose();
                     break;
                 }
 
@@ -63,6 +66,13 @@ public class Listenner implements Runnable {
 
                     case Type.LOGOUT:
                         System.out.println("Logout successfully");
+                        break;
+
+                    case Type.JOIN_ROOM:
+                        System.out.println("Join room successfully");
+                        break;
+                    case Type.CHAT_ROOM:
+                        Game.ig.addChatLine(rjson.get("message").toString(), rjson.get("sender").toString());
                         break;
 
                     default:

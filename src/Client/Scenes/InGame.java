@@ -5,6 +5,9 @@
  */
 package Client.Scenes;
 
+import Client.DataSender;
+import Client.Game;
+import static Client.Game.sender;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -28,6 +31,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import org.json.simple.JSONObject;
+import Shared.Constants.Type;
+import javax.swing.BoxLayout;
 
 /**
  *
@@ -35,15 +41,12 @@ import javax.swing.ScrollPaneConstants;
  */
 public class InGame extends JFrame {
 
-//    JTable tb = null;
-//    DefaultTableModel model = null;
     JPanel pnlInteraction = new JPanel();
     JPanel pnlGameBoard = new JPanel();
     JPanel pnlGameOptions = new JPanel();
     JPanel pnlClients = new JPanel();
     JPanel pnlGuests = new JPanel();
-    JPanel pnlMessages = new JPanel();
-//    MyTable tbChat = new MyTable();
+//    JPanel pnlMessages = new JPanel();
     JList<String> chatLine = new JList();
     DefaultListModel<String> lModel = new DefaultListModel<>();
     JScrollPane pnlChat = new JScrollPane(chatLine);
@@ -140,8 +143,8 @@ public class InGame extends JFrame {
         pnlChat.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         pnlChat.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        GridLayout grid_1col_unspecRow = new GridLayout(0, 1);
-        pnlMessages.setLayout(grid_1col_unspecRow);
+//        GridLayout grid_1col_unspecRow = new GridLayout(0, 1);
+//        pnlMessages.setLayout(grid_1col_unspecRow);
 
         JPanel pnlChatInput = new JPanel();
         pnlChatInput.setLayout(new BorderLayout());
@@ -154,7 +157,7 @@ public class InGame extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                sendMessage(true);
+                btnSendClicked();
             }
         });
 
@@ -187,7 +190,7 @@ public class InGame extends JFrame {
             @Override
             public void keyPressed(KeyEvent ke) {
                 if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
-                    sendMessage(true);
+                    btnSendClicked();
                     pnlChatInput.requestFocusInWindow();
                 }
             }
@@ -209,11 +212,15 @@ public class InGame extends JFrame {
                     txtChatInput.requestFocusInWindow();
                 }
             }
+
             @Override
             public void keyReleased(KeyEvent ke) {
             }
         });
+//        chatLine.
         chatLine.setModel(lModel);
+        chatLine.setLayoutOrientation(JList.VERTICAL);
+//        chatLine.setLayout(new BoxLayout(chatLine, BoxLayout.Y_AXIS));
         pnlChatInput.add(txtChatInput, BorderLayout.WEST);
         pnlChatInput.add(btnSend, BorderLayout.EAST);
         pnlInteraction.add(pnlChatInput);
@@ -221,12 +228,21 @@ public class InGame extends JFrame {
 
     }
 
-    public void sendMessage(boolean self) {
-        if (!txtChatInput.getText().trim().equalsIgnoreCase("") && !txtChatInput
-                .getText().trim().equalsIgnoreCase("Nhập tin nhắn ở đây...")) {
-            addChatLine(self, txtChatInput.getText(), "my name");
+    public void btnSendClicked() {
+        if (!txtChatInput.getText().trim().equalsIgnoreCase("")
+                && !txtChatInput
+                        .getText().trim().equalsIgnoreCase("Nhập tin nhắn ở đây...")) {
+            JSONObject sjson = new JSONObject();
+            sjson.put("type", Shared.Constants.Type.CHAT_ROOM);
+            sjson.put("sender", "me");
+            sjson.put("message", txtChatInput.getText());
+            sendData(sjson);
         }
         txtChatInput.setText("Nhập tin nhắn ở đây...");
+    }
+
+    public void sendData(JSONObject jobj) {
+        sender.sendData(jobj);
     }
 
     private String lineWrap(String s) {
@@ -273,11 +289,11 @@ public class InGame extends JFrame {
         return result;
     }
 
-    private void addChatLine(boolean selfChatLine, String text, String name) {
+    public void addChatLine(String text, String name) {
         String username;
         JLabel textLine = new JLabel();
         String font;
-        textLine.setPreferredSize(new Dimension(120, 50));
+//        textLine.setPreferredSize(new Dimension(120, 50));
         font = "style='font-size:15px;'";
         LocalTime currentTime = LocalTime.now();
         String hour = String.valueOf(currentTime.getHour());

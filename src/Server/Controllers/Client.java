@@ -48,6 +48,7 @@ public class Client implements Runnable {
             try {
                 // receive the request from client
                 received = dis.readUTF();
+                System.out.println(received);
 
                 // convert to json
                 JSONObject rjson = Json.parse(received);
@@ -75,12 +76,33 @@ public class Client implements Runnable {
                         this.room.setGamelogic(new CoTuong());
                         // TODO: đổi game dựa theo game id của client gửi tới
                         break;
+                        
+                    //  Join room
+                        case Type.JOIN_ROOM:
+                        if (this.room == null) {
+                            Long roomId = (Long) rjson.get("id");
+//                            String sender = rjson.get("sender").toString();
+                            JSONObject sjson = new JSONObject();
+//                            sjson.put("sender", sender);
+                            this.room = new Room();
+                            room.setId(roomId.toString());
+                            sjson.put("id", roomId);
+                            sjson.put("type", Type.JOIN_ROOM);
+                            this.joinRoom(room);
+                            sendMessage(sjson.toString());
+                        }
+                        break;
 
                     // chat
                     case Type.CHAT_ROOM:
                         if (this.room != null) {
                             String msg = (String) rjson.get("message");
-                            this.room.broadcast(msg);
+                            String sender = rjson.get("sender").toString();
+                            JSONObject sjson = new JSONObject();
+                            sjson.put("sender", sender);
+                            sjson.put("message", msg);
+                            sjson.put("type", Type.CHAT_ROOM);
+                            this.room.broadcast(sjson.toString());
                         }
                         break;
                     
@@ -149,7 +171,7 @@ public class Client implements Runnable {
 
     // room handle
     public boolean joinRoom(Room room) {
-        if (this.room == null) {
+        if (this.room != null) {
             room.addClient(this);
             this.room = room;
             return true;

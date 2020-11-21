@@ -25,8 +25,8 @@ public class Server {
 
     int port = 5056;
 
-    int corePoolSize = 1;
-    int maximumPoolSize = 5;
+    int corePoolSize = 10;
+    int maximumPoolSize = 100;
     int queueCapacity = 8;
 
     public static volatile ClientManager clientManager;

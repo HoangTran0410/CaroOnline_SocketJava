@@ -26,6 +26,14 @@ public class RoomManager {
         }
         return true;
     }
+    
+    public Room get(String roomID){
+        for(Room r : rooms){
+            if(r.getId().equalsIgnoreCase(roomID))
+                return r;
+        }
+        return null;
+    }
 
     public boolean remove(Room r) {
         if (rooms.contains(r)) {

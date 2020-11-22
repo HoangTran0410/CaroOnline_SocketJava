@@ -6,15 +6,15 @@
 package Client.Scenes;
 
 import Client.Utils.CustomListCellRenderer;
+import java.awt.event.KeyEvent;
 import javax.swing.DefaultListModel;
-import javax.swing.JLabel;
 
 /**
  *
  * @author Hoang Tran < hoang at 99.hoangtran@gmail.com >
  */
 public class InGame2 extends javax.swing.JFrame {
-    
+
     private DefaultListModel<String> chatModel = new DefaultListModel<>();
 
     /**
@@ -22,7 +22,7 @@ public class InGame2 extends javax.swing.JFrame {
      */
     public InGame2() {
         initComponents();
-        
+
         lChatContainer.setModel(chatModel);
         lChatContainer.setCellRenderer(new CustomListCellRenderer(240));
     }
@@ -36,8 +36,29 @@ public class InGame2 extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        plRightContainer = new javax.swing.JPanel();
+        plToolContainer = new javax.swing.JPanel();
+        btnNewGame = new javax.swing.JButton();
+        btnUndo = new javax.swing.JButton();
+        btnSurrender = new javax.swing.JButton();
+        btnExitRoom = new javax.swing.JButton();
+        plPlayerContainer = new javax.swing.JPanel();
+        plPlayer = new javax.swing.JPanel();
+        plAvatarContainer1 = new javax.swing.JPanel();
+        lbActive1 = new javax.swing.JLabel();
+        lbAvatar1 = new javax.swing.JLabel();
+        lbPlayerName1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        plAvatarContainer2 = new javax.swing.JPanel();
+        lbActive2 = new javax.swing.JLabel();
+        lbAvatar2 = new javax.swing.JLabel();
+        lbPlayerName2 = new javax.swing.JLabel();
+        plTimer = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        pgbTurnTimer = new javax.swing.JProgressBar();
+        pgbTurnTimer1 = new javax.swing.JProgressBar();
+        tpChatAndViewerContainer = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         lChatContainer = new javax.swing.JList<>();
@@ -45,11 +66,181 @@ public class InGame2 extends javax.swing.JFrame {
         txChatInput = new javax.swing.JTextField();
         btnSendMessage = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
+        plBoardContainer = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(102, 153, 255));
+        plToolContainer.setBorder(javax.swing.BorderFactory.createTitledBorder("Chức năng"));
+
+        btnNewGame.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnNewGame.setText("+ Ván mới");
+
+        btnUndo.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnUndo.setText("Đánh lại ↺");
+
+        btnSurrender.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnSurrender.setText("- Đầu hàng");
+
+        btnExitRoom.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnExitRoom.setText("Thoát phòng Ⓧ");
+
+        javax.swing.GroupLayout plToolContainerLayout = new javax.swing.GroupLayout(plToolContainer);
+        plToolContainer.setLayout(plToolContainerLayout);
+        plToolContainerLayout.setHorizontalGroup(
+            plToolContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(plToolContainerLayout.createSequentialGroup()
+                .addGap(44, 44, 44)
+                .addGroup(plToolContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addGroup(plToolContainerLayout.createSequentialGroup()
+                        .addComponent(btnNewGame)
+                        .addGap(6, 6, 6)
+                        .addComponent(btnUndo))
+                    .addGroup(plToolContainerLayout.createSequentialGroup()
+                        .addComponent(btnSurrender)
+                        .addGap(6, 6, 6)
+                        .addComponent(btnExitRoom)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        plToolContainerLayout.setVerticalGroup(
+            plToolContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, plToolContainerLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(plToolContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnNewGame)
+                    .addComponent(btnUndo))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(plToolContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnSurrender)
+                    .addComponent(btnExitRoom))
+                .addGap(18, 18, 18))
+        );
+
+        plPlayer.setBorder(javax.swing.BorderFactory.createTitledBorder("Người chơi"));
+
+        plAvatarContainer1.setPreferredSize(new java.awt.Dimension(96, 96));
+        plAvatarContainer1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        lbActive1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_sphere_30px.png"))); // NOI18N
+        plAvatarContainer1.add(lbActive1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 60, -1, -1));
+
+        lbAvatar1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/Avatars/icons8_circled_user_male_skin_type_7_96px.png"))); // NOI18N
+        plAvatarContainer1.add(lbAvatar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
+        lbPlayerName1.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
+        lbPlayerName1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbPlayerName1.setLabelFor(plAvatarContainer1);
+        lbPlayerName1.setText("Hoang");
+
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_sword_48px.png"))); // NOI18N
+
+        plAvatarContainer2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        lbActive2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_sphere_30px.png"))); // NOI18N
+        plAvatarContainer2.add(lbActive2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 60, -1, -1));
+
+        lbAvatar2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/Avatars/icons8_circled_user_female_skin_type_7_96px.png"))); // NOI18N
+        plAvatarContainer2.add(lbAvatar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
+        lbPlayerName2.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
+        lbPlayerName2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbPlayerName2.setLabelFor(plAvatarContainer1);
+        lbPlayerName2.setText("Hien");
+
+        javax.swing.GroupLayout plPlayerLayout = new javax.swing.GroupLayout(plPlayer);
+        plPlayer.setLayout(plPlayerLayout);
+        plPlayerLayout.setHorizontalGroup(
+            plPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(plPlayerLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(plPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(lbPlayerName1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(plAvatarContainer1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(plPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(lbPlayerName2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(plAvatarContainer2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+        plPlayerLayout.setVerticalGroup(
+            plPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(plPlayerLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(plPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(plPlayerLayout.createSequentialGroup()
+                        .addComponent(plAvatarContainer1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbPlayerName1, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE))
+                    .addGroup(plPlayerLayout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(plPlayerLayout.createSequentialGroup()
+                        .addComponent(plAvatarContainer2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbPlayerName2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+
+        plTimer.setBorder(javax.swing.BorderFactory.createTitledBorder("Thời gian"));
+
+        jLabel4.setText("Nước đi");
+
+        jLabel5.setText("Trận đấu");
+
+        pgbTurnTimer.setValue(40);
+        pgbTurnTimer.setString("00:20");
+        pgbTurnTimer.setStringPainted(true);
+
+        pgbTurnTimer1.setValue(75);
+        pgbTurnTimer1.setString("08:50");
+        pgbTurnTimer1.setStringPainted(true);
+
+        javax.swing.GroupLayout plTimerLayout = new javax.swing.GroupLayout(plTimer);
+        plTimer.setLayout(plTimerLayout);
+        plTimerLayout.setHorizontalGroup(
+            plTimerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(plTimerLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(plTimerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(plTimerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pgbTurnTimer, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pgbTurnTimer1, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+        plTimerLayout.setVerticalGroup(
+            plTimerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(plTimerLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(plTimerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pgbTurnTimer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(plTimerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pgbTurnTimer1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        );
+
+        javax.swing.GroupLayout plPlayerContainerLayout = new javax.swing.GroupLayout(plPlayerContainer);
+        plPlayerContainer.setLayout(plPlayerContainerLayout);
+        plPlayerContainerLayout.setHorizontalGroup(
+            plPlayerContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(plPlayer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(plTimer, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        plPlayerContainerLayout.setVerticalGroup(
+            plPlayerContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(plPlayerContainerLayout.createSequentialGroup()
+                .addGap(3, 3, 3)
+                .addComponent(plPlayer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(plTimer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
         lChatContainer.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -57,6 +248,12 @@ public class InGame2 extends javax.swing.JFrame {
             public String getElementAt(int i) { return strings[i]; }
         });
         jScrollPane1.setViewportView(lChatContainer);
+
+        txChatInput.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txChatInputKeyPressed(evt);
+            }
+        });
 
         btnSendMessage.setText("Gửi");
         btnSendMessage.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -73,16 +270,17 @@ public class InGame2 extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(txChatInput, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSendMessage, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
+                .addComponent(btnSendMessage, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(txChatInput, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnSendMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txChatInput))
                 .addContainerGap())
-            .addComponent(btnSendMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -99,12 +297,12 @@ public class InGame2 extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        jTabbedPane1.addTab("Nhắn tin", jPanel3);
+        tpChatAndViewerContainer.addTab("Nhắn tin", jPanel3);
 
         jPanel4.setBackground(new java.awt.Color(255, 51, 153));
 
@@ -112,42 +310,43 @@ public class InGame2 extends javax.swing.JFrame {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 333, Short.MAX_VALUE)
+            .addGap(0, 340, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 301, Short.MAX_VALUE)
+            .addGap(0, 248, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Người xem", jPanel4);
+        tpChatAndViewerContainer.addTab("Người xem", jPanel4);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTabbedPane1)
-                .addContainerGap())
+        javax.swing.GroupLayout plRightContainerLayout = new javax.swing.GroupLayout(plRightContainer);
+        plRightContainer.setLayout(plRightContainerLayout);
+        plRightContainerLayout.setHorizontalGroup(
+            plRightContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(tpChatAndViewerContainer)
+            .addComponent(plPlayerContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(plToolContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(272, Short.MAX_VALUE)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+        plRightContainerLayout.setVerticalGroup(
+            plRightContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, plRightContainerLayout.createSequentialGroup()
+                .addComponent(plToolContainer, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(plPlayerContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tpChatAndViewerContainer, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        jPanel2.setBackground(new java.awt.Color(102, 102, 102));
+        plBoardContainer.setBackground(new java.awt.Color(102, 102, 102));
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 605, Short.MAX_VALUE)
+        javax.swing.GroupLayout plBoardContainerLayout = new javax.swing.GroupLayout(plBoardContainer);
+        plBoardContainer.setLayout(plBoardContainerLayout);
+        plBoardContainerLayout.setHorizontalGroup(
+            plBoardContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 639, Short.MAX_VALUE)
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        plBoardContainerLayout.setVerticalGroup(
+            plBoardContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
@@ -157,9 +356,9 @@ public class InGame2 extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(plBoardContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(plRightContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -167,8 +366,8 @@ public class InGame2 extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(plBoardContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(plRightContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -177,10 +376,21 @@ public class InGame2 extends javax.swing.JFrame {
 
     private void btnSendMessageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSendMessageMouseClicked
         // TODO add your handling code here:
-        System.out.println("abc");
-        
+        if (lbActive1.isVisible()) {
+            lbActive1.setVisible(false);
+        } else {
+            lbActive1.setVisible(true);
+        }
+
         chatModel.addElement("12:06 [Hoang]:  Trần văn hoàngTrần văn hoàngTrần văn hoàngTrần văn hoàngTrần văn hoàngTrần văn hoàngTrần văn hoàng");
     }//GEN-LAST:event_btnSendMessageMouseClicked
+
+    private void txChatInputKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txChatInputKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            chatModel.addElement("12:06 [Hoang]:  Trần văn hoàngTrần văn hoàngTrần văn hoàngTrần văn hoàngTrần văn hoàngTrần văn hoàngTrần văn hoàng");
+        }
+    }//GEN-LAST:event_txChatInputKeyPressed
 
     /**
      * @param args the command line arguments
@@ -216,17 +426,38 @@ public class InGame2 extends javax.swing.JFrame {
             }
         });
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnExitRoom;
+    private javax.swing.JButton btnNewGame;
     private javax.swing.JButton btnSendMessage;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JButton btnSurrender;
+    private javax.swing.JButton btnUndo;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JList<String> lChatContainer;
+    private javax.swing.JLabel lbActive1;
+    private javax.swing.JLabel lbActive2;
+    private javax.swing.JLabel lbAvatar1;
+    private javax.swing.JLabel lbAvatar2;
+    private javax.swing.JLabel lbPlayerName1;
+    private javax.swing.JLabel lbPlayerName2;
+    private javax.swing.JProgressBar pgbTurnTimer;
+    private javax.swing.JProgressBar pgbTurnTimer1;
+    private javax.swing.JPanel plAvatarContainer1;
+    private javax.swing.JPanel plAvatarContainer2;
+    private javax.swing.JPanel plBoardContainer;
+    private javax.swing.JPanel plPlayer;
+    private javax.swing.JPanel plPlayerContainer;
+    private javax.swing.JPanel plRightContainer;
+    private javax.swing.JPanel plTimer;
+    private javax.swing.JPanel plToolContainer;
+    private javax.swing.JTabbedPane tpChatAndViewerContainer;
     private javax.swing.JTextField txChatInput;
     // End of variables declaration//GEN-END:variables
 }

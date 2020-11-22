@@ -24,6 +24,7 @@ public class InGame extends javax.swing.JFrame {
      */
     public InGame() {
         initComponents();
+        this.setLocationRelativeTo(null);
 
         chatModel = new DefaultListModel<>();
 

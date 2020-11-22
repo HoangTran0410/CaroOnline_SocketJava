@@ -25,15 +25,11 @@ public class Server {
 
     int port = 5056;
 
-    int corePoolSize = 10;
-    int maximumPoolSize = 100;
-    int queueCapacity = 8;
-
     public static volatile ClientManager clientManager;
     public static volatile RoomManager roomManager;
 
     public Server() {
-        
+
         try {
             ServerSocket ss = new ServerSocket(port);
             System.out.println("Created Server at port " + port + ".");
@@ -44,13 +40,17 @@ public class Server {
 
             // create threadpool
             ThreadPoolExecutor executor = new ThreadPoolExecutor(
-                    corePoolSize,
-                    maximumPoolSize,
-                    10,
+                    10, // corePoolSize
+                    100, // maximumPoolSize
+                    10, // thread timeout
                     TimeUnit.SECONDS,
-                    new ArrayBlockingQueue<>(queueCapacity)
+                    new ArrayBlockingQueue<>(8) // queueCapacity
             );
 
+            // admin
+            executor.execute(new Admin());
+
+            // server main loop - listen to client's connection
             while (true) {
                 Socket s = null;
 
@@ -63,7 +63,7 @@ public class Server {
                     Client c = new Client(s);
                     clientManager.add(c);
 
-                    // execute client
+                    // execute client runnable
                     executor.execute(c);
 
                 } catch (IOException ex) {
@@ -73,5 +73,9 @@ public class Server {
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public static void main(String[] args) {
+        new Server();
     }
 }

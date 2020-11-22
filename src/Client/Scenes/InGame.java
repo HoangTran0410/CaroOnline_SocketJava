@@ -13,14 +13,14 @@ import javax.swing.DefaultListModel;
  *
  * @author Hoang Tran < hoang at 99.hoangtran@gmail.com >
  */
-public class InGame2 extends javax.swing.JFrame {
+public class InGame extends javax.swing.JFrame {
 
     private DefaultListModel<String> chatModel = new DefaultListModel<>();
 
     /**
      * Creates new form InGame2
      */
-    public InGame2() {
+    public InGame() {
         initComponents();
 
         lChatContainer.setModel(chatModel);
@@ -57,7 +57,7 @@ public class InGame2 extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         pgbTurnTimer = new javax.swing.JProgressBar();
-        pgbTurnTimer1 = new javax.swing.JProgressBar();
+        pgbMatchTimer = new javax.swing.JProgressBar();
         tpChatAndViewerContainer = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -193,9 +193,9 @@ public class InGame2 extends javax.swing.JFrame {
         pgbTurnTimer.setString("00:20");
         pgbTurnTimer.setStringPainted(true);
 
-        pgbTurnTimer1.setValue(75);
-        pgbTurnTimer1.setString("08:50");
-        pgbTurnTimer1.setStringPainted(true);
+        pgbMatchTimer.setValue(75);
+        pgbMatchTimer.setString("08:50");
+        pgbMatchTimer.setStringPainted(true);
 
         javax.swing.GroupLayout plTimerLayout = new javax.swing.GroupLayout(plTimer);
         plTimer.setLayout(plTimerLayout);
@@ -209,7 +209,7 @@ public class InGame2 extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(plTimerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pgbTurnTimer, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(pgbTurnTimer1, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pgbMatchTimer, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         plTimerLayout.setVerticalGroup(
@@ -222,7 +222,7 @@ public class InGame2 extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(plTimerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pgbTurnTimer1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(pgbMatchTimer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout plPlayerContainerLayout = new javax.swing.GroupLayout(plPlayerContainer);
@@ -409,20 +409,21 @@ public class InGame2 extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(InGame2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(InGame2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(InGame2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(InGame2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new InGame2().setVisible(true);
+                new InGame().setVisible(true);
             }
         });
     }
@@ -447,8 +448,8 @@ public class InGame2 extends javax.swing.JFrame {
     private javax.swing.JLabel lbAvatar2;
     private javax.swing.JLabel lbPlayerName1;
     private javax.swing.JLabel lbPlayerName2;
+    private javax.swing.JProgressBar pgbMatchTimer;
     private javax.swing.JProgressBar pgbTurnTimer;
-    private javax.swing.JProgressBar pgbTurnTimer1;
     private javax.swing.JPanel plAvatarContainer1;
     private javax.swing.JPanel plAvatarContainer2;
     private javax.swing.JPanel plBoardContainer;

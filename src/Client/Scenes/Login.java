@@ -5,6 +5,13 @@
  */
 package Client.Scenes;
 
+import Client.Game;
+import Shared.StreamDTO.PlayerInfo;
+import com.google.gson.Gson;
+//import org.json.simple.JSONObject;
+import com.google.gson.JsonObject; // !!!
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Hoang Tran < hoang at 99.hoangtran@gmail.com >
@@ -14,6 +21,7 @@ public class Login extends javax.swing.JFrame {
     /**
      * Creates new form LoginF
      */
+    Gson gson = new Gson();
     public Login() {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -123,11 +131,13 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txUserNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txUserNameActionPerformed
-
+//        if (!txUserName.getText().isEmpty() && ! new String(txPassword.getPassword()).isEmpty()){
+//            
+//        }
     }//GEN-LAST:event_txUserNameActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-
+        sendData();
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnSignupMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSignupMouseClicked
@@ -138,6 +148,27 @@ public class Login extends javax.swing.JFrame {
     private void btnSignupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignupActionPerformed
 
     }//GEN-LAST:event_btnSignupActionPerformed
+
+    private void sendData() {
+        String email = txUserName.getText();
+        String pass = new String(txPassword.getPassword());
+        if (!email.isEmpty() && !pass.isEmpty()) {
+            JsonObject sjson = new JsonObject();
+            PlayerInfo p = new PlayerInfo();
+            p.setEmail(email);
+            p.setUsername("test username");
+            p.setPassword(pass);
+            sjson.addProperty("type", Shared.Constants.Type.LOGIN);
+            sjson.addProperty("content", gson.toJson(p));
+//            sjson.put("message", txtChatInput.getText());
+//            sender.sendData(sjson);
+            Game.sendData(sjson.toString());
+        }
+
+    }
+    public void showMessageDialog(String mess){
+        JOptionPane.showMessageDialog(this, mess);
+    }
 
     /**
      * @param args the command line arguments

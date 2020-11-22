@@ -6,8 +6,8 @@
 package Client;
 
 import Shared.Constants.Type;
-import Shared.StreamDTO.BaseDTO;
-import Shared.StreamDTO.ChatMessage;
+import Shared.StreamDTO.BaseSDTO;
+import Shared.StreamDTO.ChatMessageSDTO;
 import com.google.gson.Gson;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -37,19 +37,14 @@ public class Listenner implements Runnable {
 
         Gson gson = new Gson();
 
-        // listen to dis of client
         while (true) {
             try {
                 // read input stream
                 String received = dis.readUTF();
 
-                // convert to json
-                BaseDTO b = gson.fromJson(received, BaseDTO.class);
-
-                // get received type, content string
-                int rType = b.getType();
-                String rContentStr = b.getContentStr();
-                System.out.println("received " + rContentStr);
+                BaseSDTO b = gson.fromJson(received, BaseSDTO.class);
+                int rType = b.type;
+                String rContentStr = b.contentStr;
 
                 // exit if received.type == Exit
                 if (rType == Type.EXIT) {
@@ -59,11 +54,6 @@ public class Listenner implements Runnable {
                 // write on output stream based on the answer from the server
                 switch (rType) {
                     case Type.LOGIN:
-//                        if (rjson.get("status").equals("ok")) {
-//                            System.out.println("Login successfully");
-//                        } else {
-//                            System.out.println("");
-//                        }
                         break;
 
                     case Type.LOGOUT:
@@ -75,8 +65,8 @@ public class Listenner implements Runnable {
                         break;
 
                     case Type.CHAT_ROOM:
-                        ChatMessage chat = gson.fromJson(rContentStr, ChatMessage.class);
-                        System.out.println(chat.getMessage());
+                        ChatMessageSDTO chat = gson.fromJson(rContentStr, ChatMessageSDTO.class);
+                        System.out.println(chat.message);
                         break;
 
                     default:
@@ -90,6 +80,7 @@ public class Listenner implements Runnable {
 
         try {
             // closing resources
+            s.close();
             dis.close();
             dos.close();
         } catch (IOException ex) {

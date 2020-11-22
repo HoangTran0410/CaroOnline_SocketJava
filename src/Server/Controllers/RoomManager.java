@@ -26,14 +26,6 @@ public class RoomManager {
         }
         return true;
     }
-    
-    public Room get(String roomID){
-        for(Room r : rooms){
-            if(r.getId().equalsIgnoreCase(roomID))
-                return r;
-        }
-        return null;
-    }
 
     public boolean remove(Room r) {
         if (rooms.contains(r)) {
@@ -50,16 +42,6 @@ public class RoomManager {
             }
         }
         return null;
-    }
-    
-    public boolean update(Room room){
-        for (Room r : rooms) {
-            if (r.getId().equals(room.getId())) {
-                r = room;
-                return true;
-            }
-        }
-        return false;
     }
     
     public int getSize() {

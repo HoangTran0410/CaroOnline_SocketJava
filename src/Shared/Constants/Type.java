@@ -14,6 +14,7 @@ public class Type {
     // shared
     public static final int EXIT = 0;
     public static final int JOIN_ROOM = 15;
+    public static final int LEAVE_ROOM = 16;
     
     // chat
     public static final int CHAT_ROOM = 13;

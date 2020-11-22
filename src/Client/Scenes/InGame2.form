@@ -353,7 +353,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="pgbTurnTimer" min="-2" pref="252" max="-2" attributes="0"/>
-                              <Component id="pgbTurnTimer1" min="-2" pref="252" max="-2" attributes="0"/>
+                              <Component id="pgbMatchTimer" min="-2" pref="252" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -370,7 +370,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel5" alignment="3" max="32767" attributes="0"/>
-                              <Component id="pgbTurnTimer1" alignment="3" max="32767" attributes="0"/>
+                              <Component id="pgbMatchTimer" alignment="3" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -394,7 +394,7 @@
                     <Property name="stringPainted" type="boolean" value="true"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JProgressBar" name="pgbTurnTimer1">
+                <Component class="javax.swing.JProgressBar" name="pgbMatchTimer">
                   <Properties>
                     <Property name="value" type="int" value="75"/>
                     <Property name="string" type="java.lang.String" value="08:50"/>

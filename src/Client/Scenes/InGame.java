@@ -6,7 +6,16 @@
 package Client.Scenes;
 
 import Client.Utils.CustomListCellRenderer;
+import Shared.StreamDTO.BaseDTO;
+import Shared.StreamDTO.ChatMessage;
+import com.google.gson.Gson;
 import java.awt.event.KeyEvent;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 
 /**
@@ -15,13 +24,24 @@ import javax.swing.DefaultListModel;
  */
 public class InGame extends javax.swing.JFrame {
 
-    private DefaultListModel<String> chatModel = new DefaultListModel<>();
+    Socket s;
+    DataInputStream dis;
+    DataOutputStream dos;
+
+    DefaultListModel<String> chatModel;
 
     /**
-     * Creates new form InGame2
+     * Creates new form InGame
      */
-    public InGame() {
+    public InGame(Socket s, DataInputStream dis, DataOutputStream dos) {
         initComponents();
+        
+        
+        this.s = s;
+        this.dis = dis;
+        this.dos = dos;
+
+        chatModel = new DefaultListModel<>();
 
         lChatContainer.setModel(chatModel);
         lChatContainer.setCellRenderer(new CustomListCellRenderer(240));
@@ -375,14 +395,24 @@ public class InGame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSendMessageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSendMessageMouseClicked
-        // TODO add your handling code here:
-        if (lbActive1.isVisible()) {
-            lbActive1.setVisible(false);
-        } else {
-            lbActive1.setVisible(true);
-        }
+        try {
+            // TODO add your handling code here:
+            if (lbActive1.isVisible()) {
+                lbActive1.setVisible(false);
+            } else {
+                lbActive1.setVisible(true);
+            }
 
-        chatModel.addElement("12:06 [Hoang]:  Trần văn hoàngTrần văn hoàngTrần văn hoàngTrần văn hoàngTrần văn hoàngTrần văn hoàngTrần văn hoàng");
+            // Temporary room to test sending data
+            Gson gson = new Gson();
+
+            ChatMessage chat = new ChatMessage("12:00", "hoang", "chat ne");
+            BaseDTO b = new BaseDTO(Shared.Constants.Type.CHAT_ROOM, gson.toJson(chat));
+            dos.writeUTF(gson.toJson(b));
+
+        } catch (IOException ex) {
+            Logger.getLogger(InGame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnSendMessageMouseClicked
 
     private void txChatInputKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txChatInputKeyPressed
@@ -423,7 +453,7 @@ public class InGame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new InGame().setVisible(true);
+//                new InGame().setVisible(true);
             }
         });
     }

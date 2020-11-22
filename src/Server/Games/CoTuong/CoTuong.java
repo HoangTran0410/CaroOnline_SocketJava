@@ -6,7 +6,7 @@
 package Server.Games.CoTuong;
 
 import Server.Games.GameLogic;
-import org.json.simple.JSONObject;
+import com.google.gson.JsonObject;
 
 /**
  *
@@ -19,7 +19,7 @@ public class CoTuong extends GameLogic {
     }
 
     @Override
-    public void receiveDataFromClient(JSONObject rjson) {
+    public void receiveDataFromClient(JsonObject rjson) {
         System.out.println("Game CoTuong received: " + rjson.get("game_event").toString());
     }
 }

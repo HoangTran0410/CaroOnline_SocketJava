@@ -6,14 +6,15 @@
 package Client;
 
 import Shared.Constants.Type;
-import Shared.Helpers.Json;
+import Shared.StreamDTO.BaseDTO;
+import Shared.StreamDTO.ChatMessage;
+import com.google.gson.Gson;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.json.simple.JSONObject;
 
 /**
  *
@@ -34,6 +35,8 @@ public class Listenner implements Runnable {
     @Override
     public void run() {
 
+        Gson gson = new Gson();
+
         // listen to dis of client
         while (true) {
             try {
@@ -41,26 +44,26 @@ public class Listenner implements Runnable {
                 String received = dis.readUTF();
 
                 // convert to json
-                JSONObject rjson = Json.parse(received);
-                System.out.println(received);
+                BaseDTO b = gson.fromJson(received, BaseDTO.class);
 
-                // get received type
-                int rtype = ((Long) rjson.get("type")).intValue();
+                // get received type, content string
+                int rType = b.getType();
+                String rContentStr = b.getContentStr();
+                System.out.println("received " + rContentStr);
 
                 // exit if received.type == Exit
-                if (rtype == Type.EXIT) {
-                    Game.ig.dispose();
+                if (rType == Type.EXIT) {
                     break;
                 }
 
                 // write on output stream based on the answer from the server
-                switch (rtype) {
+                switch (rType) {
                     case Type.LOGIN:
-                        if (rjson.get("status").equals("ok")) {
-                            System.out.println("Login successfully");
-                        } else {
-                            System.out.println("");
-                        }
+//                        if (rjson.get("status").equals("ok")) {
+//                            System.out.println("Login successfully");
+//                        } else {
+//                            System.out.println("");
+//                        }
                         break;
 
                     case Type.LOGOUT:
@@ -70,8 +73,10 @@ public class Listenner implements Runnable {
                     case Type.JOIN_ROOM:
                         System.out.println("Join room successfully");
                         break;
+
                     case Type.CHAT_ROOM:
-//                        Game.ig.addChatLine(rjson.get("message").toString(), rjson.get("sender").toString());
+                        ChatMessage chat = gson.fromJson(rContentStr, ChatMessage.class);
+                        System.out.println(chat.getMessage());
                         break;
 
                     default:

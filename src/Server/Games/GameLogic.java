@@ -5,7 +5,7 @@
  */
 package Server.Games;
 
-import org.json.simple.JSONObject;
+import com.google.gson.JsonObject;
 
 /**
  *
@@ -16,7 +16,7 @@ public class GameLogic {
     public GameLogic() {
     }
     
-    public void receiveDataFromClient(JSONObject rjson) {
+    public void receiveDataFromClient(JsonObject rjson) {
     }
     
 }

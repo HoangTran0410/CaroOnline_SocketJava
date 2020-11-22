@@ -18,7 +18,7 @@ public class Player {
     String password;
     String email;       //  Email, dùng để đăng nhập
     String gender;
-    String rankID;
+    String rankID = "none";
     LocalDate dateOfBirth;
     int score;
     int matchCount;

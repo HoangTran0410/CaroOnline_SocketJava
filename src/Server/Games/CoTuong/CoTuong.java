@@ -18,8 +18,8 @@ public class CoTuong extends GameLogic {
         System.out.println("Co Tuong constructor");
     }
 
-    @Override
-    public void receiveDataFromClient(JSONObject rjson) {
-        System.out.println("Game CoTuong received: " + rjson.get("game_event").toString());
-    }
+//    @Override
+//    public void receiveDataFromClient(JSONObject rjson) {
+//        System.out.println("Game CoTuong received: " + rjson.get("game_event").toString());
+//    }
 }

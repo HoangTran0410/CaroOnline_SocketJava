@@ -9,7 +9,7 @@ import Shared.Helpers.Line;
 import Shared.Helpers.Point;
 import Server.Games.GameLogic;
 import Shared.Constants.Type;
-import org.json.simple.JSONObject;
+import com.google.gson.JsonObject;
 
 /**
  *
@@ -29,26 +29,26 @@ public class Caro extends GameLogic {
         }
     }
 
-    @Override
-    public void receiveDataFromClient(JSONObject rjson) {
-        // TODO: return gì đó cho client
-        int game_event = (int) rjson.get("game_event");
-        
-        switch(game_event) {
-            case Type.MOVE:
-                // TODO: add actions for game event
-                break;
-            case Type.NEW_GAME:
-                break;
-            case Type.UNDO:
-                break;
-            case Type.SURRENDER:
-                break;
-            default:
-                // do something
-                break;
-        }
-    }
+//    @Override
+//    public void receiveDataFromClient(JSONObject rjson) {
+//        // TODO: return gì đó cho client
+//        int game_event = (int) rjson.get("game_event");
+//        
+//        switch(game_event) {
+//            case Type.MOVE:
+//                // TODO: add actions for game event
+//                break;
+//            case Type.NEW_GAME:
+//                break;
+//            case Type.UNDO:
+//                break;
+//            case Type.SURRENDER:
+//                break;
+//            default:
+//                // do something
+//                break;
+//        }
+//    }
 
     public boolean setValueAt(char value, int x, int y) {
         if (x >= 0 && x < COL && y >= 0 && y < ROW) {

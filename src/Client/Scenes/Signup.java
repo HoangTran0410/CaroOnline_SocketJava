@@ -5,6 +5,12 @@
  */
 package Client.Scenes;
 
+import Client.Game;
+import Shared.StreamDTO.PlayerInfo;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+//import Shared.Constants.Type;
+
 /**
  *
  * @author Hoang Tran < hoang at 99.hoangtran@gmail.com >
@@ -14,6 +20,10 @@ public class Signup extends javax.swing.JFrame {
     /**
      * Creates new form SignupF
      */
+    
+    Gson gson = new Gson();
+    PlayerInfo p = new PlayerInfo();
+    
     public Signup() {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -38,6 +48,8 @@ public class Signup extends javax.swing.JFrame {
         txPassword = new javax.swing.JPasswordField();
         lbGender = new javax.swing.JLabel();
         cbGender = new javax.swing.JComboBox<>();
+        datePicker = new com.github.lgooddatepicker.components.DatePicker();
+        lbBirthday = new javax.swing.JLabel();
         btnSignup = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -73,12 +85,14 @@ public class Signup extends javax.swing.JFrame {
         cbGender.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         cbGender.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nam", "Nữ", "Khác" }));
 
+        lbBirthday.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_birthday_48px_1.png"))); // NOI18N
+
         javax.swing.GroupLayout plInputLayout = new javax.swing.GroupLayout(plInput);
         plInput.setLayout(plInputLayout);
         plInputLayout.setHorizontalGroup(
             plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(plInputLayout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(plInputLayout.createSequentialGroup()
                         .addComponent(lbUserName)
@@ -93,10 +107,14 @@ public class Signup extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txEmail))
                     .addGroup(plInputLayout.createSequentialGroup()
-                        .addComponent(lbGender)
+                        .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(lbBirthday, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbGender, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbGender, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbGender, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(datePicker, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(15, 15, 15))
         );
         plInputLayout.setVerticalGroup(
             plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -119,6 +137,10 @@ public class Signup extends javax.swing.JFrame {
                         .addComponent(lbGender)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(cbGender))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(datePicker, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbBirthday, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -145,26 +167,25 @@ public class Signup extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(btnSignup, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(plInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(plInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(101, 101, 101)
-                        .addComponent(lbHeaderText)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(134, 134, 134)
+                        .addComponent(lbHeaderText))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(btnSignup, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
+                .addGap(39, 39, 39)
                 .addComponent(lbHeaderText)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(plInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnSignup, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         pack();
@@ -180,7 +201,8 @@ public class Signup extends javax.swing.JFrame {
 
     private void btnSignupMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSignupMouseClicked
         // TODO: input validation check here
-        new Login().setVisible(true);
+        sendData();
+//        new Login().setVisible(true);
     }//GEN-LAST:event_btnSignupMouseClicked
 
     private void btnSignupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignupActionPerformed
@@ -190,6 +212,25 @@ public class Signup extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
+    private void sendData(){
+        if(checkInput()){
+            JsonObject sjson = new JsonObject();
+            p.setEmail(txEmail.getText());
+            p.setDateOfBirth(datePicker.getDate());
+            p.setGender(cbGender.getSelectedItem().toString());
+            p.setPassword(new String(txPassword.getPassword()));
+            p.setUsername(txUserName.getText());
+            sjson.addProperty("content", gson.toJson(p));
+            sjson.addProperty("type", Shared.Constants.Type.SIGNUP);
+            Game.sendData(sjson.toString());   
+        }
+    }
+    
+    private boolean checkInput(){
+        // TODO: check input validation here before and respond to user
+        return true;
+    }
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -226,6 +267,8 @@ public class Signup extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSignup;
     private javax.swing.JComboBox<String> cbGender;
+    private com.github.lgooddatepicker.components.DatePicker datePicker;
+    private javax.swing.JLabel lbBirthday;
     private javax.swing.JLabel lbEmail;
     private javax.swing.JLabel lbGender;
     private javax.swing.JLabel lbHeaderText;

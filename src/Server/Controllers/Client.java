@@ -5,6 +5,8 @@
  */
 package Server.Controllers;
 
+import Server.DB.Layers.BUS.PlayerBUS;
+import Server.DB.Layers.DTO.Player;
 import Server.Games.CoTuong.CoTuong;
 import Shared.Constants.Type;
 import Shared.Helpers.Json;
@@ -14,9 +16,14 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.json.simple.JSONObject;
+//import org.json.simple.JSONObject;
 import Server.Server;
 import static Server.Server.roomManager;
+import Shared.StreamDTO.ChatMessage;
+import Shared.StreamDTO.PlayerInfo;
+import Shared.StreamDTO.RoomInfo;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 /**
  *
@@ -27,9 +34,15 @@ public class Client implements Runnable {
     Socket s;
     DataInputStream dis;
     DataOutputStream dos;
+    PlayerBUS playerBUS;
+    JsonObject sjson;
+    PlayerInfo p;
+    ChatMessage mess;
+    RoomInfo r ;
 
     String email; // if == null => chua dang nhap
     Room room; // if == null => chua vao phong nao het
+    Gson gson = new Gson();
 
     public Client(Socket s) throws IOException {
         this.s = s;
@@ -51,11 +64,11 @@ public class Client implements Runnable {
                 received = dis.readUTF();
                 System.out.println(received);
 
-                // convert to json
-                JSONObject rjson = Json.parse(received);
+                // convert recieved data to json
+                JsonObject rjson = gson.fromJson(received, JsonObject.class);
 
                 // get received type
-                int rtype = ((Long) rjson.get("type")).intValue();
+                int rtype = Integer.parseInt(rjson.get("type").getAsString());
 
                 // exit if received.type == Exit
                 if (rtype == Type.EXIT) {
@@ -73,6 +86,18 @@ public class Client implements Runnable {
                         }
                         break;
 
+                    case Type.SIGNUP:
+//                        p = new PlayerInfo();
+                        sjson = new JsonObject();
+                        p = gson.fromJson(rjson.get("content").getAsString(), PlayerInfo.class);
+                        p.setStatus("error");
+                        sjson.addProperty("type", Type.SIGNUP);
+                        if(signUpPlayer(p)){
+                            p.setStatus("ok");
+                        }
+                        sjson.addProperty("content", gson.toJson(p));
+                        break;
+
                     case Type.CHANGE_GAME:
                         this.room.setGamelogic(new CoTuong());
                         // TODO: đổi game dựa theo game id của client gửi tới
@@ -81,15 +106,23 @@ public class Client implements Runnable {
                     //  Join room
                     case Type.JOIN_ROOM:
                         if (this.room == null) {
-                            Long roomId = (Long) rjson.get("id");
-//                            String sender = rjson.get("sender").toString();
-                            JSONObject sjson = new JSONObject();
-//                            sjson.put("sender", sender);
-//                            this.room = new Room();
-//                            room.setId(roomId.toString());
-                            sjson.put("id", roomId);
-                            sjson.put("type", Type.JOIN_ROOM);
-                            this.joinRoom(roomId.toString());
+                            r = gson.fromJson(rjson.get("content").getAsString(), RoomInfo.class);
+                            sjson = new JsonObject();
+                            this.joinRoom(r.getId());
+                            r.setClientsCount(this.room.clients.size());
+                            switch (r.getClientsCount()) {
+                                case 0:
+                                    r.setPlayer1(this.getEmail());
+                                    break;
+                                case 1:
+                                    r.setPlayer2(this.getEmail());
+                                    break;
+                                default:
+                                    break;
+                            }
+                            sjson.addProperty("content", gson.toJson(r));
+                            sjson.addProperty("type", Type.JOIN_ROOM);
+
                             sendMessage(sjson.toString());
                         }
                         break;
@@ -97,35 +130,36 @@ public class Client implements Runnable {
                     // chat
                     case Type.CHAT_ROOM:
                         if (this.room != null) {
-                            String msg = (String) rjson.get("message");
-                            String sender = rjson.get("sender").toString();
-                            JSONObject sjson = new JSONObject();
-                            sjson.put("sender", sender);
-                            sjson.put("message", msg);
-                            sjson.put("type", Type.CHAT_ROOM);
+                            mess = gson.fromJson(rjson.get("content").toString(), ChatMessage.class);
+                            sjson = new JsonObject();
+                            sjson.addProperty("type", Type.CHAT_ROOM);
+                            sjson.addProperty("content", gson.toJson(mess));
                             this.room.broadcast(sjson.toString());
                         }
                         break;
 
                     case Type.CHAT_ALL:
-                        String msg = (String) rjson.get("message");
-                        Server.clientManager.broadcast(msg);
+                        mess = gson.fromJson(rjson.get("content").getAsString(), ChatMessage.class);
+                        sjson = new JsonObject();
+                        sjson.addProperty("type", Type.CHAT_ROOM);
+                        sjson.addProperty("content", gson.toJson(mess));
+                        Server.clientManager.broadcast(sjson.toString());
                         break;
 
                     // auth
                     case Type.LOGIN:
-                        String e = (String) rjson.get("email");
-                        String p = (String) rjson.get("password");
-                        if (this.login(e, p)) {
+                        p = gson.fromJson(rjson.get("content").getAsString(), PlayerInfo.class);
+                        if (this.login(p.getEmail(), p.getPassword())) {
                             // TODO: check database login
-                            this.email = e;
-                            System.out.println(e + " login sucessfully.");
+                            this.email = p.getEmail();
+                            p.setStatus("ok");
+                            System.out.println(email + " login sucessfully.");
                         }
                         // TODO: return login status to client
-                        JSONObject j = new JSONObject();
-                        j.put("type", Type.LOGIN);
-                        j.put("status", "ok");
-                        dos.writeUTF(j.toJSONString());
+                        JsonObject j = new JsonObject();
+                        j.addProperty("type", Type.LOGIN);
+                        j.addProperty("content", gson.toJson(p));
+                        dos.writeUTF(j.toString());
                         break;
 
                     case Type.LOGOUT:
@@ -169,6 +203,12 @@ public class Client implements Runnable {
             return false;
         }
     }
+    
+    // signup handle - add new player into database
+    public boolean signUpPlayer(PlayerInfo p){
+        Player pDTO = p;
+        return playerBUS.add(pDTO);
+    }
 
     // room handle
     public boolean joinRoom(String id) {
@@ -195,7 +235,7 @@ public class Client implements Runnable {
     public boolean leaveRoom() {
         if (this.room != null) {
             this.room.removeClient(this);
-            roomManager.update(room);
+//            roomManager.update(room);
             System.out.println("A client left, " + this.room.clients.size() + " remaining.");
             this.room = null;
             return true;

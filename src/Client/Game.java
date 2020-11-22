@@ -23,8 +23,8 @@ public class Game {
     Socket s;
     DataInputStream dis;
     DataOutputStream dos;
-    public static InGame ig = new InGame();
-    public static DataSender sender;
+    
+    public static InGame ig = new InGame(); // TODO: bỏ static
 
     public Game() {
         ig.setVisible(true);
@@ -42,27 +42,18 @@ public class Game {
             // obtaining input and output streams
             dis = new DataInputStream(s.getInputStream());
             dos = new DataOutputStream(s.getOutputStream());
+            
+            // listen to server
             new Thread(new Listenner(s, dis, dos)).start();
-            sender = new DataSender(s, dis, dos);
+            
             // Temporary room to test sending data
             JSONObject sjson = new JSONObject();
             sjson.put("type", Type.JOIN_ROOM);
             sjson.put("id", 1);
-            sender.sendData(sjson);
+            dos.writeUTF(sjson.toString());
 
         } catch (IOException e) {
             System.err.println("Loi. " + e.getMessage());
         }
     }
 }
-
-//            // test change game
-//            JSONObject j = new JSONObject();
-//            j.put("type", Type.CHANGE_GAME);
-//            dos.writeUTF(j.toJSONString());
-//
-//            // test send game event
-//            JSONObject j2 = new JSONObject();
-//            j2.put("type", Type.GAME_EVENT);
-//            j2.put("game_event", "New Game");
-//            dos.writeUTF(j2.toJSONString());

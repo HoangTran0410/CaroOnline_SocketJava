@@ -5,7 +5,6 @@
  */
 package Client;
 
-import Client.Scenes.InGame;
 import Shared.Constants.Type;
 import Shared.Helpers.Json;
 import java.io.DataInputStream;
@@ -72,7 +71,7 @@ public class Listenner implements Runnable {
                         System.out.println("Join room successfully");
                         break;
                     case Type.CHAT_ROOM:
-                        Game.ig.addChatLine(rjson.get("message").toString(), rjson.get("sender").toString());
+//                        Game.ig.addChatLine(rjson.get("message").toString(), rjson.get("sender").toString());
                         break;
 
                     default:

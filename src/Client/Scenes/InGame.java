@@ -26,13 +26,18 @@ public class InGame extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
 
+        // jlist chat
         chatModel = new DefaultListModel<>();
-
         lChatContainer.setModel(chatModel);
-        lChatContainer.setCellRenderer(new CustomListCellRenderer(240));
+        lChatContainer.setCellRenderer(new CustomListCellRenderer(230));
 
-        lbAvatar1.setIcon(new ImageIcon(Avatar.PATH + Avatar.LIST[(int) (Math.random() * Avatar.LIST.length)]));
-        lbAvatar2.setIcon(new ImageIcon(Avatar.PATH + Avatar.LIST[(int) (Math.random() * Avatar.LIST.length)]));
+        // avatar
+        int avatars_size = Avatar.LIST.length;
+        int ava1 = (int) (Math.random() * avatars_size);
+        int ava2 = (int) (Math.random() * avatars_size);
+
+        lbAvatar1.setIcon(new ImageIcon(Avatar.PATH + Avatar.LIST[ava1]));
+        lbAvatar2.setIcon(new ImageIcon(Avatar.PATH + Avatar.LIST[ava2]));
     }
 
     /**
@@ -274,7 +279,7 @@ public class InGame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(txChatInput, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSendMessage, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
+                .addComponent(btnSendMessage, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
@@ -314,7 +319,7 @@ public class InGame extends javax.swing.JFrame {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 340, Short.MAX_VALUE)
+            .addGap(0, 328, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -327,7 +332,7 @@ public class InGame extends javax.swing.JFrame {
         plRightContainer.setLayout(plRightContainerLayout);
         plRightContainerLayout.setHorizontalGroup(
             plRightContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tpChatAndViewerContainer)
+            .addComponent(tpChatAndViewerContainer, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addComponent(plPlayerContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(plToolContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -342,12 +347,13 @@ public class InGame extends javax.swing.JFrame {
         );
 
         plBoardContainer.setBackground(new java.awt.Color(102, 102, 102));
+        plBoardContainer.setPreferredSize(new java.awt.Dimension(639, 639));
 
         javax.swing.GroupLayout plBoardContainerLayout = new javax.swing.GroupLayout(plBoardContainer);
         plBoardContainer.setLayout(plBoardContainerLayout);
         plBoardContainerLayout.setHorizontalGroup(
             plBoardContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 639, Short.MAX_VALUE)
+            .addGap(0, 662, Short.MAX_VALUE)
         );
         plBoardContainerLayout.setVerticalGroup(
             plBoardContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -360,7 +366,7 @@ public class InGame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(plBoardContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(plBoardContainer, javax.swing.GroupLayout.PREFERRED_SIZE, 662, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(plRightContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -369,9 +375,9 @@ public class InGame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(plBoardContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(plRightContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(plRightContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(plBoardContainer, javax.swing.GroupLayout.DEFAULT_SIZE, 662, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -402,7 +408,8 @@ public class InGame extends javax.swing.JFrame {
     private void txChatInputKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txChatInputKeyPressed
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            chatModel.addElement("12:06 [Hoang]:  Trần văn hoàngTrần văn hoàngTrần văn hoàngTrần văn hoàngTrần văn hoàngTrần văn hoàngTrần văn hoàng");
+            chatModel.addElement(txChatInput.getText());
+            lChatContainer.ensureIndexIsVisible(lChatContainer.getModel().getSize() - 1);
         }
     }//GEN-LAST:event_txChatInputKeyPressed
 

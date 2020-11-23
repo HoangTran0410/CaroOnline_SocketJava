@@ -15,15 +15,15 @@ public class SignupSDTO {
     public String password;
     public String name;
     public String gender;
-    public String birthday;
+    public int yearOfBirth;
     public String avatar;
 
-    public SignupSDTO(String email, String password, String name, String gender, String birthday, String avatar) {
+    public SignupSDTO(String email, String password, String name, String gender, int yearOfBirth, String avatar) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.gender = gender;
-        this.birthday = birthday;
+        this.yearOfBirth = yearOfBirth;
         this.avatar = avatar;
     }
 }

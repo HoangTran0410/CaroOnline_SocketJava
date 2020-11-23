@@ -42,15 +42,11 @@ public class Login extends javax.swing.JFrame {
         lbHeaderText.setFont(new java.awt.Font("Tahoma", 1, 25)); // NOI18N
         lbHeaderText.setText("CHÀO MỪNG");
 
-        lbUserName.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_male_user_48px.png"))); // NOI18N
+        lbUserName.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_email_48px.png"))); // NOI18N
 
         txUserName.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        txUserName.setToolTipText("");
-        txUserName.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txUserNameActionPerformed(evt);
-            }
-        });
+        txUserName.setText("Email");
+        txUserName.setToolTipText("Email");
 
         lbPassword.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_lock_48px.png"))); // NOI18N
 
@@ -58,21 +54,11 @@ public class Login extends javax.swing.JFrame {
         btnLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_login_32px.png"))); // NOI18N
         btnLogin.setText("ĐĂNG NHẬP");
         btnLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnLogin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLoginActionPerformed(evt);
-            }
-        });
 
         btnSignup.setText("Đăng ký?");
         btnSignup.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnSignupMouseClicked(evt);
-            }
-        });
-        btnSignup.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSignupActionPerformed(evt);
             }
         });
 
@@ -112,8 +98,8 @@ public class Login extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbPassword))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
-                .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSignup)
                 .addGap(21, 21, 21))
@@ -122,22 +108,10 @@ public class Login extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txUserNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txUserNameActionPerformed
-
-    }//GEN-LAST:event_txUserNameActionPerformed
-
-    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-
-    }//GEN-LAST:event_btnLoginActionPerformed
-
     private void btnSignupMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSignupMouseClicked
-        // TODO: close login frame before switch to signup frame
+        this.dispose();
         new Signup().setVisible(true);
     }//GEN-LAST:event_btnSignupMouseClicked
-
-    private void btnSignupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignupActionPerformed
-
-    }//GEN-LAST:event_btnSignupActionPerformed
 
     /**
      * @param args the command line arguments

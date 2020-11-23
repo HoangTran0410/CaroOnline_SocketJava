@@ -385,30 +385,14 @@ public class InGame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSendMessageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSendMessageMouseClicked
-//        try {
-//            // TODO add your handling code here:
-//            if (lbActive1.isVisible()) {
-//                lbActive1.setVisible(false);
-//            } else {
-//                lbActive1.setVisible(true);
-//            }
-//
-//            // Temporary room to test sending data
-//            Gson gson = new Gson();
-//
-//            ChatMessageSDTO chat = new ChatMessageSDTO("12:00", "hoang", "chat ne");
-//            BaseSDTO b = new BaseSDTO(Shared.Constants.Type.CHAT_ROOM, gson.toJson(chat));
-//            dos.writeUTF(gson.toJson(b));
-//
-//        } catch (IOException ex) {
-//            Logger.getLogger(InGame.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+
     }//GEN-LAST:event_btnSendMessageMouseClicked
 
     private void txChatInputKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txChatInputKeyPressed
-        // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             chatModel.addElement(txChatInput.getText());
+            
+            // scroll into view
             lChatContainer.ensureIndexIsVisible(lChatContainer.getModel().getSize() - 1);
         }
     }//GEN-LAST:event_txChatInputKeyPressed

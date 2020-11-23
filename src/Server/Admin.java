@@ -5,6 +5,9 @@
  */
 package Server;
 
+import Server.DB.Layers.BUS.PlayerBUS;
+import Server.DB.Layers.DTO.Player;
+import java.util.HashMap;
 import java.util.Scanner;
 
 /**
@@ -25,7 +28,8 @@ public class Admin implements Runnable {
             if (inp.equalsIgnoreCase("user-count")) {
                 System.out.println("> " + Server.clientManager.getSize());
             } else if (inp.equalsIgnoreCase("best-user")) {
-                System.out.println("> not available");
+                showBestPlayerInfo(getBestUser());
+//                System.out.println("> not available");
             } else if (inp.equalsIgnoreCase("shortest-match")) {
                 System.out.println("> not available");
             } else if (inp.indexOf("block") == 0) {
@@ -52,6 +56,34 @@ public class Admin implements Runnable {
                         + "=======================================");
             }
         }
+    }
+
+    private void showBestPlayerInfo(HashMap m) {
+        Player p = (Player) m.keySet().toArray()[0];
+        int winCount = (int) m.get(p);
+        System.out.println("Player with the most win count: " + p.getName()+ " - " + p.getEmail());
+        System.out.println("Win count: " + winCount);
+    }
+
+    private HashMap getBestUser() {
+        HashMap m = new HashMap();
+        Player bestPlayer = new Player();
+        PlayerBUS pBus = new PlayerBUS();
+        int max = 0;
+        for (Player p : pBus.getList()) {
+            int pWinCount = pBus.getWinCount(p.getID());
+            if (pWinCount > max) {
+                max = pWinCount;
+                bestPlayer = p;
+            }
+        }
+        m.put(bestPlayer, max);
+        return m;
+    }
+    
+    public static void main(String[] args) {
+        Admin ad = new Admin();
+        ad.run();
     }
 
 }

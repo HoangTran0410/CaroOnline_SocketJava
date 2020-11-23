@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th10 23, 2020 lúc 08:36 AM
+-- Thời gian đã tạo: Th10 23, 2020 lúc 10:37 AM
 -- Phiên bản máy phục vụ: 10.4.16-MariaDB
 -- Phiên bản PHP: 7.4.12
 
@@ -48,25 +48,26 @@ CREATE TABLE `player` (
   `ID` int(11) NOT NULL,
   `Email` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `Password` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `Avatar` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `Avatar` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `Name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `Gender` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `YearOfBirth` int(4) DEFAULT NULL,
-  `Score` int(11) DEFAULT 0,
-  `MatchCount` int(11) DEFAULT 0,
-  `WinRate` float DEFAULT NULL,
-  `WinStreak` int(11) DEFAULT NULL,
-  `Rank` int(11) DEFAULT NULL,
-  `Blocked` tinyint(1) DEFAULT 0
+  `Gender` varchar(10) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'Nam',
+  `YearOfBirth` int(4) NOT NULL DEFAULT 2000,
+  `Score` int(11) NOT NULL DEFAULT 0,
+  `MatchCount` int(11) NOT NULL DEFAULT 0,
+  `WinCount` int(11) NOT NULL DEFAULT 0,
+  `LoseCount` int(11) NOT NULL DEFAULT 0,
+  `CurrentStreak` int(11) NOT NULL DEFAULT 0,
+  `Rank` int(11) NOT NULL DEFAULT -1,
+  `Blocked` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `player`
 --
 
-INSERT INTO `player` (`ID`, `Email`, `Password`, `Avatar`, `Name`, `Gender`, `YearOfBirth`, `Score`, `MatchCount`, `WinRate`, `WinStreak`, `Rank`, `Blocked`) VALUES
-(1, '99.hoangtran@gmail.com', '202CB962AC59075B964B07152D234B70', 'icons8_alien_96px.png', 'hoang tran', 'nam', 1999, 0, 0, NULL, NULL, NULL, 0),
-(2, 'hientran@gmail.com', '202CB962AC59075B964B07152D234B70', 'icons8_angry_face_meme_96px.png', 'thu hien', 'nữ', 1999, 0, 0, NULL, NULL, NULL, 0);
+INSERT INTO `player` (`ID`, `Email`, `Password`, `Avatar`, `Name`, `Gender`, `YearOfBirth`, `Score`, `MatchCount`, `WinCount`, `LoseCount`, `CurrentStreak`, `Rank`, `Blocked`) VALUES
+(1, '99.hoangtran@gmail.com', '202CB962AC59075B964B07152D234B70', 'icons8_alien_96px.png', 'hoang tran', 'nam', 1999, 0, 0, 0, 0, 0, 0, 0),
+(2, 'hientran@gmail.com', '202CB962AC59075B964B07152D234B70', 'icons8_angry_face_meme_96px.png', 'thu hien', 'nữ', 1999, 0, 0, 0, 0, 0, 0, 0);
 
 --
 -- Chỉ mục cho các bảng đã đổ

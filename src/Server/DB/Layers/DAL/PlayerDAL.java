@@ -47,8 +47,9 @@ public class PlayerDAL {
                             rs.getInt("YearOfBirth"),
                             rs.getInt("Score"),
                             rs.getInt("MatchCount"),
-                            rs.getFloat("WinRate"),
-                            rs.getInt("WinStreak"),
+                            rs.getInt("WinCount"),
+                            rs.getInt("LoseCount"),
+                            rs.getInt("CurrentStreak"),
                             rs.getInt("Rank"),
                             rs.getBoolean("Blocked")
                     );
@@ -70,8 +71,8 @@ public class PlayerDAL {
         connector = new MysqlConnector();
 
         try {
-            String qry = "INSERT INTO Player(Email,Password,Avatar,Name,Gender,YearOfBirth,Score,MatchCount,WinRate,WinStreak,Rank,Blocked) "
-                    + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+            String qry = "INSERT INTO Player(Email,Password,Avatar,Name,Gender,YearOfBirth,Score,MatchCount,WinCount,LoseCount,CurrentStreak,Rank,Blocked) "
+                    + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
             PreparedStatement stm = connector.getConnection().prepareStatement(qry);
             stm.setString(1, p.getEmail());
@@ -82,10 +83,11 @@ public class PlayerDAL {
             stm.setInt(6, p.getYearOfBirth());
             stm.setInt(7, p.getScore());
             stm.setInt(8, p.getMatchCount());
-            stm.setFloat(9, p.getWinRate());
-            stm.setInt(10, p.getWinStreak());
-            stm.setInt(11, p.getRank());
-            stm.setBoolean(12, p.isBlocked());
+            stm.setInt(9, p.getWinCount());
+            stm.setInt(10, p.getLoseCount());
+            stm.setInt(11, p.getCurrentStreak());
+            stm.setInt(12, p.getRank());
+            stm.setBoolean(13, p.isBlocked());
 
             result = connector.sqlUpdate(stm);
         } catch (SQLException ex) {
@@ -111,8 +113,9 @@ public class PlayerDAL {
                     + "YearOfBirth=?,"
                     + "Score=?,"
                     + "MatchCount=?,"
-                    + "WinRate=?,"
-                    + "WinStreak=?,"
+                    + "WinCount=?,"
+                    + "LoseCount=?,"
+                    + "CurrentStreak=?,"
                     + "Rank=?,"
                     + "Blocked=?"
                     + " WHERE ID=?";
@@ -127,11 +130,12 @@ public class PlayerDAL {
             stm.setInt(6, p.getYearOfBirth());
             stm.setInt(7, p.getScore());
             stm.setInt(8, p.getMatchCount());
-            stm.setFloat(9, p.getWinRate());
-            stm.setInt(10, p.getWinStreak());
-            stm.setInt(11, p.getRank());
-            stm.setBoolean(12, p.isBlocked());
-            stm.setInt(13, p.getId());
+            stm.setInt(9, p.getWinCount());
+            stm.setInt(10, p.getLoseCount());
+            stm.setInt(11, p.getCurrentStreak());
+            stm.setInt(12, p.getRank());
+            stm.setBoolean(13, p.isBlocked());
+            stm.setInt(14, p.getId());
 
             result = connector.sqlUpdate(stm);
         } catch (SQLException ex) {

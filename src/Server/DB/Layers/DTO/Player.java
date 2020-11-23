@@ -20,12 +20,13 @@ public class Player {
     int yearOfBirth;
     int score = 0; // gia tri mac dinh
     int matchCount = 0;
-    float winRate = 0;
-    int winStreak = 0;
+    int winCount = 0;
+    int loseCount = 0;
+    int currentStreak = 0; // số âm là chuỗi thua, dương là chuỗi thắng
     int rank = 0;
     boolean blocked = false;
 
-    public Player(int id, String email, String password, String avatar, String name, String gender, int yearOfBirth, int score, int matchCount, float winRate, int winStreak, int rank, boolean blocked) {
+    public Player(int id, String email, String password, String avatar, String name, String gender, int yearOfBirth, int score, int matchCount, int winCount, int loseCount, int currentStreak, int rank, boolean blocked) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -35,8 +36,9 @@ public class Player {
         this.yearOfBirth = yearOfBirth;
         this.score = score;
         this.matchCount = matchCount;
-        this.winRate = winRate;
-        this.winStreak = winStreak;
+        this.winCount = winCount;
+        this.loseCount = loseCount;
+        this.currentStreak = currentStreak;
         this.rank = rank;
         this.blocked = blocked;
     }
@@ -60,8 +62,9 @@ public class Player {
         this.yearOfBirth = p.yearOfBirth;
         this.score = p.score;
         this.matchCount = p.matchCount;
-        this.winRate = p.winRate;
-        this.winStreak = p.winStreak;
+        this.winCount = p.winCount;
+        this.loseCount = p.loseCount;
+        this.currentStreak = p.currentStreak;
         this.rank = p.rank;
         this.blocked = p.blocked;
     }
@@ -138,20 +141,28 @@ public class Player {
         this.matchCount = matchCount;
     }
 
-    public float getWinRate() {
-        return winRate;
+    public int getWinCount() {
+        return winCount;
     }
 
-    public void setWinRate(float winRate) {
-        this.winRate = winRate;
+    public void setWinCount(int winCount) {
+        this.winCount = winCount;
     }
 
-    public int getWinStreak() {
-        return winStreak;
+    public int getLoseCount() {
+        return loseCount;
     }
 
-    public void setWinStreak(int winStreak) {
-        this.winStreak = winStreak;
+    public void setLoseCount(int loseCount) {
+        this.loseCount = loseCount;
+    }
+
+    public int getCurrentStreak() {
+        return currentStreak;
+    }
+
+    public void setCurrentStreak(int currentStreak) {
+        this.currentStreak = currentStreak;
     }
 
     public int getRank() {

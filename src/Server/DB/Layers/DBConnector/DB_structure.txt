@@ -1,35 +1,38 @@
-Player
-+ id		  : AUTO_INCREASEMENT
-+ username (email): nchar(30)
-+ password (hash) : nchar(30)
-+ displayname	  : nchar(50)
-+ gender	  : nchar(10) (nam-nữ-ẩn)
-+ birthday	  : date
-+ score		  : int
-+ matchcount	  : int
-+ winrate	  : float (vd 60.5%)
-+ winstreak	  : int ( chuỗi thắng liên tiếp đến thời điểm hiện tại)
-+ rank		  : rankID
-+ blocked	  : boolean
+- Player
+ID                  : AUTO_INCREASEMENT
+Email               : varchar(50) (unique)
+Password            : varchar(50) (hash)
+Avatar              : varchar(50) (file path)
+Name                : varchar(50)
+Gender              : varchar(10) (nam-nữ-ẩn)
+YearOfBirth         : int(4) năm sinh (1999, 2000, ..)
+Score               : int(11) điểm thành tích
+MatchCount          : int(11) số trận đã đấu
+WinRate             : float tỉ lệ thắng (0.4)
+WinStreak           : int(11) chuỗi thắng liên tiếp ở thời điểm hiện tại
+Rank                : int(11) xếp hạng
+Blocked             : tinyint(1) bị block hay không
 
-Match
-+ id		  : AUTO_INCREASEMENT
-+ user1		  : playerID
-+ user2		  : playerID
-+ winner	  : playerID (null nếu hòa)
-+ starttime	  : datetime
-+ playtime	  : int (in seconds)
-+ chat		  : file url (lưu chat vào file :))) ) (optional)
+- GameMatch
+ID          : AUTO_INCREASEMENT
+PlayerID1   : int(11) player id 1
+PlayerID2   : int(11) player id 2
+WinnerID    : int(11) winnner id (null nếu hòa)
+PlayTime    : int(11) thời lượng chơi (giây)
+TotalMove   : int(11) số bước di chuyển
+StartedTime : datetime thời gian bắt đầu trận đấu
+Chat        : varchar(50) file url, lưu chat vào file (optional)
 
-Rank (Optional) - Để sau.
+
+============= hiện tại bỏ ======================================================
+Rank (Optional)
 // Bậc xếp hạng, giống lmht, cho ng chơi có mục tiêu phấn đấu :))
 + id		  : AUTO_INCREASEMENT
 + name		  : nchar(20) Đồng-Bạc-Vàng-Bạch Kim- gì gì đó.
 + scorerequired	  : int (điểm cần để thuộc rank này)
 + description	  : nchar(50)
 
-===================================================================
-Friend (optional) - Để sau
+Friend (optional)
 + id		  : AUTO_INCREASEMENT
 + user1		  : playerID
 + user2		  : playerID

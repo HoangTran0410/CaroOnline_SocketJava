@@ -5,70 +5,121 @@
  */
 package Server.DB.Layers.DTO;
 
-import java.time.*;
-
 /**
  *
  * @author nguye
  */
 public class Player {
 
-    int ID;
-    String username;    //  Tên hiển thị trong game
+    int id;
+    String email;
     String password;
-    String email;       //  Email, dùng để đăng nhập
+    String avatar;
+    String name;
     String gender;
-    String rankID;
-    LocalDate dateOfBirth;
-    int score;
-    int matchCount;
-    float winRate;
-    int winStreak;
-    boolean blocked;
-    
+    int yearOfBirth;
+    int score = 0; // gia tri mac dinh
+    int matchCount = 0;
+    float winRate = 0;
+    int winStreak = 0;
+    int rank = 0;
+    boolean blocked = false;
 
-    public Player() {
-
-    }
-    // Constructor tạo player mới hoàn toàn để thêm vào db
-    public Player(String username, String password, String email, String gender, LocalDate dateOfBirth) {
-        this.username = username;
-        this.password = password;
+    public Player(int id, String email, String password, String avatar, String name, String gender, int yearOfBirth, int score, int matchCount, float winRate, int winStreak, int rank, boolean blocked) {
+        this.id = id;
         this.email = email;
-        this.gender = gender;
-        this.dateOfBirth = dateOfBirth;
-        this.score = 0;
-        this.matchCount = 0;
-        this.winRate = 0;
-        this.winStreak = 0; 
-        this.blocked = false;
-        this.rankID = "none";
-    }
-    
-    //Constructor để tạo Player chứa dữ liệu từ db
-    public Player(int ID, String username, String password, String email, String gender, String rankID, LocalDate dateOfBirth, int score, int matchCount, float winRate, int winStreak, boolean blocked) {
-        this.ID = ID;
-        this.username = username;
         this.password = password;
-        this.email = email;
+        this.avatar = avatar;
+        this.name = name;
         this.gender = gender;
-        this.rankID = rankID;
-        this.dateOfBirth = dateOfBirth;
+        this.yearOfBirth = yearOfBirth;
         this.score = score;
         this.matchCount = matchCount;
         this.winRate = winRate;
         this.winStreak = winStreak;
+        this.rank = rank;
         this.blocked = blocked;
     }
-    
-    
 
-    public int getID() {
-        return ID;
+    public Player(String email, String password, String avatar, String name, String gender, int yearOfBirth) {
+        this.email = email;
+        this.password = password;
+        this.avatar = avatar;
+        this.name = name;
+        this.gender = gender;
+        this.yearOfBirth = yearOfBirth;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public Player(Player p) {
+        this.id = p.id;
+        this.email = p.email;
+        this.password = p.password;
+        this.avatar = p.avatar;
+        this.name = p.name;
+        this.gender = p.gender;
+        this.yearOfBirth = p.yearOfBirth;
+        this.score = p.score;
+        this.matchCount = p.matchCount;
+        this.winRate = p.winRate;
+        this.winStreak = p.winStreak;
+        this.rank = p.rank;
+        this.blocked = p.blocked;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public int getYearOfBirth() {
+        return yearOfBirth;
+    }
+
+    public void setYearOfBirth(int yearOfBirth) {
+        this.yearOfBirth = yearOfBirth;
     }
 
     public int getScore() {
@@ -103,67 +154,20 @@ public class Player {
         this.winStreak = winStreak;
     }
 
-    public boolean isIsBlocked() {
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
+
+    public boolean isBlocked() {
         return blocked;
     }
 
-    public void setIsBlocked(boolean blocked) {
+    public void setBlocked(boolean blocked) {
         this.blocked = blocked;
-    }
-
-    public String getRankID() {
-        return rankID;
-    }
-
-    public void setRankID(String rankID) {
-        this.rankID = rankID;
-    }
-    
-    public boolean getBlockedStatus(){
-        return blocked;
-    }
-    public void setBlocked(boolean b){
-        blocked = b;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
     }
 
 }

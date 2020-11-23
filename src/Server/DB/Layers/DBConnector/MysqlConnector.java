@@ -17,35 +17,20 @@ import java.sql.SQLException;
  */
 public class MysqlConnector {
 
-    PreparedStatement stm = null;
     Connection conn = null;
-    ResultSet rs = null;
 
     String server = "localhost:3306";
-    String db = "CaroDB";
+    String db = "carodb";
     String user = "root";
-    String pass = "123456abc";
+    String pass = "";
 
     public MysqlConnector() {
-        connectDB();
-    }
-
-    public void connectDB() {
         checkDriver();
         setupConnection();
     }
 
     public void logIn(String userName, String pass) {
         this.user = userName;
-        this.pass = pass;
-        setupConnection();
-    }
-
-    public void connectDB(String server, String db, String user, String pass) {
-        checkDriver();
-        this.server = server;
-        this.db = db;
-        this.user = user;
         this.pass = pass;
         setupConnection();
     }
@@ -62,7 +47,7 @@ public class MysqlConnector {
 
     public boolean setupConnection() {
         try {
-            String url = "jdbc:mysql://" + server + "/" + db;
+            String url = "jdbc:mysql://" + server + "/" + db + "?useUnicode=true&characterEncoding=UTF-8";
             conn = DriverManager.getConnection(url, user, pass);
             return true;
         } catch (SQLException e) {
@@ -74,10 +59,10 @@ public class MysqlConnector {
     public ResultSet sqlQry(PreparedStatement stm) {
         if (checkConnection()) {
             try {
-                rs = stm.executeQuery();
+                ResultSet rs = stm.executeQuery();
                 return rs;
             } catch (SQLException e) {
-                System.err.println("Loi thuc thi query !!");
+                System.err.println("Loi thuc thi query !! " + e.getMessage());
             }
         }
         return null;
@@ -89,15 +74,14 @@ public class MysqlConnector {
                 stm.executeUpdate();
                 return true;
             } catch (SQLException e) {
-                System.err.println("Gia tri cua khoa vua nhap khong ton tai !!");
-                // System.err.println(e);
+                System.err.println("Gia tri cua khoa vua nhap khong ton tai !! " + e.getMessage());
             }
         }
         return false;
     }
-    
+
     public boolean checkConnection() {
-        if (conn == null ) {
+        if (conn == null) {
             return false;
         }
         return true;
@@ -108,13 +92,10 @@ public class MysqlConnector {
             if (conn != null) {
                 conn.close();
             }
-            if (stm != null) {
-                stm.close();
-            }
             return true;
-            
+
         } catch (SQLException e) {
-            System.err.println("-- ERROR! Không thể đóng kết nối tới " + db);
+            System.err.println("Không thể đóng kết nối tới " + db);
             return false;
         }
     }
@@ -122,6 +103,5 @@ public class MysqlConnector {
     public Connection getConnection() {
         return conn;
     }
-    
 
 }

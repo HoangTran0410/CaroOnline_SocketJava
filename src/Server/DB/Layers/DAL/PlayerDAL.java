@@ -10,7 +10,6 @@ import Server.DB.Layers.DTO.Player;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,119 +20,143 @@ import java.util.logging.Logger;
  */
 public class PlayerDAL {
 
-    PreparedStatement stm;
-    MysqlConnector conn = new MysqlConnector();
+    MysqlConnector connector;
 
     public PlayerDAL() {
-        conn.connectDB();
+
     }
 
     public ArrayList readDB() {
         ArrayList<Player> result = new ArrayList<>();
+        connector = new MysqlConnector();
+
         try {
-            String qry = "select * from Player;";
-            stm = conn.getConnection().prepareStatement(qry);
-            ResultSet rs = conn.sqlQry(stm);
+            String qry = "SELECT * FROM Player;";
+            PreparedStatement stm = connector.getConnection().prepareStatement(qry);
+            ResultSet rs = connector.sqlQry(stm);
+
             if (rs != null) {
                 while (rs.next()) {
-                    Player p = new Player();
-                    p.setID(rs.getInt("ID"));
-                    p.setUsername(rs.getString("Username"));
-                    p.setPassword(rs.getString("Password"));
-                    p.setEmail(rs.getString("Email"));
-                    p.setGender(rs.getString("Gender"));
-                    p.setRankID(rs.getString("RankID"));
-                    p.setDateOfBirth(LocalDate.parse(rs.getString("DateOfBirth")));
-                    p.setScore(rs.getInt("Score"));
-                    p.setMatchCount(rs.getInt("MatchCount"));
-                    p.setWinRate(rs.getFloat("WinRate"));
-                    p.setWinStreak(rs.getInt("WinStreak"));
-                    p.setBlocked(rs.getBoolean("Blocked"));
-
+                    Player p = new Player(
+                            rs.getInt("ID"),
+                            rs.getString("Email"),
+                            rs.getString("Password"),
+                            rs.getString("Avatar"),
+                            rs.getString("Name"),
+                            rs.getString("Gender"),
+                            rs.getInt("YearOfBirth"),
+                            rs.getInt("Score"),
+                            rs.getInt("MatchCount"),
+                            rs.getFloat("WinRate"),
+                            rs.getInt("WinStreak"),
+                            rs.getInt("Rank"),
+                            rs.getBoolean("Blocked")
+                    );
                     result.add(p);
                 }
             }
 
         } catch (SQLException e) {
             System.err.println("Error while trying to read Players info from database!");
-        };
+        } finally {
+            connector.closeConnection();
+        }
+
         return result;
     }
 
     public boolean add(Player p) {
-        try {
-            String qry = "insert into Player(Username,Password,Email,Gender,DateOfBirth,Score,MatchCount,WinRate,WinStreak,Blocked,RankID) "
-                    + "values(?,?,?,?,?,?,?,?,?,?,?)";
-            stm = conn.getConnection().prepareStatement(qry);
-            stm.setString(1, p.getUsername());
-            stm.setString(2, p.getPassword());
-            stm.setString(3, p.getEmail());
-            stm.setString(4, p.getGender());
-            stm.setString(5, p.getDateOfBirth().toString());
-            stm.setInt(6, p.getScore());
-            stm.setInt(7, p.getMatchCount());
-            stm.setFloat(8, p.getWinRate());
-            stm.setInt(9, p.getWinStreak());
-            stm.setBoolean(10, p.getBlockedStatus());
-            stm.setString(11, p.getRankID());
+        boolean result = false;
+        connector = new MysqlConnector();
 
-            return conn.sqlUpdate(stm);
+        try {
+            String qry = "INSERT INTO Player(Email,Password,Avatar,Name,Gender,YearOfBirth,Score,MatchCount,WinRate,WinStreak,Rank,Blocked) "
+                    + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+
+            PreparedStatement stm = connector.getConnection().prepareStatement(qry);
+            stm.setString(1, p.getEmail());
+            stm.setString(2, p.getPassword());
+            stm.setString(3, p.getAvatar());
+            stm.setString(4, p.getName());
+            stm.setString(5, p.getGender());
+            stm.setInt(6, p.getYearOfBirth());
+            stm.setInt(7, p.getScore());
+            stm.setInt(8, p.getMatchCount());
+            stm.setFloat(9, p.getWinRate());
+            stm.setInt(10, p.getWinStreak());
+            stm.setInt(11, p.getRank());
+            stm.setBoolean(12, p.isBlocked());
+
+            result = connector.sqlUpdate(stm);
         } catch (SQLException ex) {
             Logger.getLogger(PlayerDAL.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
+        } finally {
+            connector.closeConnection();
         }
+
+        return result;
     }
 
     public boolean update(Player p) {
+        boolean result = false;
+        connector = new MysqlConnector();
+
         try {
-            String qry = "update Player set "
-                    + "Password=?,"
+            String qry = "UPDATE Player SET "
                     + "Email=?,"
+                    + "Password=?,"
+                    + "Avatar=?,"
+                    + "Name=?,"
                     + "Gender=?,"
-                    + "RankID=?,"
-                    + "DateOfBirth=?,"
+                    + "YearOfBirth=?,"
                     + "Score=?,"
                     + "MatchCount=?,"
                     + "WinRate=?,"
                     + "WinStreak=?,"
+                    + "Rank=?,"
                     + "Blocked=?"
-                    + " where username=?";
-            stm = conn.getConnection().prepareStatement(qry);
-            stm.setString(11, p.getUsername());
-            stm.setString(1, p.getPassword());
-            stm.setString(2, p.getEmail());
-            stm.setString(3, p.getGender());
-            stm.setString(5, p.getDateOfBirth().toString());
-            stm.setInt(6, p.getScore());
-            stm.setInt(7, p.getMatchCount());
-            stm.setFloat(8, p.getWinRate());
-            stm.setInt(9, p.getWinStreak());
-            stm.setBoolean(10, p.getBlockedStatus());
-            stm.setString(4, p.getRankID());
-            return conn.sqlUpdate(stm);
+                    + " WHERE ID=?";
+
+            PreparedStatement stm = connector.getConnection().prepareStatement(qry);
+
+            stm.setString(1, p.getEmail());
+            stm.setString(2, p.getPassword());
+            stm.setString(3, p.getAvatar());
+            stm.setString(4, p.getName());
+            stm.setString(5, p.getGender());
+            stm.setInt(6, p.getYearOfBirth());
+            stm.setInt(7, p.getScore());
+            stm.setInt(8, p.getMatchCount());
+            stm.setFloat(9, p.getWinRate());
+            stm.setInt(10, p.getWinStreak());
+            stm.setInt(11, p.getRank());
+            stm.setBoolean(12, p.isBlocked());
+            stm.setInt(13, p.getId());
+
+            result = connector.sqlUpdate(stm);
         } catch (SQLException ex) {
             Logger.getLogger(PlayerDAL.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
+        } finally {
+            connector.closeConnection();
         }
+
+        return result;
     }
 
-    public boolean delete(Player p){
-        return delete(p.getUsername());
-    }
-    
-    public boolean delete(String username){
-        String qry = "delete from player where username=?";
+    public boolean delete(int id) {
+        boolean result = false;
+        connector = new MysqlConnector();
+
         try {
-            stm = conn.getConnection().prepareStatement(qry);
-            stm.setString(1, username);
+            String qry = "DELETE FROM player WHERE ID=?";
+
+            PreparedStatement stm = connector.getConnection().prepareStatement(qry);
+            stm.setInt(1, id);
+
+            result = connector.sqlUpdate(stm);
         } catch (SQLException ex) {
             Logger.getLogger(PlayerDAL.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return conn.sqlUpdate(stm);
+        return result;
     }
-    
-    public boolean closeConnection() {
-        return conn.closeConnection();
-    }
-
 }

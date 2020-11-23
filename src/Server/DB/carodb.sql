@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th10 23, 2020 lúc 05:26 AM
+-- Thời gian đã tạo: Th10 23, 2020 lúc 08:36 AM
 -- Phiên bản máy phục vụ: 10.4.16-MariaDB
 -- Phiên bản PHP: 7.4.12
 
@@ -34,7 +34,7 @@ CREATE TABLE `gamematch` (
   `WinnerID` int(11) DEFAULT NULL,
   `PlayTime` int(11) NOT NULL,
   `TotalMove` int(11) NOT NULL,
-  `StartedTime` datetime NOT NULL,
+  `StartedTime` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `Chat` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

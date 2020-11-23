@@ -5,11 +5,8 @@
  */
 package Server.DB.Layers.BUS;
 
-import Server.DB.Layers.DAL.MatchDAL;
 import Server.DB.Layers.DAL.PlayerDAL;
-import Server.DB.Layers.DTO.Match;
 import Server.DB.Layers.DTO.Player;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -19,79 +16,71 @@ import java.util.ArrayList;
 public class PlayerBUS {
 
     ArrayList<Player> listPlayer = new ArrayList<>();
-    PlayerDAL dal;
-    MatchBUS matchBus;
+    PlayerDAL playerDAL = new PlayerDAL();
 
     public PlayerBUS() {
         readDB();
     }
-    
-    public ArrayList<Player> getList(){
-        return listPlayer;
-    }
 
-    public boolean readDB() {
-        dal = new PlayerDAL();
-        listPlayer = dal.readDB();
-        return (listPlayer != null);
+    public void readDB() {
+        listPlayer = playerDAL.readDB();
     }
 
     public boolean add(Player p) {
-        dal = new PlayerDAL();
-        return dal.add(p);
-    }
+        boolean status = playerDAL.add(p);
 
-    public boolean add(String username, String password, String displayName, String gender, LocalDate dateOfBirth) {
-        Player p = new Player(username, password, displayName, gender, dateOfBirth);
-        return add(p);
-    }
-
-    public boolean update(Player p) {
-        dal = new PlayerDAL();
-        return dal.update(p);
-    }
-
-    public boolean update(String username, String password, String displayName, String gender, LocalDate dateOfBirth) {
-        Player p = new Player(username, password, displayName, gender, dateOfBirth);
-        return update(p);
-    }
-
-    public boolean delete(String username) {
-        dal = new PlayerDAL();
-        return dal.delete(username);
-    }
-
-    public int getWinCount(String username) {
-        int result = 0;
-        matchBus = new MatchBUS();
-        for (Match m : matchBus.getList()) {
-            if (m.getWinnerID().equalsIgnoreCase(username)) {
-                result++;
-            }
+        if (status == true) {
+            listPlayer.add(p);
         }
-        return result;
+
+        return status;
     }
 
-    public int getLongestWinStreak(String username) {
-        matchBus = new MatchBUS();
-        int result = 0;
-        int temp = 0;
-        for (Match m : matchBus.getList()) {
-            if (m.getPlayer1().equalsIgnoreCase(username) || m.getPlayer2().equalsIgnoreCase(username)) {
-                if (m.getWinnerID().equalsIgnoreCase(username)) {
-                    temp++;
-                } else {
-                    if (temp > result) {
-                        result = temp;
-                    }
+    public boolean delete(int id) {
+        boolean status = playerDAL.delete(id);
+
+        if (status == true) {
+            for (int i = (listPlayer.size() - 1); i >= 0; i--) {
+                if (listPlayer.get(i).getId() == id) {
+                    listPlayer.remove(i);
                 }
             }
         }
-        return result;
+
+        return status;
     }
 
-    public float calculateWinRate(Player p) {
-        return (float) (100.00 * (getWinCount(p.getUsername())/p.getMatchCount()));
+    public boolean update(Player p) {
+        boolean status = playerDAL.update(p);
+
+        if (status == true) {
+            listPlayer.forEach((pl) -> {
+                pl = new Player(p);
+            });
+        }
+
+        return status;
     }
 
+    public Player getById(int id) {
+        for (Player p : listPlayer) {
+            if (p.getId() == id) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    public Player getByEmail(String email) {
+        for (Player p : listPlayer) {
+            if (p.getEmail().equals(email)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<Player> getList() {
+        return listPlayer;
+    }
 }

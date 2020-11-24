@@ -6,6 +6,8 @@
 package Client;
 
 import Client.Scenes.ConnectServer;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -14,6 +16,26 @@ import Client.Scenes.ConnectServer;
 public class Main {
 
     public static void main(String[] args) {
+        setNimbusLookAndFeel();
+//        setSystemLookAndFeel();
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new ConnectServer().setVisible(true);
+            }
+        });
+    }
+
+    private static void setSystemLookAndFeel() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
+
+        }
+    }
+
+    private static void setNimbusLookAndFeel() {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -37,8 +59,6 @@ public class Main {
         }
         //</editor-fold>
         //</editor-fold>
-
-        new ConnectServer().setVisible(true);
     }
 
 }

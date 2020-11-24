@@ -5,7 +5,7 @@
  */
 package Client;
 
-import Client.Scenes.ChooseServer;
+import Client.Scenes.ConnectServer;
 
 /**
  *
@@ -38,7 +38,7 @@ public class Main {
         //</editor-fold>
         //</editor-fold>
 
-        new ChooseServer().setVisible(true);
+        new ConnectServer().setVisible(true);
     }
 
 }

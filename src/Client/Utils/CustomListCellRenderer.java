@@ -14,6 +14,7 @@ import javax.swing.JList;
  * @author Hoang Tran < hoang at 99.hoangtran@gmail.com >
  */
 // https://stackoverflow.com/questions/8197167/word-wrap-in-jlist-items
+// hay: https://cachhoc.net/2014/04/25/java-swing-tuy-bien-jlist-jlist-custom-renderer/
 public class CustomListCellRenderer extends DefaultListCellRenderer {
     
     private int width;

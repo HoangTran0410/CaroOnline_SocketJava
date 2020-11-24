@@ -5,7 +5,6 @@
  */
 package Server.Controllers;
 
-import Server.Games.CoTuong.CoTuong;
 import Shared.Constants.Type;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -15,7 +14,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import static Server.Server.roomManager;
 import Shared.StreamDTO.BaseSDTO;
-import Shared.StreamDTO.ChatMessageSDTO;
 import com.google.gson.Gson;
 
 /**

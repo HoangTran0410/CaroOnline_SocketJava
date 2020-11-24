@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
  *
  * @author Hoang Tran < hoang at 99.hoangtran@gmail.com >
  */
-public class ChooseServer extends javax.swing.JFrame {
+public class ConnectServer extends javax.swing.JFrame {
 
     public Socket s;
     public DataInputStream dis;
@@ -26,7 +26,7 @@ public class ChooseServer extends javax.swing.JFrame {
     /**
      * Creates new form ChooseServer
      */
-    public ChooseServer() {
+    public ConnectServer() {
         initComponents();
         this.setLocationRelativeTo(null);
 
@@ -199,20 +199,21 @@ public class ChooseServer extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ChooseServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ConnectServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ChooseServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ConnectServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ChooseServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ConnectServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ChooseServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ConnectServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ChooseServer().setVisible(true);
+                new ConnectServer().setVisible(true);
             }
         });
     }

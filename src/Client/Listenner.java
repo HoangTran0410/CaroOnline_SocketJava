@@ -5,10 +5,6 @@
  */
 package Client;
 
-import Shared.Constants.Type;
-import Shared.StreamDTO.BaseSDTO;
-import Shared.StreamDTO.ChatMessageSDTO;
-import com.google.gson.Gson;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -35,46 +31,30 @@ public class Listenner implements Runnable {
     @Override
     public void run() {
 
-        Gson gson = new Gson();
-
         while (true) {
             try {
                 // read input stream
                 String received = dis.readUTF();
 
-                BaseSDTO b = gson.fromJson(received, BaseSDTO.class);
-                int rType = b.type;
-                String rContentStr = b.contentStr;
+                if (received.indexOf("login_result") == 0) {
 
-                // exit if received.type == Exit
-                if (rType == Type.EXIT) {
-                    break;
+                } else if (received.indexOf("signup_result") == 0) {
+
+                } else if (received.indexOf("join_room_result") == 0) {
+
+                } else if (received.indexOf("leave_room_result") == 0) {
+
+                } else if (received.indexOf("chat_room") == 0) {
+
+                } else if (received.indexOf("game_event_result") == 0) {
+
+                } else if (received.indexOf("update_profile_result") == 0) {
+
                 }
 
-                // write on output stream based on the answer from the server
-                switch (rType) {
-                    case Type.LOGIN:
-                        break;
-
-                    case Type.LOGOUT:
-                        System.out.println("Logout successfully");
-                        break;
-
-                    case Type.JOIN_ROOM:
-                        System.out.println("Join room successfully");
-                        break;
-
-                    case Type.CHAT_ROOM:
-                        ChatMessageSDTO chat = gson.fromJson(rContentStr, ChatMessageSDTO.class);
-                        System.out.println(chat.message);
-                        break;
-
-                    default:
-                        // do something
-                        break;
-                }
             } catch (IOException ex) {
                 Logger.getLogger(Listenner.class.getName()).log(Level.SEVERE, null, ex);
+                break;
             }
         }
 

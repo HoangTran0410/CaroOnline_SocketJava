@@ -8,7 +8,6 @@ package Client.Scenes;
 import Client.Utils.CustomListCellRenderer;
 import Server.DB.Layers.DTO.Player;
 import Shared.Constants.Avatar;
-import Shared.StreamDTO.ChatMessageSDTO;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
@@ -422,8 +421,8 @@ public class InGame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txChatInputKeyPressed
 
-    public void addChat(ChatMessageSDTO chatmsg) {
-        
+    public void addChat() {
+        // TODO add chat
     }
 
     public void setTurn(int playerId) {

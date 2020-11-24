@@ -8,9 +8,6 @@ package Server.Games.Caro;
 import Shared.Helpers.Line;
 import Shared.Helpers.Point;
 import Server.Games.GameLogic;
-import Shared.Constants.Type;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 /**
  *
@@ -31,24 +28,11 @@ public class Caro extends GameLogic {
     }
 
     @Override
-    public void receiveDataFromClient(JsonObject rjson) {
+    public void receiveDataFromClient(String received) {
         // TODO: return gì đó cho client
-        JsonElement game_event = rjson.get("game_event");
-//        game_event.
-        
-        switch(1) {
-            case Type.MOVE:
-                // TODO: add actions for game event
-                break;
-            case Type.NEW_GAME:
-                break;
-            case Type.UNDO:
-                break;
-            case Type.SURRENDER:
-                break;
-            default:
-                // do something
-                break;
+
+        if (received.indexOf("move") == 0) {
+            // TODO game event here
         }
     }
 

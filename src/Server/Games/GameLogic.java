@@ -5,8 +5,6 @@
  */
 package Server.Games;
 
-import com.google.gson.JsonObject;
-
 /**
  *
  * @author Hoang Tran < hoang at 99.hoangtran@gmail.com >
@@ -15,8 +13,8 @@ public class GameLogic {
 
     public GameLogic() {
     }
-    
-    public void receiveDataFromClient(JsonObject rjson) {
+
+    public void receiveDataFromClient(String received) {
     }
-    
+
 }

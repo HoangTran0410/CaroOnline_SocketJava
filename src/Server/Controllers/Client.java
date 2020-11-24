@@ -5,7 +5,6 @@
  */
 package Server.Controllers;
 
-import Shared.Constants.Type;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -13,8 +12,6 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static Server.Server.roomManager;
-import Shared.StreamDTO.BaseSDTO;
-import com.google.gson.Gson;
 
 /**
  *
@@ -41,52 +38,29 @@ public class Client implements Runnable {
     public void run() {
 
         String received;
-        Gson gson = new Gson();
-        
+
         while (true) {
             try {
                 // receive the request from client
                 received = dis.readUTF();
-                
-                BaseSDTO b = gson.fromJson(received, BaseSDTO.class);
-                int rType = b.type;
-                String rContentStr = b.contentStr;
 
-                // leave room
-                if (rType == Type.LEAVE_ROOM) {
-                    System.out.println("Client " + this.s + " sends exit...");
-                    this.leaveRoom();
+                if (received.indexOf("login") == 0) {
+
+                } else if (received.indexOf("signup") == 0) {
+
+                } else if (received.indexOf("join_room") == 0) {
+
+                } else if (received.indexOf("leave_room") == 0) {
+
+                } else if (received.indexOf("chat_room") == 0) {
+
+                } else if (received.indexOf("game_event") == 0) {
+
+                } else if (received.indexOf("update_profile") == 0) {
+
+                } else if (received.indexOf("exit") == 0) {
+                    // TODO do something here
                     break;
-                }
-                
-                switch (rType) {
-                    case Type.GAME_EVENT:
-                        break;
-
-                    case Type.CHANGE_GAME:
-                        break;
-
-                    case Type.JOIN_ROOM:
-                        break;
-
-                    case Type.CHAT_ROOM:
-                        break;
-
-                    case Type.CHAT_ALL:
-                        break;
-
-                    case Type.LOGIN:
-                        break;
-
-                    case Type.LOGOUT:
-                        break;
-
-                    case Type.SIGNUP:
-                        break;
-
-                    default:
-                        System.err.println("Unknow request type: " + received);
-                        break;
                 }
 
             } catch (IOException ex) {

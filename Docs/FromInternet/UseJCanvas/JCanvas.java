@@ -1,4 +1,4 @@
-package Client.FromInternet.UseJCanvas;
+package Docs.FromInternet.UseJCanvas;
 
 //package dk.ruc.madsr.swing;
 //----------------------------------------------------------------------

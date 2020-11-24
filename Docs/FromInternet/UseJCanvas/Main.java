@@ -1,4 +1,4 @@
-package Client.FromInternet.UseJCanvas;
+package Docs.FromInternet.UseJCanvas;
 
 // +------------------------------------------------------------+
 // | Software: Caro 3.0						|

@@ -1,4 +1,4 @@
-package Client.FromInternet.UseJButton;
+package Docs.FromInternet.UseJButton;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

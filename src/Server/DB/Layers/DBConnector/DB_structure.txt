@@ -8,8 +8,9 @@ Gender              : varchar(10) (nam-nữ-ẩn)
 YearOfBirth         : int(4) năm sinh (1999, 2000, ..)
 Score               : int(11) điểm thành tích
 MatchCount          : int(11) số trận đã đấu
-WinRate             : float tỉ lệ thắng (0.4)
-WinStreak           : int(11) chuỗi thắng liên tiếp ở thời điểm hiện tại
+WinCount            : int(11) số trận thắng
+LoseCount           : int(11) số trận thua
+CurrentStreak       : int(11) chuỗi thắng/thua liên tiếp ở thời điểm hiện tại (số âm là chuỗi thua, số dương là chuỗi thắng)
 Rank                : int(11) xếp hạng
 Blocked             : tinyint(1) bị block hay không
 

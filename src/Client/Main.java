@@ -5,42 +5,13 @@
  */
 package Client;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
+import Client.Scenes.ChooseServer;
 
 /**
  *
  * @author Hoang Tran < hoang at 99.hoangtran@gmail.com >
  */
 public class Main {
-
-    Socket s;
-    DataInputStream dis;
-    DataOutputStream dos;
-
-    public void connect(String addr, int port) {
-        try {
-            // getting ip 
-            InetAddress ip = InetAddress.getByName(addr);
-
-            // establish the connection with server port 
-            s = new Socket(ip, port);
-            System.out.println("Connected to " + ip + ":" + port + ", localport:" + s.getLocalPort());
-
-            // obtaining input and output streams
-            dis = new DataInputStream(s.getInputStream());
-            dos = new DataOutputStream(s.getOutputStream());
-
-            // listen to server
-            new Thread(new Listenner(s, dis, dos)).start();
-
-        } catch (IOException e) {
-            System.err.println("Loi. " + e.getMessage());
-        }
-    }
 
     public static void main(String[] args) {
         /* Set the Nimbus look and feel */
@@ -67,8 +38,7 @@ public class Main {
         //</editor-fold>
         //</editor-fold>
 
-        Main m = new Main();
-        m.connect("localhost", 5056);
+        new ChooseServer().setVisible(true);
     }
 
 }

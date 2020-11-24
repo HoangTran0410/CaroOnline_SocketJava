@@ -6,7 +6,6 @@
 package Shared.Helpers.Security;
 
 import java.io.File;
-import java.math.BigInteger;
 import java.nio.file.Files;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
@@ -32,6 +31,15 @@ public class RSA {
 
     PublicKey publicKey;
     PrivateKey privateKey;
+    Cipher cipher;
+
+    public RSA() {
+        try {
+            cipher = Cipher.getInstance("RSA");
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException ex) {
+            Logger.getLogger(RSA.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     public RSA preparePublicKey(String publicKeyPath) {
         try {
@@ -66,8 +74,11 @@ public class RSA {
     }
 
     public String encrypt(String original) {
+        if(publicKey == null) {
+            System.err.println("Không thể mã hóa! Chưa có public key.");
+        }
+        
         try {
-            Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
             byte[] byteEncrypted = cipher.doFinal(original.getBytes());
@@ -75,7 +86,7 @@ public class RSA {
 
             return encrypted;
 
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
+        } catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
             Logger.getLogger(RSA.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -83,16 +94,18 @@ public class RSA {
     }
 
     public String decrypt(String encrypted) {
+        if(publicKey == null) {
+            System.err.println("Không thể giải mã! Chưa có private key.");
+        }
         try {
-            Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
 
-            byte[] byteDecrypted = cipher.doFinal(encrypted.getBytes());
+            byte[] byteDecrypted = cipher.doFinal(Base64.getDecoder().decode(encrypted));
             String decrypted = new String(byteDecrypted);
 
             return decrypted;
 
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
+        } catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
             Logger.getLogger(RSA.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -110,7 +123,7 @@ public class RSA {
         String original = "stackjava.com";
         System.out.println("Original: " + original);
 
-        String encrypted = serverSide.encrypt(original);
+        String encrypted = clientSide.encrypt(original);
         System.out.println("Encrypted: " + encrypted);
 
         String decrypted = serverSide.decrypt(encrypted);
@@ -118,5 +131,6 @@ public class RSA {
 
         // Lỗi javax.crypto.IllegalBlockSizeException: Data must not be longer than 256 bytes         
         // => hay: https://stackoverflow.com/a/46828430
+        // 24/11/2020 => đã fix xong, Dùng Base64.getDecoder().decode() khi decrypt dữ liệu
     }
 }

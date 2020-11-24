@@ -45,10 +45,18 @@ public class Signup extends javax.swing.JFrame {
         txUserName = new javax.swing.JTextField();
         lbPassword = new javax.swing.JLabel();
         txPassword = new javax.swing.JPasswordField();
-        lbGender = new javax.swing.JLabel();
-        cbGender = new javax.swing.JComboBox<>();
+        txPassword1 = new javax.swing.JPasswordField();
+        lbPassword1 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         lbBirthday = new javax.swing.JLabel();
         txUserName1 = new javax.swing.JTextField();
+        lbGender = new javax.swing.JLabel();
+        cbGender = new javax.swing.JComboBox<>();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
         btnSignup = new javax.swing.JButton();
         cbAvatar = new javax.swing.JComboBox<>();
         btnSignup1 = new javax.swing.JButton();
@@ -56,39 +64,52 @@ public class Signup extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        lbHeaderText.setText("THAM GIA");
         lbHeaderText.setFont(new java.awt.Font("Tahoma", 1, 25)); // NOI18N
+        lbHeaderText.setText("THAM GIA");
 
         lbEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_email_48px.png"))); // NOI18N
 
-        txEmail.setText("Email");
         txEmail.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txEmail.setToolTipText("Email");
 
-        lbUserName.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_male_user_48px.png"))); // NOI18N
+        lbUserName.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_name_48px_1.png"))); // NOI18N
 
-        txUserName.setText("Họ tên");
         txUserName.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txUserName.setToolTipText("Họ tên");
 
-        lbPassword.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_lock_48px.png"))); // NOI18N
+        lbPassword.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_password_48px.png"))); // NOI18N
 
         txPassword.setToolTipText("Mật khẩu");
 
-        lbGender.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_gender_48px.png"))); // NOI18N
-        lbGender.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txPassword1.setToolTipText("Mật khẩu");
 
-        cbGender.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nam", "Nữ", "Ẩn" }));
-        cbGender.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        cbGender.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        cbGender.setToolTipText("Giới tính");
+        lbPassword1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_password_reset_48px.png"))); // NOI18N
 
-        lbBirthday.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_birthday_cake_48px.png"))); // NOI18N
+        jLabel1.setText("Email");
+
+        jLabel2.setText("Mật khẩu");
+
         lbBirthday.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        lbBirthday.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_birthday_cake_48px_2.png"))); // NOI18N
 
         txUserName1.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        txUserName1.setText("Năm sinh");
         txUserName1.setToolTipText("Năm sinh");
+
+        lbGender.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        lbGender.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_gender_48px.png"))); // NOI18N
+
+        cbGender.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        cbGender.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nam", "Nữ", "Ẩn" }));
+        cbGender.setToolTipText("Giới tính");
+        cbGender.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        jLabel3.setText("Họ tên");
+
+        jLabel4.setText("Nhập lại mật khẩu");
+
+        jLabel5.setText("Năm sinh");
+
+        jLabel6.setText("Giới tính");
 
         javax.swing.GroupLayout plInputLayout = new javax.swing.GroupLayout(plInput);
         plInput.setLayout(plInputLayout);
@@ -97,68 +118,102 @@ public class Signup extends javax.swing.JFrame {
             .addGroup(plInputLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, plInputLayout.createSequentialGroup()
+                    .addGroup(plInputLayout.createSequentialGroup()
                         .addComponent(lbBirthday)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txUserName1, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE))
+                        .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(plInputLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel5))
+                            .addGroup(plInputLayout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(txUserName1, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(plInputLayout.createSequentialGroup()
-                        .addComponent(lbUserName)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txUserName, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE))
-                    .addGroup(plInputLayout.createSequentialGroup()
-                        .addComponent(lbEmail)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txEmail)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(plInputLayout.createSequentialGroup()
-                        .addComponent(lbPassword)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, plInputLayout.createSequentialGroup()
-                        .addComponent(lbGender)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbGender, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(plInputLayout.createSequentialGroup()
+                                .addComponent(lbEmail)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(txEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(plInputLayout.createSequentialGroup()
+                                .addComponent(lbUserName)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(txUserName))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                        .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(plInputLayout.createSequentialGroup()
+                                .addComponent(lbPassword)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(txPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(plInputLayout.createSequentialGroup()
+                                .addComponent(lbPassword1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4)
+                                    .addComponent(txPassword1, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel6)))
+                            .addGroup(plInputLayout.createSequentialGroup()
+                                .addComponent(lbGender)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbGender, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         plInputLayout.setVerticalGroup(
             plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(plInputLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(lbEmail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(txEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(txPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbPassword))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(lbUserName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(txUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(lbGender, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(cbGender, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(txPassword1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbPassword1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbBirthday, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(plInputLayout.createSequentialGroup()
-                        .addComponent(txUserName1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                    .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(txUserName1)
+                        .addComponent(lbBirthday))
+                    .addComponent(lbGender)
+                    .addComponent(cbGender, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
 
+        btnSignup.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
         btnSignup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_slide_up_32px.png"))); // NOI18N
         btnSignup.setText("ĐĂNG KÝ");
         btnSignup.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnSignup.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
         btnSignup.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnSignupMouseClicked(evt);
             }
         });
 
-        cbAvatar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         cbAvatar.setToolTipText("Ảnh đại diện");
+        cbAvatar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         btnSignup1.setText("Đăng nhập?");
         btnSignup1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -173,25 +228,23 @@ public class Signup extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(plInput, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnSignup1)
+                    .addComponent(btnSignup, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(160, 160, 160))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(plInput, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnSignup1)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(250, 250, 250)
-                                    .addComponent(lbHeaderText))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(152, 152, 152)
-                                    .addComponent(btnSignup, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(230, 230, 230)
-                                    .addComponent(cbAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGap(20, 20, 20)
+                        .addComponent(lbHeaderText))
+                    .addComponent(cbAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(239, 239, 239))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -202,11 +255,11 @@ public class Signup extends javax.swing.JFrame {
                 .addComponent(cbAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(plInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSignup, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSignup1)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -263,15 +316,23 @@ public class Signup extends javax.swing.JFrame {
     private javax.swing.JButton btnSignup1;
     private javax.swing.JComboBox<ImageIcon> cbAvatar;
     private javax.swing.JComboBox<String> cbGender;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel lbBirthday;
     private javax.swing.JLabel lbEmail;
     private javax.swing.JLabel lbGender;
     private javax.swing.JLabel lbHeaderText;
     private javax.swing.JLabel lbPassword;
+    private javax.swing.JLabel lbPassword1;
     private javax.swing.JLabel lbUserName;
     private javax.swing.JPanel plInput;
     private javax.swing.JTextField txEmail;
     private javax.swing.JPasswordField txPassword;
+    private javax.swing.JPasswordField txPassword1;
     private javax.swing.JTextField txUserName;
     private javax.swing.JTextField txUserName1;
     // End of variables declaration//GEN-END:variables

@@ -5,12 +5,7 @@
  */
 package Client.Scenes;
 
-import Client.Listenner;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
+import Client.Controller;
 import javax.swing.JOptionPane;
 
 /**
@@ -19,9 +14,7 @@ import javax.swing.JOptionPane;
  */
 public class ConnectServer extends javax.swing.JFrame {
 
-    public Socket s;
-    public DataInputStream dis;
-    public DataOutputStream dos;
+    boolean connecting = false;
 
     /**
      * Creates new form ChooseServer
@@ -127,9 +120,18 @@ public class ConnectServer extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnConnectMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConnectMouseClicked
+        // nếu đang kết nối thì ko làm gì cả
+        if (connecting) {
+            return;
+        }
+
+        String ip;
+        int port;
+
+        // validate input
         try {
-            String ip = txIP.getText();
-            int port = Integer.parseInt(txPort.getText());
+            ip = txIP.getText();
+            port = Integer.parseInt(txPort.getText());
 
             if (port < 0 || port > 65535) {
                 JOptionPane.showMessageDialog(this, "Port phải từ 0 - 65535", "Sai port", JOptionPane.ERROR_MESSAGE);
@@ -137,49 +139,47 @@ public class ConnectServer extends javax.swing.JFrame {
                 return;
             }
 
-            btnConnect.setText("Đang kết nối..");
-            pgbLoading.setVisible(true);
-
-            new Thread(() -> {
-                connect(ip, port);
-            }).start();
-
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Port phải là số nguyên", "Sai port", JOptionPane.ERROR_MESSAGE);
             txPort.requestFocus();
+            return;
         }
+
+        // connect to server
+        connect(ip, port);
     }//GEN-LAST:event_btnConnectMouseClicked
 
-    public void connect(String addr, int port) {
-        try {
-            // getting ip 
-            InetAddress ip = InetAddress.getByName(addr);
+    private void connect(String ip, int port) {
+        // show loading
+        btnConnect.setText("Đang kết nối..");
+        pgbLoading.setVisible(true);
 
-            // establish the connection with server port 
-            s = new Socket(ip, port);
-            System.out.println("Connected to " + ip + ":" + port + ", localport:" + s.getLocalPort());
+        // connect
+        new Thread(() -> {
+            // call controller
+            String result = Controller.connect(ip, port);
 
-            // obtaining input and output streams
-            dis = new DataInputStream(s.getInputStream());
-            dos = new DataOutputStream(s.getOutputStream());
+            // check result
+            if (result.equals("success")) {
+                onSuccess();
+            } else {
+                String failedMsg = result.split(";")[1];
+                onFailed(failedMsg);
+            }
 
-            // listen to server
-            new Thread(new Listenner(s, dis, dos)).start();
+            // turn off loading
+            pgbLoading.setVisible(false);
+        }).start();
+    }
 
-            // connect success
-            // TODO: send AES client's key to server
-            this.dispose();
-            new Login().setVisible(true);
+    private void onSuccess() {
+        this.dispose();
+        new Login().setVisible(true);
+    }
 
-        } catch (IOException e) {
-
-            // connect failed
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Lỗi kết nối", JOptionPane.ERROR_MESSAGE);
-            btnConnect.setText("Kết nối");
-        }
-
-        // turn off loading
-        pgbLoading.setVisible(false);
+    private void onFailed(String failedMsg) {
+        JOptionPane.showMessageDialog(ConnectServer.this, failedMsg, "Lỗi kết nối", JOptionPane.ERROR_MESSAGE);
+        btnConnect.setText("Kết nối");
     }
 
     /**

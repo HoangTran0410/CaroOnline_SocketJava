@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Server.DB.Layers.DBConnector;
+package server.db.layers.DBConnector;
 
 import java.sql.PreparedStatement;
 import java.sql.Connection;

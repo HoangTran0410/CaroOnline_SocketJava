@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Client;
+package client;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,7 +32,8 @@ public class Controller {
             InetAddress ip = InetAddress.getByName(addr);
 
             // establish the connection with server port 
-            s = new Socket(ip, port);
+            s = new Socket();
+            s.connect(new InetSocketAddress(ip, port), 4000);
             System.out.println("Connected to " + ip + ":" + port + ", localport:" + s.getLocalPort());
 
             // obtaining input and output streams

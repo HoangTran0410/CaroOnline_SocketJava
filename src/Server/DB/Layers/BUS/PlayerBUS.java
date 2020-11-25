@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Server.DB.Layers.BUS;
+package server.db.layers.BUS;
 
-import Server.DB.Layers.DAL.PlayerDAL;
-import Server.DB.Layers.DTO.Player;
+import server.db.layers.DAL.PlayerDAL;
+import server.db.layers.DTO.Player;
 import java.util.ArrayList;
 
 /**

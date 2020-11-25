@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Server.DB.Layers.DAL;
+package server.db.layers.DAL;
 
-import Server.DB.Layers.DBConnector.MysqlConnector;
-import Server.DB.Layers.DTO.Player;
+import server.db.layers.DBConnector.MysqlConnector;
+import server.db.layers.DTO.Player;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -11,7 +11,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static Server.Server.roomManager;
+import static Server.RunServer.roomManager;
+import Shared.Helpers.Security.AES;
 
 /**
  *
@@ -25,6 +26,8 @@ public class Client implements Runnable {
 
     String email; // if == null => chua dang nhap
     Room room; // if == null => chua vao phong nao het
+
+    AES aes;
 
     public Client(Socket s) throws IOException {
         this.s = s;
@@ -44,6 +47,10 @@ public class Client implements Runnable {
                 // receive the request from client
                 received = dis.readUTF();
 
+                // decrypt data
+                received = aes.decrypt(received);
+
+                // check and process data
                 if (received.indexOf("login") == 0) {
 
                 } else if (received.indexOf("signup") == 0) {
@@ -81,41 +88,47 @@ public class Client implements Runnable {
         }
     }
 
-    // chat handlers
-    public boolean sendMessage(String mes) {
+    // security handlers
+    public void setSecretKey(String seckey) {
+        aes = new AES(seckey);
+    }
+
+    // communicating handlers
+    public String sendData(String data) {
         try {
-            this.dos.writeUTF(mes);
-            return true;
+            String encrypted = aes.encrypt(data);
+            this.dos.writeUTF(encrypted);
+            return "success";
         } catch (IOException e) {
-            System.err.println("Send message failed to " + this.getEmail());
-            return false;
+            System.err.println("Send data failed to " + this.getEmail());
+            return "failed;" + e.getMessage();
         }
     }
 
     // room handlers
-    public boolean joinRoom(String id) {
+    public String joinRoom(String id) {
         // đang trong phòng rồi ?
         if (this.room != null) {
-            return false;
+            return "failed;Không thể chuyển phòng. Đang trong phòng " + this.room.getId() + " rồi!";
         }
 
         Room room = roomManager.find(id);
 
         // không tìm thấy phòng cần join ?
         if (room == null) {
-            return false;
+            return "failed;Không tìm thấy phòng " + id;
         }
 
         // join vào phòng thanh cong hay khong ?
         if (room.addClient(this)) {
             this.room = room;
-            return true;
+            return "success";
         }
 
-        return false;
+        return "failed;Không thể tham gia phòng";
     }
 
-    public boolean joinRoom(Room room) {
+    public String joinRoom(Room room) {
         return joinRoom(room.getId());
     }
 

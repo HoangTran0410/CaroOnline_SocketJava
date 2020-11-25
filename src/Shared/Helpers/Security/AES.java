@@ -44,7 +44,8 @@ public class AES {
         } catch (Exception e) {
             System.out.println(e.toString());
         }
-        return null;
+
+        return strToEncrypt;
     }
 
     public String decrypt(String strToDecrypt) {
@@ -62,7 +63,8 @@ public class AES {
         } catch (Exception e) {
             System.out.println(e.toString());
         }
-        return null;
+
+        return strToDecrypt;
     }
 
     public static void main(String[] args) {

@@ -49,7 +49,7 @@ public class Room {
     // broadcast messages
     public void broadcast(String msg) {
         clients.forEach((c) -> {
-            c.sendMessage(msg);
+            c.sendData(msg);
         });
     }
 

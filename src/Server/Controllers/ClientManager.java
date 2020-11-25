@@ -46,10 +46,10 @@ public class ClientManager {
 
     public void broadcast(String msg) {
         clients.forEach((c) -> {
-            c.sendMessage(msg);
+            c.sendData(msg);
         });
     }
-    
+
     public int getSize() {
         return clients.size();
     }

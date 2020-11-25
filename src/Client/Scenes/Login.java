@@ -52,6 +52,7 @@ public class Login extends javax.swing.JFrame {
         btnLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         btnSignup.setText("Đăng ký?");
+        btnSignup.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnSignup.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnSignupMouseClicked(evt);

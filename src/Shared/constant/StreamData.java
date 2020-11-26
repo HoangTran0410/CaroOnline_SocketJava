@@ -23,6 +23,7 @@ public class StreamData {
         // auth
         LOGIN, // chức năng đăng nhập / email, password / success hoặc failed
         SIGNUP, // chức năng đăng ký / thông tin đăng ký / success hoặc failed
+        LOGOUT, // chức năng đăng xuất / không cần dữ liệu thêm / success hoặc failed
         CHANGE_PASSWORD, // chức năng đổi mật khẩu / mật khẩu cũ, mật khẩu mới / success hoặc failed
 
         // room

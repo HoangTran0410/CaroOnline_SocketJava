@@ -84,8 +84,6 @@ public class SocketHandler {
 
         // send to server
         sendPureData(StreamData.Type.AESKEY.name() + ";" + aesKeyEncrypted);
-
-        System.out.println("Client send AES key: " + aesKey);
     }
 
     private void listen() {
@@ -114,6 +112,12 @@ public class SocketHandler {
                         break;
 
                     case SIGNUP:
+                        break;
+
+                    case LOGOUT:
+                        onReceiveLogout(received);
+                        break;
+
                     case CHANGE_PASSWORD:
                         onReceiveChangePassword(received);
                         break;
@@ -196,11 +200,15 @@ public class SocketHandler {
         }
     }
 
+    private void onReceiveLogout(String received) {
+        RunClient.closeScene(RunClient.SceneName.MAINMENU);
+        RunClient.openScene(RunClient.SceneName.LOGIN);
+    }
+
     // functions
     public void login(String email, String password) {
         // hasing password
         String passwordHash = Util.hash(password);
-        System.out.println("hash pass: " + passwordHash);
 
         // prepare data
         String data = StreamData.Type.LOGIN.name() + ";" + email + ";" + passwordHash;
@@ -216,6 +224,14 @@ public class SocketHandler {
 
         // prepare data
         String data = StreamData.Type.CHANGE_PASSWORD.name() + ";" + oldPasswordHash + ";" + newPasswordHash;
+
+        // send data
+        sendData(data);
+    }
+
+    public void logout() {
+        // prepare data
+        String data = StreamData.Type.LOGOUT.name();
 
         // send data
         sendData(data);

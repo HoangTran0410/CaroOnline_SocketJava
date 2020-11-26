@@ -69,6 +69,12 @@ public class Client implements Runnable {
                         break;
 
                     case SIGNUP:
+                        break;
+
+                    case LOGOUT:
+                        onReceiveLogout(received);
+                        break;
+
                     case CHANGE_PASSWORD:
                         onReceiveChangePassword(received);
                         break;
@@ -154,6 +160,14 @@ public class Client implements Runnable {
 
         // send status
         sendData(StreamData.Type.CHANGE_PASSWORD.name() + ";" + status);
+    }
+
+    private void onReceiveLogout(String received) {
+        // log out now
+        this.email = null;
+
+        // send status
+        sendData(StreamData.Type.LOGOUT.name() + ";success");
     }
 
     // security handlers

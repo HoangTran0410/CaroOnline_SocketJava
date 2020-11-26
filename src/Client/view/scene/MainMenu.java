@@ -69,7 +69,7 @@ public class MainMenu extends javax.swing.JFrame {
         plProfileBtn = new javax.swing.JPanel();
         btnProfileSave = new javax.swing.JButton();
         btnProfileCancel = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnLogout = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
         btnCreateRoom = new javax.swing.JButton();
@@ -315,9 +315,14 @@ public class MainMenu extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jButton3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_logout_rounded_left_24px.png"))); // NOI18N
-        jButton3.setText("Đăng xuất");
+        btnLogout.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnLogout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_logout_rounded_left_24px.png"))); // NOI18N
+        btnLogout.setText("Đăng xuất");
+        btnLogout.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnLogoutMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -329,7 +334,7 @@ public class MainMenu extends javax.swing.JFrame {
                     .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(plProfileBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3))
+                    .addComponent(btnLogout))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -342,7 +347,7 @@ public class MainMenu extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(plProfileBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton3)
+                .addComponent(btnLogout)
                 .addContainerGap())
         );
 
@@ -486,6 +491,10 @@ public class MainMenu extends javax.swing.JFrame {
         RunClient.openScene(RunClient.SceneName.CHANGEPASSWORD);
     }//GEN-LAST:event_btnProfileChangePassMouseClicked
 
+    private void btnLogoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLogoutMouseClicked
+        RunClient.socketHandler.logout();
+    }//GEN-LAST:event_btnLogoutMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -525,6 +534,7 @@ public class MainMenu extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCreateRoom;
     private javax.swing.JButton btnFindMatch;
+    private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnProfileCancel;
     private javax.swing.JButton btnProfileChangePass;
     private javax.swing.JButton btnProfileSave;
@@ -532,7 +542,6 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cbGender;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

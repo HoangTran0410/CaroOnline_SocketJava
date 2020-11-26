@@ -83,7 +83,7 @@
                       <Component id="jPanel6" alignment="2" max="32767" attributes="0"/>
                       <Component id="jPanel3" alignment="2" max="32767" attributes="0"/>
                       <Component id="plProfileBtn" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="jButton3" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnLogout" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -99,7 +99,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="plProfileBtn" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
-                  <Component id="jButton3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnLogout" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -510,7 +510,7 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JButton" name="jButton3">
+        <Component class="javax.swing.JButton" name="btnLogout">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Dialog" size="14" style="1"/>
@@ -520,6 +520,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="&#x110;&#x103;ng xu&#x1ea5;t"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnLogoutMouseClicked"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

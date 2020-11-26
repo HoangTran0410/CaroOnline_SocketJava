@@ -71,21 +71,6 @@ public class SocketHandler {
         }
     }
 
-    private void initSecurityAES() {
-        // create new key
-        aes = new AES();
-
-        // encrypt aes key using rsa with server's public key 
-        RSA clientSideRSA = new RSA()
-                .preparePublicKey("src/Server/rsa_keypair/publicKey");
-
-        String aesKey = aes.getSecretKey();
-        String aesKeyEncrypted = clientSideRSA.encrypt(aesKey);
-
-        // send to server
-        sendPureData(StreamData.Type.AESKEY.name() + ";" + aesKeyEncrypted);
-    }
-
     private void listen() {
         boolean running = true;
 
@@ -112,6 +97,7 @@ public class SocketHandler {
                         break;
 
                     case SIGNUP:
+                        onReceiveSignup(received);
                         break;
 
                     case LOGOUT:
@@ -182,6 +168,28 @@ public class SocketHandler {
         }
     }
 
+    private void onReceiveSignup(String received) {
+        // get status from data
+        String[] splitted = received.split(";");
+        String status = splitted[1];
+
+        // check status
+        if (status.equals("failed")) {
+            String failedMsg = splitted[2];
+            JOptionPane.showMessageDialog(RunClient.signupScene, failedMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
+
+        } else if (status.equals("success")) {
+            JOptionPane.showMessageDialog(RunClient.signupScene, "Đăng ký thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+            RunClient.closeScene(RunClient.SceneName.SIGNUP);
+            RunClient.openScene(RunClient.SceneName.LOGIN);
+        }
+    }
+
+    private void onReceiveLogout(String received) {
+        RunClient.closeScene(RunClient.SceneName.MAINMENU);
+        RunClient.openScene(RunClient.SceneName.LOGIN);
+    }
+
     private void onReceiveChangePassword(String received) {
         String[] splitted = received.split(";");
         String status = splitted[1];
@@ -200,18 +208,50 @@ public class SocketHandler {
         }
     }
 
-    private void onReceiveLogout(String received) {
-        RunClient.closeScene(RunClient.SceneName.MAINMENU);
-        RunClient.openScene(RunClient.SceneName.LOGIN);
+    // functions
+    private void initSecurityAES() {
+        // create new key
+        aes = new AES();
+
+        // encrypt aes key using rsa with server's public key 
+        RSA clientSideRSA = new RSA()
+                .preparePublicKey("src/Server/rsa_keypair/publicKey");
+
+        String aesKey = aes.getSecretKey();
+        String aesKeyEncrypted = clientSideRSA.encrypt(aesKey);
+
+        // send to server
+        sendPureData(StreamData.Type.AESKEY.name() + ";" + aesKeyEncrypted);
     }
 
-    // functions
     public void login(String email, String password) {
         // hasing password
         String passwordHash = Util.hash(password);
 
         // prepare data
         String data = StreamData.Type.LOGIN.name() + ";" + email + ";" + passwordHash;
+
+        // send data
+        sendData(data);
+    }
+
+    public void signup(String email, String password, String name, String gender, int yearOfBirth, String avatar) {
+        // prepare data
+        String data = StreamData.Type.SIGNUP.name() + ";"
+                + email + ";"
+                + Util.hash(password) + ";"
+                + avatar + ";"
+                + name + ";"
+                + gender + ";"
+                + String.valueOf(yearOfBirth);
+
+        // send data
+        sendData(data);
+    }
+
+    public void logout() {
+        // prepare data
+        String data = StreamData.Type.LOGOUT.name();
 
         // send data
         sendData(data);
@@ -224,14 +264,6 @@ public class SocketHandler {
 
         // prepare data
         String data = StreamData.Type.CHANGE_PASSWORD.name() + ";" + oldPasswordHash + ";" + newPasswordHash;
-
-        // send data
-        sendData(data);
-    }
-
-    public void logout() {
-        // prepare data
-        String data = StreamData.Type.LOGOUT.name();
 
         // send data
         sendData(data);

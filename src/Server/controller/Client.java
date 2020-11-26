@@ -69,6 +69,7 @@ public class Client implements Runnable {
                         break;
 
                     case SIGNUP:
+                        onReceiveSignup(received);
                         break;
 
                     case LOGOUT:
@@ -140,13 +141,38 @@ public class Client implements Runnable {
         String password = splitted[2];
 
         // check login
-        String status = new PlayerBUS().checkLogin(email, password);
+        String result = new PlayerBUS().checkLogin(email, password);
 
         // set login
         this.email = email;
 
+        // send result
+        sendData(StreamData.Type.LOGIN.name() + ";" + result);
+    }
+
+    private void onReceiveSignup(String received) {
+        // get data from received
+        String[] splitted = received.split(";");
+        String email = splitted[1];
+        String password = splitted[2];
+        String avatar = splitted[3];
+        String name = splitted[4];
+        String gender = splitted[5];
+        int yearOfBirth = Integer.parseInt(splitted[6]);
+
+        // sign up
+        String result = new PlayerBUS().signup(email, password, avatar, name, gender, yearOfBirth);
+
+        // send data
+        sendData(StreamData.Type.SIGNUP.name() + ";" + result);
+    }
+
+    private void onReceiveLogout(String received) {
+        // log out now
+        this.email = null;
+
         // send status
-        sendData(StreamData.Type.LOGIN.name() + ";" + status);
+        sendData(StreamData.Type.LOGOUT.name() + ";success");
     }
 
     private void onReceiveChangePassword(String received) {
@@ -156,18 +182,10 @@ public class Client implements Runnable {
         String newPassword = splitted[2];
 
         // check change pass
-        String status = new PlayerBUS().changePassword(email, oldPassword, newPassword);
+        String result = new PlayerBUS().changePassword(email, oldPassword, newPassword);
 
         // send status
-        sendData(StreamData.Type.CHANGE_PASSWORD.name() + ";" + status);
-    }
-
-    private void onReceiveLogout(String received) {
-        // log out now
-        this.email = null;
-
-        // send status
-        sendData(StreamData.Type.LOGOUT.name() + ";success");
+        sendData(StreamData.Type.CHANGE_PASSWORD.name() + ";" + result);
     }
 
     // security handlers

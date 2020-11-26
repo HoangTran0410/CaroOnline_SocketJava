@@ -11,7 +11,8 @@ package shared.constant;
  */
 public class Code {
 
-    public static String ACCOUNT_NOT_FOUND = "Tài khoản hoặc mật khẩu không đúng";
+    public static String ACCOUNT_NOT_FOUND = "Không tìm thấy tài khoản";
     public static String ACCOUNT_BLOCKED = "Tài khoản đang bị khóa";
     public static String WRONG_PASSWORD = "Mật khẩu không đúng";
+    public static String EMAIL_EXISTED = "Email đã tồn tại";
 }

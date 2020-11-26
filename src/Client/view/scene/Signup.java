@@ -8,6 +8,7 @@ package client.view.scene;
 import client.RunClient;
 import shared.constant.Avatar;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -29,6 +30,13 @@ public class Signup extends javax.swing.JFrame {
         }
     }
 
+    private String getAvatar() {
+        String fullPath = cbAvatar.getSelectedItem().toString();
+        String[] splitted = fullPath.split("/");
+
+        return splitted[splitted.length - 1];
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -43,15 +51,15 @@ public class Signup extends javax.swing.JFrame {
         lbEmail = new javax.swing.JLabel();
         txEmail = new javax.swing.JTextField();
         lbUserName = new javax.swing.JLabel();
-        txUserName = new javax.swing.JTextField();
+        txName = new javax.swing.JTextField();
         lbPassword = new javax.swing.JLabel();
         txPassword = new javax.swing.JPasswordField();
-        txPassword1 = new javax.swing.JPasswordField();
+        txRetypePassword = new javax.swing.JPasswordField();
         lbPassword1 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         lbBirthday = new javax.swing.JLabel();
-        txUserName1 = new javax.swing.JTextField();
+        txYearOfBirth = new javax.swing.JTextField();
         lbGender = new javax.swing.JLabel();
         cbGender = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
@@ -60,7 +68,7 @@ public class Signup extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         btnSignup = new javax.swing.JButton();
         cbAvatar = new javax.swing.JComboBox<>();
-        btnSignup1 = new javax.swing.JButton();
+        btnLogin = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Đăng ký");
@@ -76,14 +84,14 @@ public class Signup extends javax.swing.JFrame {
 
         lbUserName.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_name_48px_1.png"))); // NOI18N
 
-        txUserName.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        txUserName.setToolTipText("Họ tên");
+        txName.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txName.setToolTipText("Họ tên");
 
         lbPassword.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_password_48px.png"))); // NOI18N
 
         txPassword.setToolTipText("Mật khẩu");
 
-        txPassword1.setToolTipText("Mật khẩu");
+        txRetypePassword.setToolTipText("Mật khẩu");
 
         lbPassword1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_password_reset_48px.png"))); // NOI18N
 
@@ -94,8 +102,8 @@ public class Signup extends javax.swing.JFrame {
         lbBirthday.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lbBirthday.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_birthday_cake_48px_2.png"))); // NOI18N
 
-        txUserName1.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        txUserName1.setToolTipText("Năm sinh");
+        txYearOfBirth.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txYearOfBirth.setToolTipText("Năm sinh");
 
         lbGender.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lbGender.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_gender_48px.png"))); // NOI18N
@@ -128,7 +136,7 @@ public class Signup extends javax.swing.JFrame {
                                 .addComponent(jLabel5))
                             .addGroup(plInputLayout.createSequentialGroup()
                                 .addGap(6, 6, 6)
-                                .addComponent(txUserName1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(txYearOfBirth, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(plInputLayout.createSequentialGroup()
                         .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -143,7 +151,7 @@ public class Signup extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel3)
-                                    .addComponent(txUserName))))
+                                    .addComponent(txName))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(plInputLayout.createSequentialGroup()
@@ -157,7 +165,7 @@ public class Signup extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel4)
-                                    .addComponent(txPassword1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txRetypePassword, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel6)))
                             .addGroup(plInputLayout.createSequentialGroup()
                                 .addComponent(lbGender)
@@ -187,8 +195,8 @@ public class Signup extends javax.swing.JFrame {
                 .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(lbUserName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(txPassword1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txName, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txRetypePassword, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbPassword1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -197,7 +205,7 @@ public class Signup extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(plInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(txUserName1)
+                        .addComponent(txYearOfBirth)
                         .addComponent(lbBirthday))
                     .addComponent(lbGender)
                     .addComponent(cbGender, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -217,11 +225,11 @@ public class Signup extends javax.swing.JFrame {
         cbAvatar.setToolTipText("Ảnh đại diện");
         cbAvatar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        btnSignup1.setText("Đăng nhập?");
-        btnSignup1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnSignup1.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnLogin.setText("Đăng nhập?");
+        btnLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnLogin.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnSignup1MouseClicked(evt);
+                btnLoginMouseClicked(evt);
             }
         });
 
@@ -235,7 +243,7 @@ public class Signup extends javax.swing.JFrame {
                     .addComponent(cbAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbHeaderText)
                     .addComponent(btnSignup, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSignup1)
+                    .addComponent(btnLogin)
                     .addComponent(plInput, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -251,7 +259,7 @@ public class Signup extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSignup, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSignup1)
+                .addComponent(btnLogin)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -259,14 +267,57 @@ public class Signup extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSignupMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSignupMouseClicked
-        // TODO: input validation check here
-        System.out.println(cbAvatar.getSelectedItem());
+        try {
+            // get data from form
+            String email = txEmail.getText();
+            String password = new String(txPassword.getPassword());
+            String rePass = new String(txRetypePassword.getPassword());
+            String name = txName.getText();
+            String gender = cbGender.getSelectedItem().toString();
+            int yearOfBirth = Integer.parseInt(txYearOfBirth.getText());
+            String avatar = getAvatar();
+
+            // validate
+            if (!rePass.equals(password)) {
+                JOptionPane.showMessageDialog(this, "Nhập lại mật khẩu chưa khớp", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                txRetypePassword.requestFocus();
+                return;
+            }
+            if (email.trim().equals("")) {
+                JOptionPane.showMessageDialog(this, "Chưa nhập email", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                txEmail.requestFocus();
+                return;
+            }
+            if (password.equals("")) {
+                JOptionPane.showMessageDialog(this, "Chưa nhập mật khẩu", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                txPassword.requestFocus();
+                return;
+            }
+            if (name.trim().equals("")) {
+                JOptionPane.showMessageDialog(this, "Chưa nhập tên", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                txName.requestFocus();
+                return;
+            }
+            if (yearOfBirth < 1900 || yearOfBirth > 2020) {
+                JOptionPane.showMessageDialog(this, "Năm sinh quá sai", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                txYearOfBirth.requestFocus();
+                return;
+            }
+            // TODO validate email
+
+            // call signup from socket handler
+            RunClient.socketHandler.signup(email, password, name, gender, yearOfBirth, avatar);
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Năm sinh phải là số nguyên", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            txYearOfBirth.requestFocus();
+        }
     }//GEN-LAST:event_btnSignupMouseClicked
 
-    private void btnSignup1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSignup1MouseClicked
+    private void btnLoginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLoginMouseClicked
         this.dispose();
         RunClient.openScene(RunClient.SceneName.LOGIN);
-    }//GEN-LAST:event_btnSignup1MouseClicked
+    }//GEN-LAST:event_btnLoginMouseClicked
 
     /**
      * @param args the command line arguments
@@ -305,8 +356,8 @@ public class Signup extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnSignup;
-    private javax.swing.JButton btnSignup1;
     private javax.swing.JComboBox<ImageIcon> cbAvatar;
     private javax.swing.JComboBox<String> cbGender;
     private javax.swing.JLabel jLabel1;
@@ -324,9 +375,9 @@ public class Signup extends javax.swing.JFrame {
     private javax.swing.JLabel lbUserName;
     private javax.swing.JPanel plInput;
     private javax.swing.JTextField txEmail;
+    private javax.swing.JTextField txName;
     private javax.swing.JPasswordField txPassword;
-    private javax.swing.JPasswordField txPassword1;
-    private javax.swing.JTextField txUserName;
-    private javax.swing.JTextField txUserName1;
+    private javax.swing.JPasswordField txRetypePassword;
+    private javax.swing.JTextField txYearOfBirth;
     // End of variables declaration//GEN-END:variables
 }

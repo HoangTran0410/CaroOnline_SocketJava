@@ -91,33 +91,63 @@ public class PlayerBUS {
         // return listPlayer.stream().anyMatch((p) -> (p.getEmail().equals(email) && p.getPassword().equals(password)));
         // nhưng chợt nhận ra có block player nữa, nên phải trả về String chứ ko được boolean :(
 
+        // check email
         Player p = getByEmail(email);
-
-        if (p != null && p.getPassword().equals(password)) {
-            if (p.isBlocked()) {
-                return "failed;" + Code.ACCOUNT_BLOCKED;
-            }
-
-            return "success";
+        if (p == null) {
+            return "failed;" + Code.ACCOUNT_NOT_FOUND;
         }
 
-        return "failed;" + Code.ACCOUNT_NOT_FOUND;
+        // check password
+        if (!p.getPassword().equals(password)) {
+            return "failed;" + Code.WRONG_PASSWORD;
+        }
+
+        // check blocked
+        if (p.isBlocked()) {
+            return "failed;" + Code.ACCOUNT_BLOCKED;
+        }
+
+        return "success";
     }
 
     public String changePassword(String email, String oldPassword, String newPassword) {
+        // check email
         Player p = getByEmail(email);
-
-        if (p != null) {
-            if (!p.getPassword().equals(oldPassword)) {
-                return "failed;" + Code.WRONG_PASSWORD;
-            }
-
-            p.setPassword(newPassword);
-            update(p);
-
-            return "success";
+        if (p == null) {
+            return "failed;" + Code.ACCOUNT_NOT_FOUND;
         }
 
-        return "failed;" + Code.ACCOUNT_NOT_FOUND;
+        // check password
+        if (!p.getPassword().equals(oldPassword)) {
+            return "failed;" + Code.WRONG_PASSWORD;
+        }
+
+        // đặt pass mới
+        p.setPassword(newPassword);
+        boolean status = update(p);
+        if (!status) {
+            // lỗi không xác định
+            return "failed;Lỗi khi đổi mật khẩu";
+        }
+
+        return "success";
+    }
+
+    public String signup(String email, String password, String avatar, String name, String gender, int yearOfBirth) {
+
+        // check email 
+        Player p = getByEmail(email);
+        if (p != null) {
+            return "failed;" + Code.EMAIL_EXISTED;
+        }
+
+        // thêm vào db
+        boolean status = add(new Player(email, password, avatar, name, gender, yearOfBirth));
+        if (!status) {
+            // lỗi ko xác định
+            return "failed;Lỗi khi đăng ký";
+        }
+
+        return "success";
     }
 }

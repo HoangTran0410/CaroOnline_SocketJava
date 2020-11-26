@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package shared.helper.security;
+package shared.security;
 
 import java.security.MessageDigest;
 import java.util.Arrays;
@@ -26,6 +26,14 @@ public class AES {
     }
 
     public AES(String secretKey) {
+        this.secretKey = secretKey;
+    }
+
+    public String getSecretKey() {
+        return secretKey;
+    }
+
+    public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
     }
 

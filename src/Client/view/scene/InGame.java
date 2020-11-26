@@ -5,7 +5,6 @@
  */
 package client.view.scene;
 
-import client.controller.SocketHandler;
 import client.view.helper.CustomListCellRenderer;
 import server.db.layers.DTO.Player;
 import shared.constant.Avatar;
@@ -66,7 +65,6 @@ public class InGame extends javax.swing.JFrame {
         plToolContainer = new javax.swing.JPanel();
         btnNewGame = new javax.swing.JButton();
         btnUndo = new javax.swing.JButton();
-        btnSurrender = new javax.swing.JButton();
         btnExitRoom = new javax.swing.JButton();
         plPlayerContainer = new javax.swing.JPanel();
         plPlayer = new javax.swing.JPanel();
@@ -90,6 +88,8 @@ public class InGame extends javax.swing.JFrame {
         txChatInput = new javax.swing.JTextField();
         btnSendMessage = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
         plBoardContainer = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -106,12 +106,8 @@ public class InGame extends javax.swing.JFrame {
         btnUndo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_undo_24px.png"))); // NOI18N
         btnUndo.setText("Đánh lại");
 
-        btnSurrender.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        btnSurrender.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_flag_2_24px.png"))); // NOI18N
-        btnSurrender.setText("Đầu hàng");
-
         btnExitRoom.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        btnExitRoom.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_open_door_24px.png"))); // NOI18N
+        btnExitRoom.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_exit_sign_24px.png"))); // NOI18N
         btnExitRoom.setText("Thoát phòng");
 
         javax.swing.GroupLayout plToolContainerLayout = new javax.swing.GroupLayout(plToolContainer);
@@ -125,11 +121,8 @@ public class InGame extends javax.swing.JFrame {
                         .addComponent(btnNewGame)
                         .addGap(6, 6, 6)
                         .addComponent(btnUndo))
-                    .addGroup(plToolContainerLayout.createSequentialGroup()
-                        .addComponent(btnSurrender)
-                        .addGap(6, 6, 6)
-                        .addComponent(btnExitRoom)))
-                .addGap(22, 22, 22))
+                    .addComponent(btnExitRoom))
+                .addGap(42, 42, 42))
         );
         plToolContainerLayout.setVerticalGroup(
             plToolContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -139,9 +132,7 @@ public class InGame extends javax.swing.JFrame {
                     .addComponent(btnNewGame)
                     .addComponent(btnUndo))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(plToolContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSurrender)
-                    .addComponent(btnExitRoom))
+                .addComponent(btnExitRoom)
                 .addGap(18, 18, 18))
         );
 
@@ -338,17 +329,28 @@ public class InGame extends javax.swing.JFrame {
 
         tpChatAndViewerContainer.addTab("Nhắn tin", jPanel3);
 
-        jPanel4.setBackground(new java.awt.Color(255, 51, 153));
+        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Người 1", "Người 2", "Người 3", "Người 4" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane2.setViewportView(jList1);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 328, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 236, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         tpChatAndViewerContainer.addTab("Người xem", jPanel4);
@@ -489,14 +491,15 @@ public class InGame extends javax.swing.JFrame {
     private javax.swing.JButton btnExitRoom;
     private javax.swing.JButton btnNewGame;
     private javax.swing.JButton btnSendMessage;
-    private javax.swing.JButton btnSurrender;
     private javax.swing.JButton btnUndo;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JList<String> lChatContainer;
     private javax.swing.JLabel lbActive1;
     private javax.swing.JLabel lbActive2;

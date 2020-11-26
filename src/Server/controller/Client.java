@@ -12,7 +12,9 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static server.RunServer.roomManager;
-import shared.helper.security.AES;
+import shared.constant.StreamData;
+import shared.security.AES;
+import shared.security.RSA;
 
 /**
  *
@@ -41,33 +43,57 @@ public class Client implements Runnable {
     public void run() {
 
         String received;
+        boolean running = true;
 
-        while (true) {
+        while (running) {
             try {
                 // receive the request from client
                 received = dis.readUTF();
 
-                // decrypt data
-                received = aes.decrypt(received);
+                // decrypt data if needed
+                if (aes != null) {
+                    received = aes.decrypt(received);
+                }
 
                 // check and process data
-                if (received.indexOf("login") == 0) {
+                StreamData.Type type = StreamData.getTypeFromData(received);
 
-                } else if (received.indexOf("signup") == 0) {
+                switch (type) {
+                    case AESKEY:
+                        // get encrypted key
+                        String keyEncrypted = received.split(";")[1];
 
-                } else if (received.indexOf("join_room") == 0) {
+                        // init rsa
+                        RSA serverSide = new RSA()
+                                .preparePrivateKey("src/Server/rsa_keypair/privateKey");
 
-                } else if (received.indexOf("leave_room") == 0) {
+                        // decrypt key
+                        String aesKey = serverSide.decrypt(keyEncrypted);
 
-                } else if (received.indexOf("chat_room") == 0) {
+                        System.out.println("Server receive AES key: " + aesKey);
 
-                } else if (received.indexOf("game_event") == 0) {
+                        // set aes key
+                        setSecretKey(aesKey);
 
-                } else if (received.indexOf("update_profile") == 0) {
-
-                } else if (received.indexOf("exit") == 0) {
-                    // TODO do something here
-                    break;
+                        // send status connect ok to client
+                        sendData(StreamData.Type.AESKEY.name());
+                        break;
+                    case LOGIN:
+                    case SIGNUP:
+                    case LIST_ROOM:
+                    case CREATE_ROOM:
+                    case JOIN_ROOM:
+                    case LEAVE_ROOM:
+                    case ROOM_CHAT:
+                    case PROFILE:
+                    case FIND_GAME:
+                    case MOVE:
+                    case UNDO:
+                    case UNDO_ACCEPT:
+                    case NEW_GAME:
+                    case NEW_GAME_ACCEPT:
+                    case EXIT:
+                        running = false;
                 }
 
             } catch (IOException ex) {
@@ -96,8 +122,22 @@ public class Client implements Runnable {
     // communicating handlers
     public String sendData(String data) {
         try {
-            String encrypted = aes.encrypt(data);
-            this.dos.writeUTF(encrypted);
+            if (aes != null) {
+                String encrypted = aes.encrypt(data);
+                this.dos.writeUTF(encrypted);
+            } else {
+                this.dos.writeUTF(data);
+            }
+            return "success";
+        } catch (IOException e) {
+            System.err.println("Send data failed to " + this.getEmail());
+            return "failed;" + e.getMessage();
+        }
+    }
+
+    public String sendPureData(String data) {
+        try {
+            this.dos.writeUTF(data);
             return "success";
         } catch (IOException e) {
             System.err.println("Send data failed to " + this.getEmail());
@@ -132,6 +172,7 @@ public class Client implements Runnable {
         return joinRoom(room.getId());
     }
 
+    // TODO chuyển return type về String
     public boolean leaveRoom() {
         // hien tai chua trong phong nao het ?
         if (this.room == null) {
@@ -158,7 +199,7 @@ public class Client implements Runnable {
         return true;
     }
 
-    public boolean signup(String email, String password, String name, String gender, String birthday) {
+    public boolean signup(String email, String password, String name, String gender, int yearOfBirth, String avatar) {
         // TODO: xu ly db , neu oke thi dang nhap luon
         return true;
     }

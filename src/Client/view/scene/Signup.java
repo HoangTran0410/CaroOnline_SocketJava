@@ -265,7 +265,7 @@ public class Signup extends javax.swing.JFrame {
 
     private void btnSignup1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSignup1MouseClicked
         this.dispose();
-        RunClient.changeScene(RunClient.SceneName.LOGIN);
+        RunClient.openScene(RunClient.SceneName.LOGIN);
     }//GEN-LAST:event_btnSignup1MouseClicked
 
     /**

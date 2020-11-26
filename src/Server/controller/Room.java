@@ -18,8 +18,8 @@ public class Room {
 
     String id;
     GameLogic gamelogic;
-    ArrayList<Client> clients = new ArrayList<>();
     Client player1, player2; // TODO: tách người chơi và người xem
+    ArrayList<Client> clients = new ArrayList<>();
 
     public Room() {
         // room id

@@ -5,6 +5,7 @@
  */
 package client.controller;
 
+import client.RunClient;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -13,7 +14,9 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import shared.helper.security.AES;
+import shared.constant.StreamData;
+import shared.security.AES;
+import shared.security.RSA;
 
 /**
  *
@@ -53,9 +56,8 @@ public class SocketHandler {
             });
             listener.start();
 
-            // TODO: send AES client's key to server
-            // create new aes key
-            aes = new AES();
+            // security
+            initSecurityAES();
 
             // connect success
             return "success";
@@ -67,27 +69,63 @@ public class SocketHandler {
         }
     }
 
+    private void initSecurityAES() {
+        // create new key
+        aes = new AES();
+
+        // encrypt aes key using rsa with server's public key 
+        RSA clientSideRSA = new RSA()
+                .preparePublicKey("src/Server/rsa_keypair/publicKey");
+
+        String aesKey = aes.getSecretKey();
+        String aesKeyEncrypted = clientSideRSA.encrypt(aesKey);
+
+        // send to server
+        sendPureData(StreamData.Type.AESKEY.name() + ";" + aesKeyEncrypted);
+
+        System.out.println("Client send AES key: " + aesKey);
+    }
+
     private void listen() {
-        while (true) {
+        boolean running = true;
+
+        while (running) {
             try {
                 // read input stream
                 String received = dis.readUTF();
 
+                // decrypt data if needed
+                if (aes != null) {
+                    received = aes.decrypt(received);
+                }
+
                 // process received data
-                if (received.indexOf("login_result") == 0) {
+                StreamData.Type type = StreamData.getTypeFromData(received);
 
-                } else if (received.indexOf("signup_result") == 0) {
-
-                } else if (received.indexOf("join_room_result") == 0) {
-
-                } else if (received.indexOf("leave_room_result") == 0) {
-
-                } else if (received.indexOf("chat_room") == 0) {
-
-                } else if (received.indexOf("game_event_result") == 0) {
-
-                } else if (received.indexOf("update_profile_result") == 0) {
-
+                switch (type) {
+                    case AESKEY:
+                        // client nhận được phản hồi "đã nhận được aes key từ server"
+                        // tắt scene connectServer
+                        RunClient.closeScene(RunClient.SceneName.CONNECTSERVER);
+                        // mở scene login
+                        RunClient.openScene(RunClient.SceneName.LOGIN);
+                        break;
+                    case LOGIN:
+                    case SIGNUP:
+                    case LIST_ROOM:
+                    case CREATE_ROOM:
+                    case JOIN_ROOM:
+                    case LEAVE_ROOM:
+                    case ROOM_CHAT:
+                    case PROFILE:
+                    case FIND_GAME:
+                    case MOVE:
+                    case UNDO:
+                    case UNDO_ACCEPT:
+                    case NEW_GAME:
+                    case NEW_GAME_ACCEPT:
+                    case EXIT:
+                        running = false;
                 }
 
             } catch (IOException ex) {
@@ -96,16 +134,30 @@ public class SocketHandler {
             }
         }
 
-        // close resource if something failed
-        closeResources();
-    }
-
-    private void closeResources() {
         try {
             // closing resources
             s.close();
             dis.close();
             dos.close();
+        } catch (IOException ex) {
+            Logger.getLogger(SocketHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void sendPureData(String data) {
+        try {
+            dos.writeUTF(data);
+        } catch (IOException ex) {
+            Logger.getLogger(SocketHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void sendData(String data) {
+        try {
+
+            String encrypted = aes.encrypt(data);
+            dos.writeUTF(encrypted);
+
         } catch (IOException ex) {
             Logger.getLogger(SocketHandler.class.getName()).log(Level.SEVERE, null, ex);
         }

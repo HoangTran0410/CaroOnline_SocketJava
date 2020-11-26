@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package shared.helper.security;
+package shared.security;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -94,7 +94,7 @@ public class RSA {
     }
 
     public String decrypt(String encrypted) {
-        if(publicKey == null) {
+        if(privateKey == null) {
             System.err.println("Không thể giải mã! Chưa có private key.");
         }
         try {

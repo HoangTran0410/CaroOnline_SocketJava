@@ -19,6 +19,13 @@ public class Login extends javax.swing.JFrame {
     public Login() {
         initComponents();
         this.setLocationRelativeTo(null);
+
+        // default is hidden
+        pgbLoading.setVisible(false);
+    }
+
+    public void setLoading(boolean status) {
+        pgbLoading.setVisible(status);
     }
 
     /**
@@ -36,10 +43,11 @@ public class Login extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         lbUserName = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        txUserName = new javax.swing.JTextField();
+        txEmail = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         lbPassword = new javax.swing.JLabel();
         txPassword = new javax.swing.JPasswordField();
+        pgbLoading = new javax.swing.JProgressBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Đăng Nhập");
@@ -70,8 +78,8 @@ public class Login extends javax.swing.JFrame {
 
         jLabel1.setText("Email");
 
-        txUserName.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        txUserName.setToolTipText("Email");
+        txEmail.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txEmail.setToolTipText("Email");
 
         jLabel2.setText("Mật khẩu");
 
@@ -89,7 +97,7 @@ public class Login extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(txUserName)))
+                            .addComponent(txEmail)))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addComponent(lbPassword)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -106,15 +114,17 @@ public class Login extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lbUserName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbPassword))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
+
+        pgbLoading.setIndeterminate(true);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -126,7 +136,8 @@ public class Login extends javax.swing.JFrame {
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbHeaderText)
                     .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSignup))
+                    .addComponent(btnSignup)
+                    .addComponent(pgbLoading, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -136,11 +147,13 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(lbHeaderText)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(10, 10, 10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                .addComponent(pgbLoading, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSignup)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -152,7 +165,12 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSignupMouseClicked
 
     private void btnLoginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLoginMouseClicked
-        // TODO open MainMenu scene from RunClient
+        String email = txEmail.getText();
+        String password = new String(txPassword.getPassword());
+        // TODO validate input
+
+        RunClient.socketHandler.login(email, password);
+        pgbLoading.setVisible(true);
     }//GEN-LAST:event_btnLoginMouseClicked
 
     /**
@@ -200,7 +218,8 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel lbHeaderText;
     private javax.swing.JLabel lbPassword;
     private javax.swing.JLabel lbUserName;
+    private javax.swing.JProgressBar pgbLoading;
+    private javax.swing.JTextField txEmail;
     private javax.swing.JPasswordField txPassword;
-    private javax.swing.JTextField txUserName;
     // End of variables declaration//GEN-END:variables
 }

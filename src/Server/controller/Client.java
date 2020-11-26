@@ -11,7 +11,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static server.RunServer.roomManager;
+import server.RunServer;
+import server.db.layers.BUS.PlayerBUS;
 import shared.constant.StreamData;
 import shared.security.AES;
 import shared.security.RSA;
@@ -55,7 +56,7 @@ public class Client implements Runnable {
                     received = aes.decrypt(received);
                 }
 
-                // check and process data
+                // process received data
                 StreamData.Type type = StreamData.getTypeFromData(received);
 
                 switch (type) {
@@ -69,16 +70,28 @@ public class Client implements Runnable {
 
                         // decrypt key
                         String aesKey = serverSide.decrypt(keyEncrypted);
-
                         System.out.println("Server receive AES key: " + aesKey);
 
-                        // set aes key
+                        // set AES key
                         setSecretKey(aesKey);
 
-                        // send status connect ok to client
+                        // notify client
                         sendData(StreamData.Type.AESKEY.name());
                         break;
+
                     case LOGIN:
+                        // get email / pass from data
+                        String[] splitted = received.split(";");
+                        String email = splitted[1];
+                        String password = splitted[2];
+
+                        // check login
+                        String status = new PlayerBUS().checkLogin(email, password);
+
+                        // send status
+                        sendData(StreamData.Type.LOGIN.name() + ";" + status);
+                        break;
+
                     case SIGNUP:
                     case LIST_ROOM:
                     case CREATE_ROOM:
@@ -152,7 +165,7 @@ public class Client implements Runnable {
             return "failed;Không thể chuyển phòng. Đang trong phòng " + this.room.getId() + " rồi!";
         }
 
-        Room room = roomManager.find(id);
+        Room room = RunServer.roomManager.find(id);
 
         // không tìm thấy phòng cần join ?
         if (room == null) {

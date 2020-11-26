@@ -6,6 +6,7 @@
 package client.controller;
 
 import client.RunClient;
+import shared.helper.Util;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import shared.constant.StreamData;
 import shared.security.AES;
 import shared.security.RSA;
@@ -91,7 +93,7 @@ public class SocketHandler {
 
         while (running) {
             try {
-                // read input stream
+                // receive the data from server
                 String received = dis.readUTF();
 
                 // decrypt data if needed
@@ -104,13 +106,32 @@ public class SocketHandler {
 
                 switch (type) {
                     case AESKEY:
-                        // client nhận được phản hồi "đã nhận được aes key từ server"
+                        // khi client nhận được phản hồi "đã nhận được aes key" từ server
                         // tắt scene connectServer
                         RunClient.closeScene(RunClient.SceneName.CONNECTSERVER);
                         // mở scene login
                         RunClient.openScene(RunClient.SceneName.LOGIN);
                         break;
+
                     case LOGIN:
+                        // get status from data
+                        String[] splitted = received.split(";");
+                        String status = splitted[1];
+
+                        // turn off loading
+                        RunClient.loginScene.setLoading(false);
+
+                        // check status
+                        if (status.equals("failed")) {
+                            String failedMsg = splitted[2];
+                            JOptionPane.showMessageDialog(RunClient.loginScene, failedMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
+
+                        } else if (status.equals("success")) {
+                            RunClient.closeScene(RunClient.SceneName.LOGIN);
+                            RunClient.openScene(RunClient.SceneName.MAINMENU);
+                        }
+                        break;
+
                     case SIGNUP:
                     case LIST_ROOM:
                     case CREATE_ROOM:
@@ -161,5 +182,17 @@ public class SocketHandler {
         } catch (IOException ex) {
             Logger.getLogger(SocketHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public void login(String email, String password) {
+        // hasing password
+        String passwordHash = Util.hash(password);
+        System.out.println("hash pass: " + passwordHash);
+
+        // prepare data
+        String data = StreamData.Type.LOGIN.name() + ";" + email + ";" + passwordHash;
+
+        // send data
+        sendData(data);
     }
 }

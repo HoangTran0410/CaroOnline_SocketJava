@@ -156,7 +156,7 @@ public class ConnectServer extends javax.swing.JFrame {
         btnConnect.setText("Đang kết nối..");
         pgbLoading.setVisible(true);
 
-        // connect
+        // connect to server
         new Thread(() -> {
             // call controller
             String result = RunClient.socketHandler.connect(ip, port);
@@ -172,12 +172,16 @@ public class ConnectServer extends javax.swing.JFrame {
     }
 
     private void onSuccess() {
-        // Kết nối thành công nhưng vẫn chờ server gửi thông báo đã nhận aes key
-        // Scene sẽ được chuyển qua Login khi client nhận được phản hồi từ server
+        // Kết nối thành công nhưng vẫn chờ server gửi thông báo đã nhận AES key
+        // Scene sẽ được chuyển qua LoginScene khi client nhận được phản hồi từ server
         // => code chuyển scene được đưa vào socket handler, lúc listen nhận được AESKEY từ server
 
 //        this.dispose();
 //        RunClient.changeScene(RunClient.SceneName.LOGIN);
+
+        // khi kết nối thành công sẽ đợi tạo kết nối bảo mật (gửi nhận AES key)
+        // => hiển thị ra cho người dùng thấy
+        btnConnect.setText("Đang bảo mật..");
     }
 
     private void onFailed(String failedMsg) {

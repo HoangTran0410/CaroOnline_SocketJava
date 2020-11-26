@@ -8,6 +8,7 @@ package server.db.layers.BUS;
 import server.db.layers.DAL.PlayerDAL;
 import server.db.layers.DTO.Player;
 import java.util.ArrayList;
+import shared.constant.Code;
 
 /**
  *
@@ -78,6 +79,24 @@ public class PlayerBUS {
             }
         }
         return null;
+    }
+
+    public String checkLogin(String email, String password) {
+        // code vòng for như getByEmail là được, nhưng netbeans nó hiện bóng đèn sáng ấn vào thì ra code này
+        // thấy "ngầu" nên để lại :))
+        // return listPlayer.stream().anyMatch((p) -> (p.getEmail().equals(email) && p.getPassword().equals(password)));
+        // nhưng chợt nhận ra có block player nữa, nên phải trả về String chứ ko được boolean :(
+
+        for (Player p : listPlayer) {
+            if (p.getEmail().equals(email) && p.getPassword().equals(password)) {
+                if (p.isBlocked()) {
+                    return "failed;" + Code.LOGIN_ACCOUNT_BLOCKED;
+                } else {
+                    return "success";
+                }
+            }
+        }
+        return "failed;" + Code.LOGIN_ACCOUNT_NOT_FOUND;
     }
 
     public ArrayList<Player> getList() {

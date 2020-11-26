@@ -106,33 +106,18 @@ public class SocketHandler {
 
                 switch (type) {
                     case AESKEY:
-                        // khi client nhận được phản hồi "đã nhận được aes key" từ server
-                        // tắt scene connectServer
-                        RunClient.closeScene(RunClient.SceneName.CONNECTSERVER);
-                        // mở scene login
-                        RunClient.openScene(RunClient.SceneName.LOGIN);
+                        onReceiveAESKey(received);
                         break;
 
                     case LOGIN:
-                        // get status from data
-                        String[] splitted = received.split(";");
-                        String status = splitted[1];
-
-                        // turn off loading
-                        RunClient.loginScene.setLoading(false);
-
-                        // check status
-                        if (status.equals("failed")) {
-                            String failedMsg = splitted[2];
-                            JOptionPane.showMessageDialog(RunClient.loginScene, failedMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
-
-                        } else if (status.equals("success")) {
-                            RunClient.closeScene(RunClient.SceneName.LOGIN);
-                            RunClient.openScene(RunClient.SceneName.MAINMENU);
-                        }
+                        onReceiveLogin(received);
                         break;
 
                     case SIGNUP:
+                    case CHANGE_PASSWORD:
+                        onReceiveChangePassword(received);
+                        break;
+
                     case LIST_ROOM:
                     case CREATE_ROOM:
                     case JOIN_ROOM:
@@ -165,6 +150,78 @@ public class SocketHandler {
         }
     }
 
+    // listen events
+    private void onReceiveAESKey(String received) {
+        // khi client nhận được phản hồi "đã nhận được aes key" từ server
+        // tắt scene connectServer
+        RunClient.closeScene(RunClient.SceneName.CONNECTSERVER);
+        // mở scene login
+        RunClient.openScene(RunClient.SceneName.LOGIN);
+    }
+
+    private void onReceiveLogin(String received) {
+        // get status from data
+        String[] splitted = received.split(";");
+        String status = splitted[1];
+
+        // turn off loading
+        RunClient.loginScene.setLoading(false);
+
+        // check status
+        if (status.equals("failed")) {
+            String failedMsg = splitted[2];
+            JOptionPane.showMessageDialog(RunClient.loginScene, failedMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
+
+        } else if (status.equals("success")) {
+            RunClient.closeScene(RunClient.SceneName.LOGIN);
+            RunClient.openScene(RunClient.SceneName.MAINMENU);
+        }
+    }
+
+    private void onReceiveChangePassword(String received) {
+        String[] splitted = received.split(";");
+        String status = splitted[1];
+
+        // turn off loading
+        RunClient.changePasswordScene.setLoading(false);
+
+        // check status
+        if (status.equals("failed")) {
+            String failedMsg = splitted[2];
+            JOptionPane.showMessageDialog(RunClient.loginScene, failedMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
+
+        } else if (status.equals("success")) {
+            RunClient.closeScene(RunClient.SceneName.CHANGEPASSWORD);
+            JOptionPane.showMessageDialog(RunClient.loginScene, "Đổi mật khẩu thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    // functions
+    public void login(String email, String password) {
+        // hasing password
+        String passwordHash = Util.hash(password);
+        System.out.println("hash pass: " + passwordHash);
+
+        // prepare data
+        String data = StreamData.Type.LOGIN.name() + ";" + email + ";" + passwordHash;
+
+        // send data
+        sendData(data);
+    }
+
+    public void changePassword(String oldPassword, String newPassword) {
+        // hasing password
+        String oldPasswordHash = Util.hash(oldPassword);
+        String newPasswordHash = Util.hash(newPassword);
+
+        // prepare data
+        String data = StreamData.Type.CHANGE_PASSWORD.name() + ";" + oldPasswordHash + ";" + newPasswordHash;
+
+        // send data
+        sendData(data);
+    }
+
+    // send data fucntions
     public void sendPureData(String data) {
         try {
             dos.writeUTF(data);
@@ -184,15 +241,4 @@ public class SocketHandler {
         }
     }
 
-    public void login(String email, String password) {
-        // hasing password
-        String passwordHash = Util.hash(password);
-        System.out.println("hash pass: " + passwordHash);
-
-        // prepare data
-        String data = StreamData.Type.LOGIN.name() + ";" + email + ";" + passwordHash;
-
-        // send data
-        sendData(data);
-    }
 }

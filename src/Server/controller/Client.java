@@ -61,38 +61,18 @@ public class Client implements Runnable {
 
                 switch (type) {
                     case AESKEY:
-                        // get encrypted key
-                        String keyEncrypted = received.split(";")[1];
-
-                        // init rsa
-                        RSA serverSide = new RSA()
-                                .preparePrivateKey("src/Server/rsa_keypair/privateKey");
-
-                        // decrypt key
-                        String aesKey = serverSide.decrypt(keyEncrypted);
-                        System.out.println("Server receive AES key: " + aesKey);
-
-                        // set AES key
-                        setSecretKey(aesKey);
-
-                        // notify client
-                        sendData(StreamData.Type.AESKEY.name());
+                        onReceiveAESKey(received);
                         break;
 
                     case LOGIN:
-                        // get email / pass from data
-                        String[] splitted = received.split(";");
-                        String email = splitted[1];
-                        String password = splitted[2];
-
-                        // check login
-                        String status = new PlayerBUS().checkLogin(email, password);
-
-                        // send status
-                        sendData(StreamData.Type.LOGIN.name() + ";" + status);
+                        onReceiveLogin(received);
                         break;
 
                     case SIGNUP:
+                    case CHANGE_PASSWORD:
+                        onReceiveChangePassword(received);
+                        break;
+
                     case LIST_ROOM:
                     case CREATE_ROOM:
                     case JOIN_ROOM:
@@ -125,6 +105,55 @@ public class Client implements Runnable {
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    // listen events
+    private void onReceiveAESKey(String received) {
+        // get encrypted key
+        String keyEncrypted = received.split(";")[1];
+
+        // init rsa
+        RSA serverSide = new RSA()
+                .preparePrivateKey("src/Server/rsa_keypair/privateKey");
+
+        // decrypt key
+        String aesKey = serverSide.decrypt(keyEncrypted);
+        System.out.println("Server receive AES key: " + aesKey);
+
+        // save AES key
+        setSecretKey(aesKey);
+
+        // notify client
+        sendData(StreamData.Type.AESKEY.name());
+    }
+
+    private void onReceiveLogin(String received) {
+        // get email / password from data
+        String[] splitted = received.split(";");
+        String email = splitted[1];
+        String password = splitted[2];
+
+        // check login
+        String status = new PlayerBUS().checkLogin(email, password);
+
+        // set login
+        this.email = email;
+
+        // send status
+        sendData(StreamData.Type.LOGIN.name() + ";" + status);
+    }
+
+    private void onReceiveChangePassword(String received) {
+        // get old pass, new pass from data
+        String[] splitted = received.split(";");
+        String oldPassword = splitted[1];
+        String newPassword = splitted[2];
+
+        // check change pass
+        String status = new PlayerBUS().changePassword(email, oldPassword, newPassword);
+
+        // send status
+        sendData(StreamData.Type.CHANGE_PASSWORD.name() + ";" + status);
     }
 
     // security handlers

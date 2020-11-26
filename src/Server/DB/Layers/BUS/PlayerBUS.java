@@ -81,25 +81,43 @@ public class PlayerBUS {
         return null;
     }
 
+    public ArrayList<Player> getList() {
+        return listPlayer;
+    }
+
     public String checkLogin(String email, String password) {
         // code vòng for như getByEmail là được, nhưng netbeans nó hiện bóng đèn sáng ấn vào thì ra code này
         // thấy "ngầu" nên để lại :))
         // return listPlayer.stream().anyMatch((p) -> (p.getEmail().equals(email) && p.getPassword().equals(password)));
         // nhưng chợt nhận ra có block player nữa, nên phải trả về String chứ ko được boolean :(
 
-        for (Player p : listPlayer) {
-            if (p.getEmail().equals(email) && p.getPassword().equals(password)) {
-                if (p.isBlocked()) {
-                    return "failed;" + Code.LOGIN_ACCOUNT_BLOCKED;
-                } else {
-                    return "success";
-                }
+        Player p = getByEmail(email);
+
+        if (p != null && p.getPassword().equals(password)) {
+            if (p.isBlocked()) {
+                return "failed;" + Code.ACCOUNT_BLOCKED;
             }
+
+            return "success";
         }
-        return "failed;" + Code.LOGIN_ACCOUNT_NOT_FOUND;
+
+        return "failed;" + Code.ACCOUNT_NOT_FOUND;
     }
 
-    public ArrayList<Player> getList() {
-        return listPlayer;
+    public String changePassword(String email, String oldPassword, String newPassword) {
+        Player p = getByEmail(email);
+
+        if (p != null) {
+            if (!p.getPassword().equals(oldPassword)) {
+                return "failed;" + Code.WRONG_PASSWORD;
+            }
+
+            p.setPassword(newPassword);
+            update(p);
+
+            return "success";
+        }
+
+        return "failed;" + Code.ACCOUNT_NOT_FOUND;
     }
 }

@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package client.scene;
+package client.view.scene;
 
-import client.Controller;
+import client.RunClient;
 import javax.swing.JOptionPane;
 
 /**
@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
  * @author Hoang Tran < hoang at 99.hoangtran@gmail.com >
  */
 public class ConnectServer extends javax.swing.JFrame {
-
+    
     boolean connecting = false;
 
     /**
@@ -126,7 +126,7 @@ public class ConnectServer extends javax.swing.JFrame {
         if (connecting) {
             return;
         }
-
+        
         String ip;
         int port;
 
@@ -134,13 +134,13 @@ public class ConnectServer extends javax.swing.JFrame {
         try {
             ip = txIP.getText();
             port = Integer.parseInt(txPort.getText());
-
+            
             if (port < 0 || port > 65535) {
                 JOptionPane.showMessageDialog(this, "Port phải từ 0 - 65535", "Sai port", JOptionPane.ERROR_MESSAGE);
                 txPort.requestFocus();
                 return;
             }
-
+            
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Port phải là số nguyên", "Sai port", JOptionPane.ERROR_MESSAGE);
             txPort.requestFocus();
@@ -150,7 +150,7 @@ public class ConnectServer extends javax.swing.JFrame {
         // connect to server
         connect(ip, port);
     }//GEN-LAST:event_btnConnectMouseClicked
-
+    
     private void connect(String ip, int port) {
         // show loading
         btnConnect.setText("Đang kết nối..");
@@ -159,7 +159,7 @@ public class ConnectServer extends javax.swing.JFrame {
         // connect
         new Thread(() -> {
             // call controller
-            String result = Controller.connect(ip, port);
+            String result = RunClient.socketHandler.connect(ip, port);
 
             // check result
             if (result.equals("success")) {
@@ -173,12 +173,12 @@ public class ConnectServer extends javax.swing.JFrame {
             pgbLoading.setVisible(false);
         }).start();
     }
-
+    
     private void onSuccess() {
         this.dispose();
-        new Login().setVisible(true);
+        RunClient.changeScene(RunClient.SceneName.LOGIN);
     }
-
+    
     private void onFailed(String failedMsg) {
         JOptionPane.showMessageDialog(ConnectServer.this, failedMsg, "Lỗi kết nối", JOptionPane.ERROR_MESSAGE);
         btnConnect.setText("Kết nối");

@@ -24,14 +24,14 @@ import java.util.logging.Logger;
  */
 public class RunServer {
 
-    int port = 5056;
-
     public static volatile ClientManager clientManager;
     public static volatile RoomManager roomManager;
 
     public RunServer() {
 
         try {
+            int port = 5056;
+
             ServerSocket ss = new ServerSocket(port);
             System.out.println("Created Server at port " + port + ".");
 

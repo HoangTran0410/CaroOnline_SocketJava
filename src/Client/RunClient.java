@@ -5,62 +5,74 @@
  */
 package client;
 
-import client.scene.ConnectServer;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import client.controller.SocketHandler;
+import client.view.helper.LookAndFeel;
+import client.view.scene.ChangePassword;
+import client.view.scene.ConnectServer;
+import client.view.scene.InGame;
+import client.view.scene.Login;
+import client.view.scene.MainMenu;
+import client.view.scene.Signup;
 
 /**
  *
  * @author Hoang Tran < hoang at 99.hoangtran@gmail.com >
  */
 public class RunClient {
+    
+    public enum SceneName {
+        CONNECTSERVER,
+        LOGIN,
+        SIGNUP,
+        MAINMENU,
+        CHANGEPASSWORD,
+        INGAME
+    }
+
+    public static ConnectServer connectServerScene;
+    public static Login loginScene;
+    public static Signup signupScene;
+    public static MainMenu mainMenuScene;
+    public static ChangePassword changePasswordScene;
+    public static InGame inGameScene;
+    
+    public static SocketHandler socketHandler;
+
+    public RunClient() {
+        socketHandler = new SocketHandler();
+        changeScene(SceneName.CONNECTSERVER);
+    }
+
+    public static void changeScene(SceneName sceneName) {
+
+        if (sceneName == SceneName.CONNECTSERVER) {
+            connectServerScene = new ConnectServer();
+            connectServerScene.setVisible(true);
+
+        } else if (sceneName == SceneName.LOGIN) {
+            loginScene = new Login();
+            loginScene.setVisible(true);
+
+        } else if (sceneName == SceneName.SIGNUP) {
+            signupScene = new Signup();
+            signupScene.setVisible(true);
+
+        } else if (sceneName == SceneName.MAINMENU) {
+            mainMenuScene = new MainMenu();
+            mainMenuScene.setVisible(true);
+
+        } else if (sceneName == SceneName.CHANGEPASSWORD) {
+            changePasswordScene = new ChangePassword();
+            changePasswordScene.setVisible(true);
+
+        } else if (sceneName == SceneName.INGAME) {
+            inGameScene = new InGame();
+            inGameScene.setVisible(true);
+        }
+    }
 
     public static void main(String[] args) {
-        setNimbusLookAndFeel();
-//        setSystemLookAndFeel();
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ConnectServer().setVisible(true);
-            }
-        });
+        LookAndFeel.setSystemLookAndFeel();
+        new RunClient();
     }
-
-    private static void setSystemLookAndFeel() {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
-
-        }
-    }
-
-    private static void setNimbusLookAndFeel() {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(RunClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(RunClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(RunClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(RunClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-    }
-
 }

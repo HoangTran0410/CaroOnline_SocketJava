@@ -126,7 +126,7 @@
                   <Font name="Dialog" size="14" style="1"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Client/Assets/icons8_new_file_24px.png"/>
+                  <Image iconType="3" name="/client/view/asset/icons8_new_file_24px.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="V&#xe1;n m&#x1edb;i"/>
               </Properties>
@@ -137,7 +137,7 @@
                   <Font name="Dialog" size="14" style="1"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Client/Assets/icons8_undo_24px.png"/>
+                  <Image iconType="3" name="/client/view/asset/icons8_undo_24px.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="&#x110;&#xe1;nh l&#x1ea1;i"/>
               </Properties>
@@ -148,7 +148,7 @@
                   <Font name="Dialog" size="14" style="1"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Client/Assets/icons8_flag_2_24px.png"/>
+                  <Image iconType="3" name="/client/view/asset/icons8_flag_2_24px.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="&#x110;&#x1ea7;u h&#xe0;ng"/>
               </Properties>
@@ -159,7 +159,7 @@
                   <Font name="Dialog" size="14" style="1"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Client/Assets/icons8_open_door_24px.png"/>
+                  <Image iconType="3" name="/client/view/asset/icons8_open_door_24px.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Tho&#xe1;t ph&#xf2;ng"/>
               </Properties>
@@ -259,7 +259,7 @@
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="0"/>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/Client/Assets/Avatars/icons8_circled_user_male_skin_type_7_96px.png"/>
+                      <Image iconType="3" name="/client/view/asset/avatar/icons8_circled_user_male_skin_type_7_96px.png"/>
                     </Property>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -281,7 +281,7 @@
                 <Component class="javax.swing.JLabel" name="lbActive1">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/Client/Assets/icons8_sphere_30px.png"/>
+                      <Image iconType="3" name="/client/view/asset/icons8_sphere_30px.png"/>
                     </Property>
                   </Properties>
                 </Component>
@@ -289,7 +289,7 @@
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="0"/>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/Client/Assets/icons8_sword_48px.png"/>
+                      <Image iconType="3" name="/client/view/asset/icons8_sword_48px.png"/>
                     </Property>
                   </Properties>
                 </Component>
@@ -297,7 +297,7 @@
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="0"/>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/Client/Assets/Avatars/icons8_circled_user_female_skin_type_7_96px.png"/>
+                      <Image iconType="3" name="/client/view/asset/avatar/icons8_circled_user_female_skin_type_7_96px.png"/>
                     </Property>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -318,7 +318,7 @@
                 <Component class="javax.swing.JLabel" name="lbActive2">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/Client/Assets/icons8_sphere_30px.png"/>
+                      <Image iconType="3" name="/client/view/asset/icons8_sphere_30px.png"/>
                     </Property>
                   </Properties>
                 </Component>
@@ -494,7 +494,7 @@
                     <Component class="javax.swing.JButton" name="btnSendMessage">
                       <Properties>
                         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                          <Image iconType="3" name="/Client/Assets/icons8_paper_plane_24px.png"/>
+                          <Image iconType="3" name="/client/view/asset/icons8_paper_plane_24px.png"/>
                         </Property>
                         <Property name="text" type="java.lang.String" value="G&#x1eed;i"/>
                       </Properties>

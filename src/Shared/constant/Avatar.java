@@ -11,8 +11,8 @@ package shared.constant;
  */
 public class Avatar {
 
-    public static final String PATH = "src/client/asset/avatar/";
-    public static final String PATH_RESOURCE = "/client/asset/avatar/";
+    public static final String PATH = "src/client/view/asset/avatar/";
+    public static final String PATH_RESOURCE = "/client/view/asset/avatar/";
 
     // https://www.dropboxforum.com/t5/Dropbox-files-folders/How-to-Copy-file-Names-within-a-Folder-Create-a-table-of/td-p/253141
     public static final String[] LIST = {

@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package client.scene;
+package client.view.scene;
 
+import client.controller.SocketHandler;
 import shared.constant.Avatar;
 import javax.swing.ImageIcon;
 
@@ -53,7 +54,7 @@ public class MainMenu extends javax.swing.JFrame {
         lbBirthday = new javax.swing.JLabel();
         txUserName1 = new javax.swing.JTextField();
         btnProfileChangePass = new javax.swing.JButton();
-        lbGender1 = new javax.swing.JLabel();
+        lbPassword = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         cbAvatar = new javax.swing.JComboBox<>();
         jPanel7 = new javax.swing.JPanel();
@@ -95,18 +96,18 @@ public class MainMenu extends javax.swing.JFrame {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Hồ sơ cá nhân"));
 
-        lbEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_email_48px.png"))); // NOI18N
+        lbEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_email_48px.png"))); // NOI18N
 
         txEmail.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txEmail.setToolTipText("Email");
 
-        lbUserName.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_name_48px_1.png"))); // NOI18N
+        lbUserName.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_name_48px_1.png"))); // NOI18N
 
         txUserName.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txUserName.setToolTipText("Họ tên");
 
         lbGender.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        lbGender.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_gender_48px.png"))); // NOI18N
+        lbGender.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_gender_48px.png"))); // NOI18N
 
         cbGender.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         cbGender.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nam", "Nữ", "Ẩn" }));
@@ -114,7 +115,7 @@ public class MainMenu extends javax.swing.JFrame {
         cbGender.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         lbBirthday.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        lbBirthday.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_birthday_cake_48px_2.png"))); // NOI18N
+        lbBirthday.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_birthday_cake_48px_2.png"))); // NOI18N
 
         txUserName1.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txUserName1.setToolTipText("Năm sinh");
@@ -127,8 +128,8 @@ public class MainMenu extends javax.swing.JFrame {
             }
         });
 
-        lbGender1.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        lbGender1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/assets/icons8_password_48px.png"))); // NOI18N
+        lbPassword.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        lbPassword.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_password_48px.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -150,7 +151,7 @@ public class MainMenu extends javax.swing.JFrame {
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lbGender)
-                                    .addComponent(lbGender1))
+                                    .addComponent(lbPassword))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(cbGender, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -185,7 +186,7 @@ public class MainMenu extends javax.swing.JFrame {
                     .addComponent(cbGender, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lbGender1)
+                    .addComponent(lbPassword)
                     .addComponent(btnProfileChangePass))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -363,15 +364,15 @@ public class MainMenu extends javax.swing.JFrame {
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 128, Short.MAX_VALUE)
+            .addGap(0, 162, Short.MAX_VALUE)
         );
 
         jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder("Chức năng"));
 
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_add_24px.png"))); // NOI18N
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_add_24px.png"))); // NOI18N
         jButton3.setText("Tạo phòng");
 
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_circled_play_24px.png"))); // NOI18N
+        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_circled_play_24px.png"))); // NOI18N
         jButton4.setText("Tìm trận");
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
@@ -425,7 +426,7 @@ public class MainMenu extends javax.swing.JFrame {
             .addGroup(jPanel9Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(112, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -447,8 +448,8 @@ public class MainMenu extends javax.swing.JFrame {
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -547,7 +548,7 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JLabel lbBirthday;
     private javax.swing.JLabel lbEmail;
     private javax.swing.JLabel lbGender;
-    private javax.swing.JLabel lbGender1;
+    private javax.swing.JLabel lbPassword;
     private javax.swing.JLabel lbUserName;
     private javax.swing.JPanel plProfileBtn;
     private javax.swing.JTextField txEmail;

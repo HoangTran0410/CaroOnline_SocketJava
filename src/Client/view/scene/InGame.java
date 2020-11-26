@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package client.scene;
+package client.view.scene;
 
-import client.helper.CustomListCellRenderer;
+import client.controller.SocketHandler;
+import client.view.helper.CustomListCellRenderer;
 import server.db.layers.DTO.Player;
 import shared.constant.Avatar;
 import java.awt.event.KeyEvent;
@@ -98,19 +99,19 @@ public class InGame extends javax.swing.JFrame {
         plToolContainer.setBorder(javax.swing.BorderFactory.createTitledBorder("Chức năng"));
 
         btnNewGame.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        btnNewGame.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_new_file_24px.png"))); // NOI18N
+        btnNewGame.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_new_file_24px.png"))); // NOI18N
         btnNewGame.setText("Ván mới");
 
         btnUndo.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        btnUndo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_undo_24px.png"))); // NOI18N
+        btnUndo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_undo_24px.png"))); // NOI18N
         btnUndo.setText("Đánh lại");
 
         btnSurrender.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        btnSurrender.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_flag_2_24px.png"))); // NOI18N
+        btnSurrender.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_flag_2_24px.png"))); // NOI18N
         btnSurrender.setText("Đầu hàng");
 
         btnExitRoom.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        btnExitRoom.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_open_door_24px.png"))); // NOI18N
+        btnExitRoom.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_open_door_24px.png"))); // NOI18N
         btnExitRoom.setText("Thoát phòng");
 
         javax.swing.GroupLayout plToolContainerLayout = new javax.swing.GroupLayout(plToolContainer);
@@ -147,7 +148,7 @@ public class InGame extends javax.swing.JFrame {
         plPlayer.setBorder(javax.swing.BorderFactory.createTitledBorder("Người chơi"));
 
         lbAvatar1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbAvatar1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/Avatars/icons8_circled_user_male_skin_type_7_96px.png"))); // NOI18N
+        lbAvatar1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/avatar/icons8_circled_user_male_skin_type_7_96px.png"))); // NOI18N
         lbAvatar1.setBorder(javax.swing.BorderFactory.createTitledBorder("Đang đánh"));
         lbAvatar1.setOpaque(true);
 
@@ -155,20 +156,20 @@ public class InGame extends javax.swing.JFrame {
         lbPlayerName1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbPlayerName1.setText("Hoang");
 
-        lbActive1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_sphere_30px.png"))); // NOI18N
+        lbActive1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_sphere_30px.png"))); // NOI18N
 
         lbVersus.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbVersus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_sword_48px.png"))); // NOI18N
+        lbVersus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_sword_48px.png"))); // NOI18N
 
         lbAvatar2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbAvatar2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/Avatars/icons8_circled_user_female_skin_type_7_96px.png"))); // NOI18N
+        lbAvatar2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/avatar/icons8_circled_user_female_skin_type_7_96px.png"))); // NOI18N
         lbAvatar2.setBorder(javax.swing.BorderFactory.createTitledBorder("Chờ"));
 
         lbPlayerName2.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
         lbPlayerName2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbPlayerName2.setText("Hien");
 
-        lbActive2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_sphere_30px.png"))); // NOI18N
+        lbActive2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_sphere_30px.png"))); // NOI18N
 
         javax.swing.GroupLayout plPlayerLayout = new javax.swing.GroupLayout(plPlayer);
         plPlayer.setLayout(plPlayerLayout);
@@ -287,7 +288,7 @@ public class InGame extends javax.swing.JFrame {
             }
         });
 
-        btnSendMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Assets/icons8_paper_plane_24px.png"))); // NOI18N
+        btnSendMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_paper_plane_24px.png"))); // NOI18N
         btnSendMessage.setText("Gửi");
         btnSendMessage.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {

@@ -82,7 +82,7 @@
                               </Group>
                               <Group type="102" attributes="0">
                                   <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-                                  <Component id="txUserName1" min="-2" pref="262" max="-2" attributes="0"/>
+                                  <Component id="txUserName1" min="-2" pref="250" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -94,7 +94,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="txEmail" min="-2" pref="262" max="-2" attributes="0"/>
+                                      <Component id="txEmail" min="-2" pref="250" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
@@ -113,7 +113,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                                      <Component id="txPassword" min="-2" pref="262" max="-2" attributes="0"/>
+                                      <Component id="txPassword" min="-2" pref="250" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
@@ -121,7 +121,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                                      <Component id="txPassword1" min="-2" pref="262" max="-2" attributes="0"/>
+                                      <Component id="txPassword1" min="-2" pref="250" max="-2" attributes="0"/>
                                       <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
@@ -191,7 +191,7 @@
         <Component class="javax.swing.JLabel" name="lbEmail">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/Client/Assets/icons8_email_48px.png"/>
+              <Image iconType="3" name="/client/view/asset/icons8_email_48px.png"/>
             </Property>
           </Properties>
         </Component>
@@ -206,7 +206,7 @@
         <Component class="javax.swing.JLabel" name="lbUserName">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/Client/Assets/icons8_name_48px_1.png"/>
+              <Image iconType="3" name="/client/view/asset/icons8_name_48px_1.png"/>
             </Property>
           </Properties>
         </Component>
@@ -221,7 +221,7 @@
         <Component class="javax.swing.JLabel" name="lbPassword">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/Client/Assets/icons8_password_48px.png"/>
+              <Image iconType="3" name="/client/view/asset/icons8_password_48px.png"/>
             </Property>
           </Properties>
         </Component>
@@ -238,7 +238,7 @@
         <Component class="javax.swing.JLabel" name="lbPassword1">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/Client/Assets/icons8_password_reset_48px.png"/>
+              <Image iconType="3" name="/client/view/asset/icons8_password_reset_48px.png"/>
             </Property>
           </Properties>
         </Component>
@@ -258,7 +258,7 @@
               <Font name="Tahoma" size="15" style="0"/>
             </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/Client/Assets/icons8_birthday_cake_48px_2.png"/>
+              <Image iconType="3" name="/client/view/asset/icons8_birthday_cake_48px_2.png"/>
             </Property>
           </Properties>
         </Component>
@@ -276,7 +276,7 @@
               <Font name="Tahoma" size="15" style="0"/>
             </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/Client/Assets/icons8_gender_48px.png"/>
+              <Image iconType="3" name="/client/view/asset/icons8_gender_48px.png"/>
             </Property>
           </Properties>
         </Component>
@@ -329,7 +329,7 @@
           <Font name="Tahoma" size="20" style="1"/>
         </Property>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/Client/Assets/icons8_slide_up_32px.png"/>
+          <Image iconType="3" name="/client/view/asset/icons8_slide_up_32px.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="&#x110;&#x102;NG K&#xdd;"/>
         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">

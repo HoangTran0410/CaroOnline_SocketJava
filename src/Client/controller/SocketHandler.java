@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package client;
+package client.controller;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -13,20 +13,22 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import shared.helper.security.AES;
 
 /**
  *
  * @author Hoang Tran < hoang at 99.hoangtran@gmail.com >
  */
-public class Controller {
+public class SocketHandler {
 
-    public static volatile Socket s;
-    public static volatile DataInputStream dis;
-    public static volatile DataOutputStream dos;
+    Socket s;
+    DataInputStream dis;
+    DataOutputStream dos;
 
-    private static Thread listener = null;
+    Thread listener = null;
+    AES aes;
 
-    public static String connect(String addr, int port) {
+    public String connect(String addr, int port) {
         try {
             // getting ip 
             InetAddress ip = InetAddress.getByName(addr);
@@ -37,8 +39,8 @@ public class Controller {
             System.out.println("Connected to " + ip + ":" + port + ", localport:" + s.getLocalPort());
 
             // obtaining input and output streams
-            dis = new DataInputStream(Controller.s.getInputStream());
-            dos = new DataOutputStream(Controller.s.getOutputStream());
+            dis = new DataInputStream(s.getInputStream());
+            dos = new DataOutputStream(s.getOutputStream());
 
             // close old listener
             if (listener != null && listener.isAlive()) {
@@ -51,8 +53,11 @@ public class Controller {
             });
             listener.start();
 
-            // connect success
             // TODO: send AES client's key to server
+            // create new aes key
+            aes = new AES();
+
+            // connect success
             return "success";
 
         } catch (IOException e) {
@@ -62,7 +67,7 @@ public class Controller {
         }
     }
 
-    private static void listen() {
+    private void listen() {
         while (true) {
             try {
                 // read input stream
@@ -86,18 +91,23 @@ public class Controller {
                 }
 
             } catch (IOException ex) {
-                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(SocketHandler.class.getName()).log(Level.SEVERE, null, ex);
                 break;
             }
         }
 
+        // close resource if something failed
+        closeResources();
+    }
+
+    private void closeResources() {
         try {
             // closing resources
             s.close();
             dis.close();
             dos.close();
         } catch (IOException ex) {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SocketHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

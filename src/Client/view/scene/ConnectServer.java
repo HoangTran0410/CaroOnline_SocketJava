@@ -14,8 +14,6 @@ import javax.swing.JOptionPane;
  */
 public class ConnectServer extends javax.swing.JFrame {
 
-    boolean connecting = false;
-
     /**
      * Creates new form ChooseServer
      */
@@ -77,25 +75,27 @@ public class ConnectServer extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.CENTER, layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel2))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(jLabel2)
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnConnect, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(pgbLoading, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                                    .addComponent(jLabel3)
-                                    .addComponent(txIP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(14, 14, 14)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                                    .addComponent(txPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4))))
-                        .addGap(0, 46, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btnConnect, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(pgbLoading, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txIP, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(92, 92, 92)
+                                        .addComponent(jLabel3)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txPort)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(jLabel4)
+                                        .addGap(29, 29, 29)))))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -122,11 +122,6 @@ public class ConnectServer extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnConnectMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConnectMouseClicked
-        // nếu đang kết nối thì ko làm gì cả
-        if (connecting) {
-            return;
-        }
-
         String ip;
         int port;
 
@@ -155,6 +150,7 @@ public class ConnectServer extends javax.swing.JFrame {
         // show loading
         btnConnect.setText("Đang kết nối..");
         pgbLoading.setVisible(true);
+        btnConnect.setEnabled(false);
 
         // connect to server
         new Thread(() -> {
@@ -178,16 +174,16 @@ public class ConnectServer extends javax.swing.JFrame {
 
 //        this.dispose();
 //        RunClient.changeScene(RunClient.SceneName.LOGIN);
-
         // khi kết nối thành công sẽ đợi tạo kết nối bảo mật (gửi nhận AES key)
         // => hiển thị ra cho người dùng thấy
         btnConnect.setText("Đang bảo mật..");
     }
 
     private void onFailed(String failedMsg) {
-        JOptionPane.showMessageDialog(ConnectServer.this, failedMsg, "Lỗi kết nối", JOptionPane.ERROR_MESSAGE);
         btnConnect.setText("Kết nối");
         pgbLoading.setVisible(false);
+        btnConnect.setEnabled(true);
+        JOptionPane.showMessageDialog(ConnectServer.this, failedMsg, "Lỗi kết nối", JOptionPane.ERROR_MESSAGE);
     }
 
     /**

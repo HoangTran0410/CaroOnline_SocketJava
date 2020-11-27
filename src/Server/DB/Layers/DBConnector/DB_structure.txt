@@ -2,8 +2,8 @@
 ID                  : AUTO_INCREASEMENT
 Email               : varchar(50) (unique)
 Password            : varchar(50) (hash)
-Avatar              : varchar(50) (file path)
 Name                : varchar(50)
+Avatar              : varchar(50) (file path)
 Gender              : varchar(10) (nam-nữ-ẩn)
 YearOfBirth         : int(4) năm sinh (1999, 2000, ..)
 Score               : int(11) điểm thành tích
@@ -11,7 +11,6 @@ MatchCount          : int(11) số trận đã đấu
 WinCount            : int(11) số trận thắng
 LoseCount           : int(11) số trận thua
 CurrentStreak       : int(11) chuỗi thắng/thua liên tiếp ở thời điểm hiện tại (số âm là chuỗi thua, số dương là chuỗi thắng)
-Rank                : int(11) xếp hạng
 Blocked             : tinyint(1) bị block hay không
 
 - GameMatch

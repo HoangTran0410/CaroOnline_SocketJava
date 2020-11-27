@@ -23,14 +23,13 @@ public class Player {
     int winCount = 0;
     int loseCount = 0;
     int currentStreak = 0; // số âm là chuỗi thua, dương là chuỗi thắng
-    int rank = 0;
     boolean blocked = false;
 
     public Player() {
 
     }
 
-    public Player(int id, String email, String password, String avatar, String name, String gender, int yearOfBirth, int score, int matchCount, int winCount, int loseCount, int currentStreak, int rank, boolean blocked) {
+    public Player(int id, String email, String password, String avatar, String name, String gender, int yearOfBirth, int score, int matchCount, int winCount, int loseCount, int currentStreak, boolean blocked) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -43,7 +42,6 @@ public class Player {
         this.winCount = winCount;
         this.loseCount = loseCount;
         this.currentStreak = currentStreak;
-        this.rank = rank;
         this.blocked = blocked;
     }
 
@@ -69,7 +67,6 @@ public class Player {
         this.winCount = p.winCount;
         this.loseCount = p.loseCount;
         this.currentStreak = p.currentStreak;
-        this.rank = p.rank;
         this.blocked = p.blocked;
     }
 
@@ -78,7 +75,7 @@ public class Player {
             return 0;
         }
 
-        return (float) (1.0 * winCount / matchCount);
+        return (float) (100.0 * winCount / matchCount);
     }
 
     public int getId() {
@@ -175,14 +172,6 @@ public class Player {
 
     public void setCurrentStreak(int currentStreak) {
         this.currentStreak = currentStreak;
-    }
-
-    public int getRank() {
-        return rank;
-    }
-
-    public void setRank(int rank) {
-        this.rank = rank;
     }
 
     public boolean isBlocked() {

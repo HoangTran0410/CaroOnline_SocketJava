@@ -37,7 +37,7 @@ public class ClientManager {
 
     public Client find(String email) {
         for (Client c : clients) {
-            if (c.getEmail().equals(email)) {
+            if (c.getLoginEmail().equals(email)) {
                 return c;
             }
         }

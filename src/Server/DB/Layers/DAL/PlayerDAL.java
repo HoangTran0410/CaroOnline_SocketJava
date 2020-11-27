@@ -50,7 +50,6 @@ public class PlayerDAL {
                             rs.getInt("WinCount"),
                             rs.getInt("LoseCount"),
                             rs.getInt("CurrentStreak"),
-                            rs.getInt("Rank"),
                             rs.getBoolean("Blocked")
                     );
                     result.add(p);
@@ -86,8 +85,7 @@ public class PlayerDAL {
             stm.setInt(9, p.getWinCount());
             stm.setInt(10, p.getLoseCount());
             stm.setInt(11, p.getCurrentStreak());
-            stm.setInt(12, p.getRank());
-            stm.setBoolean(13, p.isBlocked());
+            stm.setBoolean(12, p.isBlocked());
 
             result = connector.sqlUpdate(stm);
         } catch (SQLException ex) {
@@ -133,9 +131,8 @@ public class PlayerDAL {
             stm.setInt(9, p.getWinCount());
             stm.setInt(10, p.getLoseCount());
             stm.setInt(11, p.getCurrentStreak());
-            stm.setInt(12, p.getRank());
-            stm.setBoolean(13, p.isBlocked());
-            stm.setInt(14, p.getId());
+            stm.setBoolean(12, p.isBlocked());
+            stm.setInt(13, p.getId());
 
             result = connector.sqlUpdate(stm);
         } catch (SQLException ex) {

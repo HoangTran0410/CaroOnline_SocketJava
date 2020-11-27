@@ -110,8 +110,8 @@ public class SocketHandler {
                     case JOIN_ROOM:
                     case LEAVE_ROOM:
                     case ROOM_CHAT:
-                    case PROFILE:
-                        onReceiveProfile(received);
+                    case GET_PROFILE:
+                        onReceiveGetProfile(received);
                         break;
 
                     case EDIT_PROFILE:
@@ -220,7 +220,7 @@ public class SocketHandler {
         RunClient.openScene(RunClient.SceneName.LOGIN);
     }
 
-    private void onReceiveProfile(String received) {
+    private void onReceiveGetProfile(String received) {
         String[] splitted = received.split(";");
         String status = splitted[1];
 
@@ -237,9 +237,9 @@ public class SocketHandler {
             String email = splitted[3];
             String name = splitted[4];
             String avatar = splitted[5];
-            String yearOfBirthStr = splitted[6];
-            String gender = splitted[7];
-            String rankStr = splitted[8];
+            String gender = splitted[6];
+            String yearOfBirthStr = splitted[7];
+            String scoreStr = splitted[8];
             String matchCountStr = splitted[9];
             String currentStreakStr = splitted[10];
             String winRateStr = splitted[11];
@@ -248,19 +248,22 @@ public class SocketHandler {
             try {
                 int id = Integer.parseInt(idStr);
                 int yearOfBirth = Integer.parseInt(yearOfBirthStr);
-                int rank = Integer.parseInt(rankStr);
+                int score = Integer.parseInt(scoreStr);
                 int matchCount = Integer.parseInt(matchCountStr);
                 int currentStreak = Integer.parseInt(currentStreakStr);
                 float winRate = Float.parseFloat(winRateStr);
 
                 // TODO check isMe
-                ProfileData p = new ProfileData(id, email, name, avatar, yearOfBirth, gender, rank, matchCount, currentStreak, winRate);
+                ProfileData p = new ProfileData(id, email, name, avatar, gender, yearOfBirth, score, matchCount, currentStreak, winRate);
 
                 // show data to UI
                 RunClient.profileScene.setProfileData(p);
 
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(RunClient.profileScene, "Dữ liệu hồ sơ bị lỗi: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+
+                // tự động đóng scene profile nếu có lỗi
+                RunClient.closeScene(RunClient.SceneName.PROFILE);
             }
         }
     }
@@ -373,7 +376,7 @@ public class SocketHandler {
 
     public void getProfile(String email) {
         // prepare data
-        String data = StreamData.Type.PROFILE.name() + ";" + email;
+        String data = StreamData.Type.GET_PROFILE.name() + ";" + email;
 
         // send data
         sendData(data);

@@ -35,7 +35,7 @@ public class Profile extends javax.swing.JFrame {
         setAvatar(Avatar.LIST);
     }
 
-    public void setAvatar(String[] avas) {
+    private void setAvatar(String[] avas) {
         cbAvatar.removeAllItems();
         hAvatar.clear();
 
@@ -44,6 +44,18 @@ public class Profile extends javax.swing.JFrame {
             hAvatar.put(s, i);
             cbAvatar.addItem(i);
         }
+    }
+
+    private String getCurrentStreakStr(int currentStreak) {
+        if (currentStreak > 0) {
+            return "thắng " + currentStreak;
+        }
+
+        if (currentStreak < 0) {
+            return "thua " + currentStreak;
+        }
+
+        return "" + currentStreak;
     }
 
     public void loadProfileData(String email) {
@@ -58,16 +70,17 @@ public class Profile extends javax.swing.JFrame {
         boolean isMe = p.getEmail().equals(RunClient.socketHandler.getEmail());
 
         // put data to form
+        plContainer.setBorder(javax.swing.BorderFactory.createTitledBorder("Người chơi #" + p.getId()));
         txEmail.setText(p.getEmail());
         txName.setText(p.getName());
-        txYearOfBirth.setText(String.valueOf(p.getYearOfBirth()));
+        txYearOfBirth.setText("" + p.getYearOfBirth());
         cbGender.setSelectedItem(p.getGender());
         cbAvatar.setSelectedItem(hAvatar.get(p.getAvatar()));
 
-        lbRank.setText(String.valueOf(p.getRank()));
-        lbMatchCount.setText(String.valueOf(p.getMatchCount()));
-        lbCurrentStreak.setText(String.valueOf(p.getCurrentStreak()));
-        lbWinRate.setText(String.valueOf(p.getWinRate()));
+        lbScore.setText(String.valueOf(p.getScore()));
+        lbMatchCount.setText("" + p.getMatchCount());
+        lbCurrentStreak.setText(getCurrentStreakStr(p.getCurrentStreak()));
+        lbWinRate.setText(p.getWinRate() + "%");
 
         // editable chỉ khi là tài khoản của mình
         txEmail.setEditable(isMe);
@@ -98,7 +111,7 @@ public class Profile extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        plContainer = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         lbEmail = new javax.swing.JLabel();
         txEmail = new javax.swing.JTextField();
@@ -121,15 +134,15 @@ public class Profile extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        lbRank = new javax.swing.JLabel();
+        lbScore = new javax.swing.JLabel();
         lbMatchCount = new javax.swing.JLabel();
         lbCurrentStreak = new javax.swing.JLabel();
         lbWinRate = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Tài khoản");
+        setTitle("Hồ sơ");
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Người chơi"));
+        plContainer.setBorder(javax.swing.BorderFactory.createTitledBorder("Người chơi"));
 
         lbEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_email_48px.png"))); // NOI18N
 
@@ -276,21 +289,21 @@ public class Profile extends javax.swing.JFrame {
         cbAvatar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel1.setText("Hạng");
+        jLabel1.setText("Điểm");
 
         jLabel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel2.setText("Số trận");
 
         jLabel3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel3.setText("Chuỗi thắng");
+        jLabel3.setText("Chuỗi");
 
         jLabel4.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel4.setText("Tỉ lệ thắng");
 
-        lbRank.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
-        lbRank.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        lbRank.setText("_/_");
-        lbRank.setToolTipText("");
+        lbScore.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
+        lbScore.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        lbScore.setText("_");
+        lbScore.setToolTipText("");
 
         lbMatchCount.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
         lbMatchCount.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
@@ -318,7 +331,7 @@ public class Profile extends javax.swing.JFrame {
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbRank, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+                    .addComponent(lbScore, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
                     .addComponent(lbMatchCount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbWinRate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbCurrentStreak, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -330,7 +343,7 @@ public class Profile extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(lbRank))
+                    .addComponent(lbScore))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -367,20 +380,20 @@ public class Profile extends javax.swing.JFrame {
                 .addContainerGap(11, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout plContainerLayout = new javax.swing.GroupLayout(plContainer);
+        plContainer.setLayout(plContainerLayout);
+        plContainerLayout.setHorizontalGroup(
+            plContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(plContainerLayout.createSequentialGroup()
                 .addGap(5, 5, 5)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(plContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        plContainerLayout.setVerticalGroup(
+            plContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(plContainerLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10)
@@ -393,14 +406,14 @@ public class Profile extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(plContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(plContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -476,7 +489,6 @@ public class Profile extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
@@ -486,10 +498,11 @@ public class Profile extends javax.swing.JFrame {
     private javax.swing.JLabel lbGender;
     private javax.swing.JLabel lbMatchCount;
     private javax.swing.JLabel lbPassword;
-    private javax.swing.JLabel lbRank;
+    private javax.swing.JLabel lbScore;
     private javax.swing.JLabel lbUserName;
     private javax.swing.JLabel lbWinRate;
     private javax.swing.JProgressBar pgbProfileLoading;
+    private javax.swing.JPanel plContainer;
     private javax.swing.JPanel plProfileBtn;
     private javax.swing.JTextField txEmail;
     private javax.swing.JTextField txName;

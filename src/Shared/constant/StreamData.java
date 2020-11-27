@@ -33,7 +33,7 @@ public class StreamData {
         ROOM_CHAT, // chức năng chat phòng / dữ liệu chat / dữ liệu chat (gửi broadcast trong phòng)
 
         // profile
-        PROFILE, // chức năng xem hồ sơ cá nhân / không cần dữ liệu thêm / dữ liệu người chơi (sau này có thể cho xem profile của người khác)
+        GET_PROFILE, // chức năng xem hồ sơ cá nhân / không cần dữ liệu thêm / dữ liệu người chơi (sau này có thể cho xem profile của người khác)
         EDIT_PROFILE, // chức năng chỉnh thông tin cá nhân / thông tin cá nhân mới / success hoặc failed
         CHANGE_PASSWORD, // chức năng đổi mật khẩu / mật khẩu cũ, mật khẩu mới / success hoặc failed
 
@@ -45,12 +45,21 @@ public class StreamData {
         NEW_GAME, // chức năng tạo game mới / không cần dữ liệu thêm / nếu game chưa end thì gửi request accept tới đối thủ
         NEW_GAME_ACCEPT, // chức năng đồng ý tạo game mới / đồng ý hay không / gửi result broadcast làm mới trận
 
+        UNKNOW_TYPE, // khi client gửi type không xác định
         EXIT, // chức năng tắt game / không cần dữ liệu thêm / bradcast thoát game
     }
 
     // https://stackoverflow.com/a/6667365
     public static Type getType(String typeName) {
-        return Enum.valueOf(StreamData.Type.class, typeName);
+        Type result = Type.UNKNOW_TYPE;
+
+        try {
+            result = Enum.valueOf(StreamData.Type.class, typeName);
+        } catch (Exception e) {
+            System.err.println("Unknow type: " + e.getMessage());
+        }
+
+        return result;
     }
 
     public static Type getTypeFromData(String data) {

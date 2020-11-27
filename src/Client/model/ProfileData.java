@@ -15,10 +15,10 @@ public class ProfileData {
     String email = "#"; // cài giá trị mặc định
     String name = "#";
     String avatar = "icons8_circled_user_male_skin_type_7_96px.png";
-    int yearOfBirth = 1999;
     String gender = "Nam";
+    int yearOfBirth = 1999;
 
-    int rank = 0;
+    int score = 0;
     int matchCount = 0;
     int currentStreak = 0;
     float winRate = 0;
@@ -26,14 +26,14 @@ public class ProfileData {
     public ProfileData() {
     }
 
-    public ProfileData(int id, String email, String name, String avatar, int yearOfBirth, String gender, int rank, int matchCount, int currentStreak, float winRate) {
+    public ProfileData(int id, String email, String name, String avatar, String gender, int yearOfBirth, int score, int matchCount, int currentStreak, float winRate) {
         this.id = id;
         this.email = email;
         this.name = name;
         this.avatar = avatar;
         this.yearOfBirth = yearOfBirth;
         this.gender = gender;
-        this.rank = rank;
+        this.score = score;
         this.matchCount = matchCount;
         this.currentStreak = currentStreak;
         this.winRate = winRate;
@@ -87,12 +87,12 @@ public class ProfileData {
         this.gender = gender;
     }
 
-    public int getRank() {
-        return rank;
+    public int getScore() {
+        return score;
     }
 
-    public void setRank(int rank) {
-        this.rank = rank;
+    public void setScore(int score) {
+        this.score = score;
     }
 
     public int getMatchCount() {

@@ -28,7 +28,7 @@ public class Client implements Runnable {
     DataInputStream dis;
     DataOutputStream dos;
 
-    String email; // if == null => chua dang nhap
+    String loginEmail; // if == null => chua dang nhap
     Room room; // if == null => chua vao phong nao het
     AES aes;
 
@@ -83,8 +83,8 @@ public class Client implements Runnable {
                     case JOIN_ROOM:
                     case LEAVE_ROOM:
                     case ROOM_CHAT:
-                    case PROFILE:
-                        onReceiveProfile(received);
+                    case GET_PROFILE:
+                        onReceiveGetProfile(received);
                         break;
 
                     case EDIT_PROFILE:
@@ -151,8 +151,8 @@ public class Client implements Runnable {
         // check login
         String result = new PlayerBUS().checkLogin(email, password);
 
-        // set login
-        this.email = email;
+        // set login email
+        this.loginEmail = email;
 
         // send result
         sendData(StreamData.Type.LOGIN.name() + ";" + result);
@@ -177,14 +177,14 @@ public class Client implements Runnable {
 
     private void onReceiveLogout(String received) {
         // log out now
-        this.email = null;
+        this.loginEmail = null;
         this.findingMatch = false;
 
         // send status
         sendData(StreamData.Type.LOGOUT.name() + ";success");
     }
 
-    private void onReceiveProfile(String received) {
+    private void onReceiveGetProfile(String received) {
         String result;
 
         // get email from data
@@ -200,16 +200,16 @@ public class Client implements Runnable {
                     + p.getEmail() + ";"
                     + p.getName() + ";"
                     + p.getAvatar() + ";"
-                    + p.getYearOfBirth() + ";"
                     + p.getGender() + ";"
-                    + p.getRank() + ";"
+                    + p.getYearOfBirth() + ";"
+                    + p.getScore() + ";"
                     + p.getMatchCount() + ";"
                     + p.getCurrentStreak() + ";"
                     + p.calculateWinRate();
         }
 
         // send result
-        sendData(StreamData.Type.PROFILE.name() + ";" + result);
+        sendData(StreamData.Type.GET_PROFILE.name() + ";" + result);
     }
 
     private void onReceiveEditProfile(String received) {
@@ -223,12 +223,12 @@ public class Client implements Runnable {
             String gender = splitted[5];
 
             // edit profile
-            String result = new PlayerBUS().editProfile(email, newEmail, name, avatar, yearOfBirth, gender);
+            String result = new PlayerBUS().editProfile(loginEmail, newEmail, name, avatar, yearOfBirth, gender);
 
-            // lưu lại email mới vào Client nếu cập nhật thành công
+            // lưu lại newEmail vào Client nếu cập nhật thành công
             String status = result.split(";")[0];
             if (status.equals("success")) {
-                email = newEmail;
+                loginEmail = newEmail;
             }
 
             // send result
@@ -247,7 +247,7 @@ public class Client implements Runnable {
         String newPassword = splitted[2];
 
         // check change pass
-        String result = new PlayerBUS().changePassword(email, oldPassword, newPassword);
+        String result = new PlayerBUS().changePassword(loginEmail, oldPassword, newPassword);
 
         // send result
         sendData(StreamData.Type.CHANGE_PASSWORD.name() + ";" + result);
@@ -273,7 +273,7 @@ public class Client implements Runnable {
             }
             return "success";
         } catch (IOException e) {
-            System.err.println("Send data failed to " + this.getEmail());
+            System.err.println("Send data failed to " + this.getLoginEmail());
             return "failed;" + e.getMessage();
         }
     }
@@ -283,7 +283,7 @@ public class Client implements Runnable {
             this.dos.writeUTF(data);
             return "success";
         } catch (IOException e) {
-            System.err.println("Send data failed to " + this.getEmail());
+            System.err.println("Send data failed to " + this.getLoginEmail());
             return "failed;" + e.getMessage();
         }
     }
@@ -331,25 +331,9 @@ public class Client implements Runnable {
         return false;
     }
 
-    // auth handlers
-    public boolean login(String email, String password) {
-        // xu ly db
-        return true;
-    }
-
-    public boolean logout() {
-        this.email = null;
-        return true;
-    }
-
-    public boolean signup(String email, String password, String name, String gender, int yearOfBirth, String avatar) {
-        // TODO: xu ly db , neu oke thi dang nhap luon
-        return true;
-    }
-
     // gets sets
-    public String getEmail() {
-        return email;
+    public String getLoginEmail() {
+        return loginEmail;
     }
 
     public boolean isFindingMatch() {

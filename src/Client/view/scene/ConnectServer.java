@@ -69,9 +69,9 @@ public class ConnectServer extends javax.swing.JFrame {
         btnConnect.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         btnConnect.setText("Kết nối");
         btnConnect.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnConnect.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnConnectMouseClicked(evt);
+        btnConnect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConnectActionPerformed(evt);
             }
         });
 
@@ -133,7 +133,7 @@ public class ConnectServer extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnConnectMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConnectMouseClicked
+    private void btnConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectActionPerformed
         String ip;
         int port;
 
@@ -156,7 +156,7 @@ public class ConnectServer extends javax.swing.JFrame {
 
         // connect to server
         connect(ip, port);
-    }//GEN-LAST:event_btnConnectMouseClicked
+    }//GEN-LAST:event_btnConnectActionPerformed
 
     private void connect(String ip, int port) {
         // show loading

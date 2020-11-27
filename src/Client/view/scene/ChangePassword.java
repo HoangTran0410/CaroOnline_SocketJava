@@ -19,13 +19,25 @@ public class ChangePassword extends javax.swing.JFrame {
      */
     public ChangePassword() {
         initComponents();
-        this.setLocationRelativeTo(null);
+        this.setLocationRelativeTo(RunClient.profileScene);
 
         pgbLoading.setVisible(false);
     }
 
     public void setLoading(boolean status) {
-        pgbLoading.setVisible(status);
+        if (status == true) {
+            pgbLoading.setVisible(true);
+            btnCancel.setEnabled(false);
+            btnSave.setEnabled(false);
+
+            btnSave.setText("Đang xử lý..");
+        } else {
+            pgbLoading.setVisible(false);
+            btnCancel.setEnabled(true);
+            btnSave.setEnabled(true);
+
+            btnSave.setText("Lưu");
+        }
     }
 
     /**
@@ -75,17 +87,17 @@ public class ChangePassword extends javax.swing.JFrame {
 
         btnCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_cancel_24px.png"))); // NOI18N
         btnCancel.setText("Hủy");
-        btnCancel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnCancelMouseClicked(evt);
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
             }
         });
 
         btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_ok_24px.png"))); // NOI18N
         btnSave.setText("Lưu");
-        btnSave.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnSaveMouseClicked(evt);
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
             }
         });
 
@@ -175,11 +187,7 @@ public class ChangePassword extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnCancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelMouseClicked
-        this.dispose();
-    }//GEN-LAST:event_btnCancelMouseClicked
-
-    private void btnSaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMouseClicked
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         // prepare data
         String oldPass = new String(txOldPassword.getPassword());
         String newPass = new String(txNewPassword.getPassword());
@@ -193,11 +201,15 @@ public class ChangePassword extends javax.swing.JFrame {
         }
 
         // turn on loading
-        pgbLoading.setVisible(true);
+        setLoading(true);
 
         // call change pass from socket handler
         RunClient.socketHandler.changePassword(oldPass, newPass);
-    }//GEN-LAST:event_btnSaveMouseClicked
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btnCancelActionPerformed
 
     /**
      * @param args the command line arguments

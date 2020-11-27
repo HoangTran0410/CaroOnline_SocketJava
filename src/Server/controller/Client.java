@@ -13,6 +13,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import server.RunServer;
 import server.db.layers.BUS.PlayerBUS;
+import server.db.layers.DTO.Player;
+import shared.constant.Code;
 import shared.constant.StreamData;
 import shared.security.AES;
 import shared.security.RSA;
@@ -86,6 +88,9 @@ public class Client implements Runnable {
                     case LEAVE_ROOM:
                     case ROOM_CHAT:
                     case PROFILE:
+                        onReceiveProfile(received);
+                        break;
+
                     case FIND_GAME:
                     case MOVE:
                     case UNDO:
@@ -119,12 +124,8 @@ public class Client implements Runnable {
         // get encrypted key
         String keyEncrypted = received.split(";")[1];
 
-        // init rsa
-        RSA serverSide = new RSA()
-                .preparePrivateKey("src/Server/rsa_keypair/privateKey");
-
         // decrypt key
-        String aesKey = serverSide.decrypt(keyEncrypted);
+        String aesKey = RunServer.serverSide.decrypt(keyEncrypted);
         System.out.println("Server receive AES key: " + aesKey);
 
         // save AES key
@@ -184,8 +185,36 @@ public class Client implements Runnable {
         // check change pass
         String result = new PlayerBUS().changePassword(email, oldPassword, newPassword);
 
-        // send status
+        // send result
         sendData(StreamData.Type.CHANGE_PASSWORD.name() + ";" + result);
+    }
+
+    private void onReceiveProfile(String received) {
+        String result;
+
+        // get email from data
+        String email = received.split(";")[1];
+
+        // get player data
+        Player p = new PlayerBUS().getByEmail(email);
+        if (p == null) {
+            result = "failed;" + Code.ACCOUNT_NOT_FOUND;
+        } else {
+            result = "success;"
+                    + p.getId() + ";"
+                    + p.getEmail() + ";"
+                    + p.getName() + ";"
+                    + p.getAvatar() + ";"
+                    + p.getYearOfBirth() + ";"
+                    + p.getGender() + ";"
+                    + p.getRank() + ";"
+                    + p.getMatchCount() + ";"
+                    + p.getCurrentStreak() + ";"
+                    + p.calculateWinRate();
+        }
+
+        // send result
+        sendData(StreamData.Type.PROFILE.name() + ";" + result);
     }
 
     // security handlers

@@ -69,6 +69,14 @@ public class Player {
         this.blocked = p.blocked;
     }
 
+    public float calculateWinRate() {
+        if (this.matchCount == 0) {
+            return 0;
+        }
+
+        return (float) (1.0 * winCount / matchCount);
+    }
+
     public int getId() {
         return id;
     }

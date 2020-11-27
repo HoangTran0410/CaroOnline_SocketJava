@@ -107,7 +107,7 @@ public class PlayerBUS {
             return "failed;" + Code.ACCOUNT_BLOCKED;
         }
 
-        return "success";
+        return "success;" + email;
     }
 
     public String changePassword(String email, String oldPassword, String newPassword) {

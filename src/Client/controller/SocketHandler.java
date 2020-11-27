@@ -6,6 +6,8 @@
 package client.controller;
 
 import client.RunClient;
+import client.model.ProfileData;
+import client.view.scene.Profile;
 import shared.helper.Util;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -16,6 +18,7 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import shared.constant.Avatar;
 import shared.constant.StreamData;
 import shared.security.AES;
 import shared.security.RSA;
@@ -29,6 +32,8 @@ public class SocketHandler {
     Socket s;
     DataInputStream dis;
     DataOutputStream dos;
+
+    String email = null; // lưu tài khoản đăng nhập hiện tại
 
     Thread listener = null;
     AES aes;
@@ -53,9 +58,7 @@ public class SocketHandler {
             }
 
             // listen to server
-            listener = new Thread(() -> {
-                listen();
-            });
+            listener = new Thread(this::listen);
             listener.start();
 
             // security
@@ -114,6 +117,9 @@ public class SocketHandler {
                     case LEAVE_ROOM:
                     case ROOM_CHAT:
                     case PROFILE:
+                        onReceiveProfile(received);
+                        break;
+
                     case FIND_GAME:
                     case MOVE:
                     case UNDO:
@@ -161,12 +167,16 @@ public class SocketHandler {
         // turn off loading
         RunClient.loginScene.setLoading(false);
 
-        // check status
         if (status.equals("failed")) {
+            // hiển thị lỗi
             String failedMsg = splitted[2];
             JOptionPane.showMessageDialog(RunClient.loginScene, failedMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
 
         } else if (status.equals("success")) {
+            // lưu email login
+            email = splitted[2];
+
+            // chuyển scene
             RunClient.closeScene(RunClient.SceneName.LOGIN);
             RunClient.openScene(RunClient.SceneName.MAINMENU);
         }
@@ -187,6 +197,7 @@ public class SocketHandler {
             JOptionPane.showMessageDialog(RunClient.signupScene, failedMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
 
         } else if (status.equals("success")) {
+            RunClient.signupScene.setLoading(false);
             JOptionPane.showMessageDialog(RunClient.signupScene, "Đăng ký thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);
             RunClient.closeScene(RunClient.SceneName.SIGNUP);
             RunClient.openScene(RunClient.SceneName.LOGIN);
@@ -194,6 +205,10 @@ public class SocketHandler {
     }
 
     private void onReceiveLogout(String received) {
+        // xóa email login
+        email = null;
+
+        // chuyển scene
         RunClient.closeScene(RunClient.SceneName.MAINMENU);
         RunClient.openScene(RunClient.SceneName.LOGIN);
     }
@@ -208,11 +223,54 @@ public class SocketHandler {
         // check status
         if (status.equals("failed")) {
             String failedMsg = splitted[2];
-            JOptionPane.showMessageDialog(RunClient.loginScene, failedMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(RunClient.changePasswordScene, failedMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
 
         } else if (status.equals("success")) {
             RunClient.closeScene(RunClient.SceneName.CHANGEPASSWORD);
-            JOptionPane.showMessageDialog(RunClient.loginScene, "Đổi mật khẩu thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(RunClient.changePasswordScene, "Đổi mật khẩu thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    private void onReceiveProfile(String received) {
+        String[] splitted = received.split(";");
+        String status = splitted[1];
+
+        if (status.equals("failed")) {
+            String failedMsg = splitted[2];
+            JOptionPane.showMessageDialog(RunClient.profileScene, failedMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
+
+        } else if (status.equals("success")) {
+            // get player data from received
+            String idStr = splitted[2];
+            String email = splitted[3];
+            String name = splitted[4];
+            String avatar = splitted[5];
+            String yearOfBirthStr = splitted[6];
+            String gender = splitted[7];
+            String rankStr = splitted[8];
+            String matchCountStr = splitted[9];
+            String currentStreakStr = splitted[10];
+            String winRateStr = splitted[11];
+
+            // validate
+            try {
+                int id = Integer.parseInt(idStr);
+                int yearOfBirth = Integer.parseInt(yearOfBirthStr);
+                int rank = Integer.parseInt(rankStr);
+                int matchCount = Integer.parseInt(matchCountStr);
+                int currentStreak = Integer.parseInt(currentStreakStr);
+                float winRate = Float.parseFloat(winRateStr);
+
+                // TODO check isMe
+                ProfileData p = new ProfileData(id, email, name, avatar, yearOfBirth, gender, rank, matchCount, currentStreak, winRate);
+
+                // show data to UI
+                RunClient.profileScene.setLoading(false);
+                RunClient.profileScene.setProfileData(p);
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(RunClient.profileScene, "Dữ liệu hồ sơ bị lỗi: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
@@ -277,6 +335,14 @@ public class SocketHandler {
         sendData(data);
     }
 
+    public void profile(String email) {
+        // prepare data
+        String data = StreamData.Type.PROFILE.name() + ";" + email;
+
+        // send data
+        sendData(data);
+    }
+
     // send data fucntions
     public void sendPureData(String data) {
         try {
@@ -297,4 +363,8 @@ public class SocketHandler {
         }
     }
 
+    // get set
+    public String getEmail() {
+        return email;
+    }
 }

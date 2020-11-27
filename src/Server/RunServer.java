@@ -17,6 +17,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import shared.security.RSA;
 
 /**
  *
@@ -26,6 +27,7 @@ public class RunServer {
 
     public static volatile ClientManager clientManager;
     public static volatile RoomManager roomManager;
+    public static volatile RSA serverSide;
 
     public RunServer() {
 
@@ -34,6 +36,10 @@ public class RunServer {
 
             ServerSocket ss = new ServerSocket(port);
             System.out.println("Created Server at port " + port + ".");
+
+            // init rsa key
+            serverSide = new RSA()
+                    .preparePrivateKey("src/Server/rsa_keypair/privateKey");
 
             // init managers
             clientManager = new ClientManager();

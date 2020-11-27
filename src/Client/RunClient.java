@@ -12,6 +12,7 @@ import client.view.scene.ConnectServer;
 import client.view.scene.InGame;
 import client.view.scene.Login;
 import client.view.scene.MainMenu;
+import client.view.scene.Profile;
 import client.view.scene.Signup;
 
 /**
@@ -26,16 +27,20 @@ public class RunClient {
         SIGNUP,
         MAINMENU,
         CHANGEPASSWORD,
-        INGAME
+        INGAME,
+        PROFILE
     }
 
+    // các scenes
     public static ConnectServer connectServerScene;
     public static Login loginScene;
     public static Signup signupScene;
     public static MainMenu mainMenuScene;
     public static ChangePassword changePasswordScene;
     public static InGame inGameScene;
+    public static Profile profileScene;
 
+    // controller 
     public static SocketHandler socketHandler;
 
     public RunClient() {
@@ -51,6 +56,7 @@ public class RunClient {
         mainMenuScene = new MainMenu();
         changePasswordScene = new ChangePassword();
         inGameScene = new InGame();
+        profileScene = new Profile();
     }
 
     public static void openScene(SceneName sceneName) {
@@ -82,6 +88,10 @@ public class RunClient {
                     inGameScene = new InGame();
                     inGameScene.setVisible(true);
                     break;
+                case PROFILE:
+                    profileScene = new Profile();
+                    profileScene.setVisible(true);
+                    break;
                 default:
                     break;
             }
@@ -109,6 +119,9 @@ public class RunClient {
                 case INGAME:
                     inGameScene.dispose();
                     break;
+                case PROFILE:
+                    profileScene.dispose();
+                    break;
                 default:
                     break;
             }
@@ -122,6 +135,7 @@ public class RunClient {
         mainMenuScene.dispose();
         changePasswordScene.dispose();
         inGameScene.dispose();
+        profileScene.dispose();
     }
 
     public static void main(String[] args) {

@@ -13,8 +13,9 @@ import java.util.ArrayList;
  */
 public class CurrentGame {
 
-    ArrayList<Player> listViewer;
-    Player player1, player2;
+    ArrayList<ProfileData> listViewer;
+    ProfileData player1;
+    ProfileData player2;
     boolean player1Turn;
 
     int[][] listCell;
@@ -23,27 +24,27 @@ public class CurrentGame {
 
     }
 
-    public ArrayList<Player> getListViewer() {
+    public ArrayList<ProfileData> getListViewer() {
         return listViewer;
     }
 
-    public void setListViewer(ArrayList<Player> listViewer) {
+    public void setListViewer(ArrayList<ProfileData> listViewer) {
         this.listViewer = listViewer;
     }
 
-    public Player getPlayer1() {
+    public ProfileData getPlayer1() {
         return player1;
     }
 
-    public void setPlayer1(Player player1) {
+    public void setPlayer1(ProfileData player1) {
         this.player1 = player1;
     }
 
-    public Player getPlayer2() {
+    public ProfileData getPlayer2() {
         return player2;
     }
 
-    public void setPlayer2(Player player2) {
+    public void setPlayer2(ProfileData player2) {
         this.player2 = player2;
     }
 

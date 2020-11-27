@@ -9,7 +9,7 @@ package client.model;
  *
  * @author Hoang Tran < hoang at 99.hoangtran@gmail.com >
  */
-public class Player {
+public class ProfileData {
 
     int id;
     String email = "#"; // cài giá trị mặc định
@@ -18,20 +18,15 @@ public class Player {
     int yearOfBirth = 1999;
     String gender = "Nam";
 
-    String rank = "#";
-    int totalMatch = 0;
+    int rank = 0;
+    int matchCount = 0;
     int currentStreak = 0;
     float winRate = 0;
 
-    boolean isMe;
-
-    public Player(boolean isMe) {
-        this.isMe = isMe;
+    public ProfileData() {
     }
 
-    public Player(boolean isMe, int id, String email, String name, String avatar, int yearOfBirth, String gender, String rank, int totalMatch, int currentStreak, float winRate) {
-        this.isMe = isMe;
-
+    public ProfileData(int id, String email, String name, String avatar, int yearOfBirth, String gender, int rank, int matchCount, int currentStreak, float winRate) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -39,7 +34,7 @@ public class Player {
         this.yearOfBirth = yearOfBirth;
         this.gender = gender;
         this.rank = rank;
-        this.totalMatch = totalMatch;
+        this.matchCount = matchCount;
         this.currentStreak = currentStreak;
         this.winRate = winRate;
     }
@@ -92,20 +87,20 @@ public class Player {
         this.gender = gender;
     }
 
-    public String getRank() {
+    public int getRank() {
         return rank;
     }
 
-    public void setRank(String rank) {
+    public void setRank(int rank) {
         this.rank = rank;
     }
 
-    public int getTotalMatch() {
-        return totalMatch;
+    public int getMatchCount() {
+        return matchCount;
     }
 
-    public void setTotalMatch(int totalMatch) {
-        this.totalMatch = totalMatch;
+    public void setMatchCount(int matchCount) {
+        this.matchCount = matchCount;
     }
 
     public int getCurrentStreak() {

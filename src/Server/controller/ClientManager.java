@@ -50,6 +50,16 @@ public class ClientManager {
         });
     }
 
+    public Client findClientFindingGame() {
+        for (Client c : clients) {
+            if (c.isFindingMatch()) {
+                return c;
+            }
+        }
+
+        return null;
+    }
+
     public int getSize() {
         return clients.size();
     }

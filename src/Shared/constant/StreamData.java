@@ -38,7 +38,7 @@ public class StreamData {
         CHANGE_PASSWORD, // chức năng đổi mật khẩu / mật khẩu cũ, mật khẩu mới / success hoặc failed
 
         // game
-        FIND_GAME, // chức năng tìm trận / không cần dữ liệu thêm / id phòng sau khi ghép trận thành công
+        FIND_MATCH, // chức năng tìm trận / không cần dữ liệu thêm / id phòng sau khi ghép trận thành công
         MOVE, // chức năng đánh caro tại 1 ô / vị trí ô / success hoặc failed
         UNDO, // chức năng đánh lại / không cần dữ liệu thêm / gửi request broadcast (cho mọi người biết là muốn đánh lại, kể cả viewer)
         UNDO_ACCEPT, // chắc năng đồng ý đánh lại / đồng ý hay không / gửi result broadcast (cho mọi người biết người chơi có đồng ý cho đánh lại hay không)

@@ -17,7 +17,6 @@ import server.db.layers.DTO.Player;
 import shared.constant.Code;
 import shared.constant.StreamData;
 import shared.security.AES;
-import shared.security.RSA;
 
 /**
  *
@@ -31,8 +30,9 @@ public class Client implements Runnable {
 
     String email; // if == null => chua dang nhap
     Room room; // if == null => chua vao phong nao het
-
     AES aes;
+
+    boolean findingMatch = false;
 
     public Client(Socket s) throws IOException {
         this.s = s;
@@ -95,7 +95,10 @@ public class Client implements Runnable {
                         onReceiveChangePassword(received);
                         break;
 
-                    case FIND_GAME:
+                    case FIND_MATCH:
+                        onReceiveFindMatch(received);
+                        break;
+
                     case MOVE:
                     case UNDO:
                     case UNDO_ACCEPT:
@@ -175,6 +178,7 @@ public class Client implements Runnable {
     private void onReceiveLogout(String received) {
         // log out now
         this.email = null;
+        this.findingMatch = false;
 
         // send status
         sendData(StreamData.Type.LOGOUT.name() + ";success");
@@ -247,6 +251,10 @@ public class Client implements Runnable {
 
         // send result
         sendData(StreamData.Type.CHANGE_PASSWORD.name() + ";" + result);
+    }
+
+    private void onReceiveFindMatch(String received) {
+
     }
 
     // security handlers
@@ -343,4 +351,13 @@ public class Client implements Runnable {
     public String getEmail() {
         return email;
     }
+
+    public boolean isFindingMatch() {
+        return findingMatch;
+    }
+
+    public void setFindingMatch(boolean findingMatch) {
+        this.findingMatch = this.findingMatch;
+    }
+
 }

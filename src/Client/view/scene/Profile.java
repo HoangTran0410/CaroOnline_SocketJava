@@ -9,8 +9,6 @@ import client.RunClient;
 import client.model.ProfileData;
 import java.util.HashMap;
 import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
 import shared.constant.Avatar;
 
 /**
@@ -50,7 +48,7 @@ public class Profile extends javax.swing.JFrame {
 
     public void loadProfileData(String email) {
         setLoading(true);
-        RunClient.socketHandler.profile(email);
+        RunClient.socketHandler.getProfile(email);
     }
 
     public void setProfileData(ProfileData p) {
@@ -129,6 +127,7 @@ public class Profile extends javax.swing.JFrame {
         lbWinRate = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Tài khoản");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Người chơi"));
 
@@ -191,17 +190,15 @@ public class Profile extends javax.swing.JFrame {
             plProfileBtnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(plProfileBtnLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(plProfileBtnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, plProfileBtnLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnProfileCancel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnProfileSave))
-                    .addGroup(plProfileBtnLayout.createSequentialGroup()
-                        .addComponent(lbPassword)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnProfileChangePass)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addComponent(lbPassword)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnProfileChangePass)
+                .addContainerGap(108, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, plProfileBtnLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnProfileCancel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnProfileSave)
                 .addContainerGap())
         );
         plProfileBtnLayout.setVerticalGroup(
@@ -210,11 +207,11 @@ public class Profile extends javax.swing.JFrame {
                 .addGroup(plProfileBtnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lbPassword)
                     .addComponent(btnProfileChangePass))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(plProfileBtnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnProfileSave)
                     .addComponent(btnProfileCancel))
-                .addGap(18, 18, 18))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pgbProfileLoading.setIndeterminate(true);
@@ -269,7 +266,7 @@ public class Profile extends javax.swing.JFrame {
                     .addComponent(lbGender)
                     .addComponent(cbGender, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(plProfileBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(plProfileBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pgbProfileLoading, javax.swing.GroupLayout.DEFAULT_SIZE, 18, Short.MAX_VALUE)
                 .addContainerGap())

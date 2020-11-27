@@ -7,7 +7,6 @@ package client.controller;
 
 import client.RunClient;
 import client.model.ProfileData;
-import client.view.scene.Profile;
 import shared.helper.Util;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -18,7 +17,6 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import shared.constant.Avatar;
 import shared.constant.StreamData;
 import shared.security.AES;
 import shared.security.RSA;
@@ -124,7 +122,10 @@ public class SocketHandler {
                         onReceiveChangePassword(received);
                         break;
 
-                    case FIND_GAME:
+                    case FIND_MATCH:
+                        onReceiveFindMatch(received);
+                        break;
+
                     case MOVE:
                     case UNDO:
                     case UNDO_ACCEPT:
@@ -283,7 +284,7 @@ public class SocketHandler {
             RunClient.socketHandler.setEmail(newEmail);
 
             // load lại thông tin cá nhân mới - có thể ko cần! load lại cho chắc
-            profile(newEmail);
+            getProfile(newEmail);
         }
     }
 
@@ -303,6 +304,10 @@ public class SocketHandler {
             RunClient.closeScene(RunClient.SceneName.CHANGEPASSWORD);
             JOptionPane.showMessageDialog(RunClient.changePasswordScene, "Đổi mật khẩu thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);
         }
+    }
+
+    private void onReceiveFindMatch(String received) {
+
     }
 
     // functions
@@ -366,7 +371,7 @@ public class SocketHandler {
         sendData(data);
     }
 
-    public void profile(String email) {
+    public void getProfile(String email) {
         // prepare data
         String data = StreamData.Type.PROFILE.name() + ";" + email;
 
@@ -385,6 +390,10 @@ public class SocketHandler {
 
         // send data
         sendData(data);
+    }
+
+    public void findMatch() {
+        sendData(StreamData.Type.FIND_MATCH.name());
     }
 
     // send data fucntions

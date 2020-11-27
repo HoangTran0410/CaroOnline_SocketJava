@@ -26,6 +26,10 @@ public class Player {
     int rank = 0;
     boolean blocked = false;
 
+    public Player() {
+
+    }
+
     public Player(int id, String email, String password, String avatar, String name, String gender, int yearOfBirth, int score, int matchCount, int winCount, int loseCount, int currentStreak, int rank, boolean blocked) {
         this.id = id;
         this.email = email;

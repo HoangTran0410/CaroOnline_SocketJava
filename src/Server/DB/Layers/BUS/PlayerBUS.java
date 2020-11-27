@@ -150,4 +150,33 @@ public class PlayerBUS {
 
         return "success";
     }
+
+    public String editProfile(String email, String newEmail, String name, String avatar, int yearOfBirth, String gender) {
+        // check trung email
+        if (!newEmail.equals(email) && getByEmail(newEmail) != null) {
+            return "failed;" + Code.EMAIL_EXISTED;
+        }
+
+        // check email
+        Player p = getByEmail(email);
+        if (p == null) {
+            return "failed;" + Code.ACCOUNT_NOT_FOUND;
+        }
+
+        // set data
+        p.setEmail(newEmail);
+        p.setName(name);
+        p.setAvatar(avatar);
+        p.setYearOfBirth(yearOfBirth);
+        p.setGender(gender);
+
+        // update
+        boolean status = update(p);
+
+        if (!status) {
+            return "failed;Lỗi khi cập nhật thông tin cá nhân";
+        }
+
+        return "success;" + newEmail;
+    }
 }

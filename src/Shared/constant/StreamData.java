@@ -24,7 +24,6 @@ public class StreamData {
         LOGIN, // chức năng đăng nhập / email, password / success hoặc failed
         SIGNUP, // chức năng đăng ký / thông tin đăng ký / success hoặc failed
         LOGOUT, // chức năng đăng xuất / không cần dữ liệu thêm / success hoặc failed
-        CHANGE_PASSWORD, // chức năng đổi mật khẩu / mật khẩu cũ, mật khẩu mới / success hoặc failed
 
         // room
         LIST_ROOM, // lấy danh sách phòng hiện tại / ko cần dữ liệu thêm / dữ liệu danh sách phòng
@@ -35,6 +34,8 @@ public class StreamData {
 
         // profile
         PROFILE, // chức năng xem hồ sơ cá nhân / không cần dữ liệu thêm / dữ liệu người chơi (sau này có thể cho xem profile của người khác)
+        EDIT_PROFILE, // chức năng chỉnh thông tin cá nhân / thông tin cá nhân mới / success hoặc failed
+        CHANGE_PASSWORD, // chức năng đổi mật khẩu / mật khẩu cũ, mật khẩu mới / success hoặc failed
 
         // game
         FIND_GAME, // chức năng tìm trận / không cần dữ liệu thêm / id phòng sau khi ghép trận thành công
@@ -43,7 +44,7 @@ public class StreamData {
         UNDO_ACCEPT, // chắc năng đồng ý đánh lại / đồng ý hay không / gửi result broadcast (cho mọi người biết người chơi có đồng ý cho đánh lại hay không)
         NEW_GAME, // chức năng tạo game mới / không cần dữ liệu thêm / nếu game chưa end thì gửi request accept tới đối thủ
         NEW_GAME_ACCEPT, // chức năng đồng ý tạo game mới / đồng ý hay không / gửi result broadcast làm mới trận
-        
+
         EXIT, // chức năng tắt game / không cần dữ liệu thêm / bradcast thoát game
     }
 

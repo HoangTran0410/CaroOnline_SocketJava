@@ -18,7 +18,7 @@ import shared.constant.Avatar;
  * @author Hoang Tran < hoang at 99.hoangtran@gmail.com >
  */
 public class Profile extends javax.swing.JFrame {
-    
+
     HashMap<String, ImageIcon> hAvatar = new HashMap<>();
     ProfileData currentProfile = new ProfileData();
 
@@ -36,23 +36,23 @@ public class Profile extends javax.swing.JFrame {
         cbAvatar.setMaximumRowCount(5);
         setAvatar(Avatar.LIST);
     }
-    
+
     public void setAvatar(String[] avas) {
         cbAvatar.removeAllItems();
         hAvatar.clear();
-        
+
         for (String s : avas) {
             ImageIcon i = new ImageIcon(Avatar.PATH + s);
             hAvatar.put(s, i);
             cbAvatar.addItem(i);
         }
     }
-    
+
     public void loadProfileData(String email) {
         setLoading(true);
         RunClient.socketHandler.profile(email);
     }
-    
+
     public void setProfileData(ProfileData p) {
 
         // save current profile
@@ -65,7 +65,7 @@ public class Profile extends javax.swing.JFrame {
         txYearOfBirth.setText(String.valueOf(p.getYearOfBirth()));
         cbGender.setSelectedItem(p.getGender());
         cbAvatar.setSelectedItem(hAvatar.get(p.getAvatar()));
-        
+
         lbRank.setText(String.valueOf(p.getRank()));
         lbMatchCount.setText(String.valueOf(p.getMatchCount()));
         lbCurrentStreak.setText(String.valueOf(p.getCurrentStreak()));
@@ -78,15 +78,15 @@ public class Profile extends javax.swing.JFrame {
         cbGender.setEnabled(isMe);
         plProfileBtn.setVisible(isMe);
     }
-    
+
     public void setProfileSaveLoading(boolean status) {
         btnProfileSave.setText(status ? "Đang xử lý" : "Lưu");
         btnProfileSave.setEnabled(!status);
         btnProfileCancel.setEnabled(!status);
-        
+
         pgbProfileLoading.setVisible(status);
     }
-    
+
     public void setLoading(boolean status) {
         pgbProfileLoading.setVisible(status);
     }
@@ -415,9 +415,19 @@ public class Profile extends javax.swing.JFrame {
     }//GEN-LAST:event_btnProfileChangePassActionPerformed
 
     private void btnProfileSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProfileSaveActionPerformed
+        // loading
         setProfileSaveLoading(true);
 
-        // TODO edit profle
+        // get data from form
+        String email = txEmail.getText();
+        String name = txName.getText();
+        String avatar = Avatar.getAvatarFilNameFromPath(cbAvatar.getSelectedItem().toString());
+        String yearOfBirth = txYearOfBirth.getText();
+        String gender = cbGender.getSelectedItem().toString();
+
+        // TODO validate data
+        // call sockethandler function
+        RunClient.socketHandler.editProfile(email, name, avatar, yearOfBirth, gender);
     }//GEN-LAST:event_btnProfileSaveActionPerformed
 
     private void btnProfileCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProfileCancelActionPerformed

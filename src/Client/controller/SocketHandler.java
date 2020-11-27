@@ -107,10 +107,6 @@ public class SocketHandler {
                         onReceiveLogout(received);
                         break;
 
-                    case CHANGE_PASSWORD:
-                        onReceiveChangePassword(received);
-                        break;
-
                     case LIST_ROOM:
                     case CREATE_ROOM:
                     case JOIN_ROOM:
@@ -118,6 +114,14 @@ public class SocketHandler {
                     case ROOM_CHAT:
                     case PROFILE:
                         onReceiveProfile(received);
+                        break;
+
+                    case EDIT_PROFILE:
+                        onReceivedEditProfile(received);
+                        break;
+
+                    case CHANGE_PASSWORD:
+                        onReceiveChangePassword(received);
                         break;
 
                     case FIND_GAME:
@@ -187,6 +191,9 @@ public class SocketHandler {
         String[] splitted = received.split(";");
         String status = splitted[1];
 
+        // turn off loading
+        RunClient.signupScene.setLoading(false);
+
         // check status
         if (status.equals("failed")) {
             // turn off loading
@@ -197,7 +204,6 @@ public class SocketHandler {
             JOptionPane.showMessageDialog(RunClient.signupScene, failedMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
 
         } else if (status.equals("success")) {
-            RunClient.signupScene.setLoading(false);
             JOptionPane.showMessageDialog(RunClient.signupScene, "Đăng ký thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);
             RunClient.closeScene(RunClient.SceneName.SIGNUP);
             RunClient.openScene(RunClient.SceneName.LOGIN);
@@ -213,27 +219,12 @@ public class SocketHandler {
         RunClient.openScene(RunClient.SceneName.LOGIN);
     }
 
-    private void onReceiveChangePassword(String received) {
+    private void onReceiveProfile(String received) {
         String[] splitted = received.split(";");
         String status = splitted[1];
 
         // turn off loading
-        RunClient.changePasswordScene.setLoading(false);
-
-        // check status
-        if (status.equals("failed")) {
-            String failedMsg = splitted[2];
-            JOptionPane.showMessageDialog(RunClient.changePasswordScene, failedMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
-
-        } else if (status.equals("success")) {
-            RunClient.closeScene(RunClient.SceneName.CHANGEPASSWORD);
-            JOptionPane.showMessageDialog(RunClient.changePasswordScene, "Đổi mật khẩu thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-
-    private void onReceiveProfile(String received) {
-        String[] splitted = received.split(";");
-        String status = splitted[1];
+        RunClient.profileScene.setLoading(false);
 
         if (status.equals("failed")) {
             String failedMsg = splitted[2];
@@ -265,12 +256,52 @@ public class SocketHandler {
                 ProfileData p = new ProfileData(id, email, name, avatar, yearOfBirth, gender, rank, matchCount, currentStreak, winRate);
 
                 // show data to UI
-                RunClient.profileScene.setLoading(false);
                 RunClient.profileScene.setProfileData(p);
 
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(RunClient.profileScene, "Dữ liệu hồ sơ bị lỗi: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
+        }
+    }
+
+    private void onReceivedEditProfile(String received) {
+        String[] splitted = received.split(";");
+        String status = splitted[1];
+
+        // turn off loading
+        RunClient.profileScene.setProfileSaveLoading(false);
+
+        if (status.equals("failed")) {
+            String failedMsg = splitted[2];
+            JOptionPane.showMessageDialog(RunClient.profileScene, failedMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
+
+        } else if (status.equals("success")) {
+            JOptionPane.showMessageDialog(RunClient.profileScene, "Đổi thông tin thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+
+            // lưu lại email
+            String newEmail = splitted[2];
+            RunClient.socketHandler.setEmail(newEmail);
+
+            // load lại thông tin cá nhân mới - có thể ko cần! load lại cho chắc
+            profile(newEmail);
+        }
+    }
+
+    private void onReceiveChangePassword(String received) {
+        String[] splitted = received.split(";");
+        String status = splitted[1];
+
+        // turn off loading
+        RunClient.changePasswordScene.setLoading(false);
+
+        // check status
+        if (status.equals("failed")) {
+            String failedMsg = splitted[2];
+            JOptionPane.showMessageDialog(RunClient.changePasswordScene, failedMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
+
+        } else if (status.equals("success")) {
+            RunClient.closeScene(RunClient.SceneName.CHANGEPASSWORD);
+            JOptionPane.showMessageDialog(RunClient.changePasswordScene, "Đổi mật khẩu thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -343,12 +374,27 @@ public class SocketHandler {
         sendData(data);
     }
 
+    public void editProfile(String newEmail, String name, String avatar, String yearOfBirth, String gender) {
+        // prepare data
+        String data = StreamData.Type.EDIT_PROFILE + ";"
+                + newEmail + ";"
+                + name + ";"
+                + avatar + ";"
+                + yearOfBirth + ";"
+                + gender;
+
+        // send data
+        sendData(data);
+    }
+
     // send data fucntions
     public void sendPureData(String data) {
         try {
             dos.writeUTF(data);
+
         } catch (IOException ex) {
-            Logger.getLogger(SocketHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SocketHandler.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -359,12 +405,17 @@ public class SocketHandler {
             dos.writeUTF(encrypted);
 
         } catch (IOException ex) {
-            Logger.getLogger(SocketHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SocketHandler.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     // get set
     public String getEmail() {
         return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

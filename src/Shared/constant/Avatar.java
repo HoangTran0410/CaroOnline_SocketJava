@@ -66,4 +66,9 @@ public class Avatar {
         "icons8_saitama_96px.png",
         "icons8_trollface_96px.png"
     };
+
+    public static String getAvatarFilNameFromPath(String path) {
+        String[] splitted = path.split("/");
+        return splitted[splitted.length - 1];
+    }
 }

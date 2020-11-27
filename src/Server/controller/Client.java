@@ -78,10 +78,6 @@ public class Client implements Runnable {
                         onReceiveLogout(received);
                         break;
 
-                    case CHANGE_PASSWORD:
-                        onReceiveChangePassword(received);
-                        break;
-
                     case LIST_ROOM:
                     case CREATE_ROOM:
                     case JOIN_ROOM:
@@ -89,6 +85,14 @@ public class Client implements Runnable {
                     case ROOM_CHAT:
                     case PROFILE:
                         onReceiveProfile(received);
+                        break;
+
+                    case EDIT_PROFILE:
+                        onReceiveEditProfile(received);
+                        break;
+
+                    case CHANGE_PASSWORD:
+                        onReceiveChangePassword(received);
                         break;
 
                     case FIND_GAME:
@@ -176,19 +180,6 @@ public class Client implements Runnable {
         sendData(StreamData.Type.LOGOUT.name() + ";success");
     }
 
-    private void onReceiveChangePassword(String received) {
-        // get old pass, new pass from data
-        String[] splitted = received.split(";");
-        String oldPassword = splitted[1];
-        String newPassword = splitted[2];
-
-        // check change pass
-        String result = new PlayerBUS().changePassword(email, oldPassword, newPassword);
-
-        // send result
-        sendData(StreamData.Type.CHANGE_PASSWORD.name() + ";" + result);
-    }
-
     private void onReceiveProfile(String received) {
         String result;
 
@@ -215,6 +206,47 @@ public class Client implements Runnable {
 
         // send result
         sendData(StreamData.Type.PROFILE.name() + ";" + result);
+    }
+
+    private void onReceiveEditProfile(String received) {
+        try {
+            // get data from received
+            String[] splitted = received.split(";");
+            String newEmail = splitted[1];
+            String name = splitted[2];
+            String avatar = splitted[3];
+            int yearOfBirth = Integer.parseInt(splitted[4]);
+            String gender = splitted[5];
+
+            // edit profile
+            String result = new PlayerBUS().editProfile(email, newEmail, name, avatar, yearOfBirth, gender);
+
+            // lưu lại email mới vào Client nếu cập nhật thành công
+            String status = result.split(";")[0];
+            if (status.equals("success")) {
+                email = newEmail;
+            }
+
+            // send result
+            sendData(StreamData.Type.EDIT_PROFILE + ";" + result);
+
+        } catch (NumberFormatException e) {
+            // send failed format
+            sendData(StreamData.Type.EDIT_PROFILE + ";failed;Năm sinh phải là số nguyên");
+        }
+    }
+
+    private void onReceiveChangePassword(String received) {
+        // get old pass, new pass from data
+        String[] splitted = received.split(";");
+        String oldPassword = splitted[1];
+        String newPassword = splitted[2];
+
+        // check change pass
+        String result = new PlayerBUS().changePassword(email, oldPassword, newPassword);
+
+        // send result
+        sendData(StreamData.Type.CHANGE_PASSWORD.name() + ";" + result);
     }
 
     // security handlers

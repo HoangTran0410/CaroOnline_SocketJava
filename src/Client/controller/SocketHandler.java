@@ -215,7 +215,7 @@ public class SocketHandler {
         email = null;
 
         // chuyển scene
-        RunClient.closeScene(RunClient.SceneName.MAINMENU);
+        RunClient.closeAllScene();
         RunClient.openScene(RunClient.SceneName.LOGIN);
     }
 

@@ -70,8 +70,8 @@ public class PlayerDAL {
         connector = new MysqlConnector();
 
         try {
-            String qry = "INSERT INTO Player(Email,Password,Avatar,Name,Gender,YearOfBirth,Score,MatchCount,WinCount,LoseCount,CurrentStreak,Rank,Blocked) "
-                    + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            String qry = "INSERT INTO Player(Email,Password,Avatar,Name,Gender,YearOfBirth,Score,MatchCount,WinCount,LoseCount,CurrentStreak,Blocked) "
+                    + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
 
             PreparedStatement stm = connector.getConnection().prepareStatement(qry);
             stm.setString(1, p.getEmail());
@@ -114,7 +114,6 @@ public class PlayerDAL {
                     + "WinCount=?,"
                     + "LoseCount=?,"
                     + "CurrentStreak=?,"
-                    + "Rank=?,"
                     + "Blocked=?"
                     + " WHERE ID=?";
 

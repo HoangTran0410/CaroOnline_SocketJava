@@ -62,7 +62,7 @@ public class MysqlConnector {
                 ResultSet rs = stm.executeQuery();
                 return rs;
             } catch (SQLException e) {
-                System.err.println("Loi thuc thi query !! " + e.getMessage());
+                System.err.println("Loi thuc thi sql query: " + stm.toString() + " , " + e.getMessage());
             }
         }
         return null;
@@ -74,7 +74,7 @@ public class MysqlConnector {
                 stm.executeUpdate();
                 return true;
             } catch (SQLException e) {
-                System.err.println("Gia tri cua khoa vua nhap khong ton tai !! " + e.getMessage());
+                System.err.println("Loi thuc thi sql update: " + stm.toString() + " , " + e.getMessage());
             }
         }
         return false;

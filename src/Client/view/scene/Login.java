@@ -6,6 +6,7 @@
 package client.view.scene;
 
 import client.RunClient;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -168,7 +169,16 @@ public class Login extends javax.swing.JFrame {
         String email = txEmail.getText();
         String password = new String(txPassword.getPassword());
         // TODO validate input
-
+        if (!RunClient.validation.checkEmail(email)) {
+            JOptionPane.showMessageDialog(this, "Email không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            txEmail.requestFocus();
+            return;
+        }
+        if (!RunClient.validation.checkPassword(password)) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu phải từ 6-30 ký tự", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            txPassword.requestFocus();
+            return;
+        }
         RunClient.socketHandler.login(email, password);
         setLoading(true);
     }//GEN-LAST:event_btnLoginActionPerformed

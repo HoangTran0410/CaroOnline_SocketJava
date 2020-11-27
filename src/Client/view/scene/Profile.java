@@ -9,6 +9,12 @@ import client.RunClient;
 import client.model.ProfileData;
 import java.util.HashMap;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.Element;
 import shared.constant.Avatar;
 
 /**
@@ -33,6 +39,24 @@ public class Profile extends javax.swing.JFrame {
         // avatar combobox
         cbAvatar.setMaximumRowCount(5);
         setAvatar(Avatar.LIST);
+        txYearOfBirth.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent de) {
+                RunClient.validation.checkNumberInputChanged(txYearOfBirth);
+//                System.out.println("inserted"); 
+           }
+
+            @Override
+            public void removeUpdate(DocumentEvent de) {
+//                dateOfBirthChanged("");
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent de) {
+//                RunClient.validation.dateOfBirthChanged(txYearOfBirth,"changed");
+//                System.out.println("changed");
+            }
+        });
     }
 
     private void setAvatar(String[] avas) {
@@ -180,6 +204,11 @@ public class Profile extends javax.swing.JFrame {
 
         txYearOfBirth.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txYearOfBirth.setToolTipText("Năm sinh");
+        txYearOfBirth.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txYearOfBirthActionPerformed(evt);
+            }
+        });
 
         btnProfileSave.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         btnProfileSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_ok_24px.png"))); // NOI18N
@@ -390,7 +419,7 @@ public class Profile extends javax.swing.JFrame {
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(cbAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(11, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 204, 102), 2, true));
@@ -561,6 +590,25 @@ public class Profile extends javax.swing.JFrame {
         String gender = cbGender.getSelectedItem().toString();
 
         // TODO validate data
+        if (!RunClient.validation.checkEmail(email)) {
+            JOptionPane.showMessageDialog(this, "Email không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            txEmail.requestFocus();
+            return;
+        }
+        if (!RunClient.validation.checkName(name)) {
+            JOptionPane.showMessageDialog(this, "Chưa nhập tên", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            txName.requestFocus();
+            return;
+        }
+        try {
+            if (!RunClient.validation.checkYearOfBirth(Integer.parseInt(yearOfBirth))) {
+                JOptionPane.showMessageDialog(this, "Chưa sinh ra hoặc quá 100 tuổi vui lòng đừng chơi!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                txYearOfBirth.requestFocus();
+                return;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Năm sinh phải là số", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
         // call sockethandler function
         RunClient.socketHandler.editProfile(email, name, avatar, yearOfBirth, gender);
     }//GEN-LAST:event_btnProfileSaveActionPerformed
@@ -569,6 +617,10 @@ public class Profile extends javax.swing.JFrame {
         setLoading(true);
         loadProfileData(currentProfile.getEmail());
     }//GEN-LAST:event_btnProfileCancelActionPerformed
+
+    private void txYearOfBirthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txYearOfBirthActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txYearOfBirthActionPerformed
 
     /**
      * @param args the command line arguments

@@ -7,6 +7,7 @@ package client;
 
 import client.controller.SocketHandler;
 import client.view.helper.LookAndFeel;
+import client.view.helper.Validation;
 import client.view.scene.ChangePassword;
 import client.view.scene.ConnectServer;
 import client.view.scene.InGame;
@@ -39,6 +40,7 @@ public class RunClient {
     public static ChangePassword changePasswordScene;
     public static InGame inGameScene;
     public static Profile profileScene;
+    public static Validation validation;
 
     // controller 
     public static SocketHandler socketHandler;
@@ -57,6 +59,7 @@ public class RunClient {
         changePasswordScene = new ChangePassword();
         inGameScene = new InGame();
         profileScene = new Profile();
+        validation = new Validation();
     }
 
     public static void openScene(SceneName sceneName) {

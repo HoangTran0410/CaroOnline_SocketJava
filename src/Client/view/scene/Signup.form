@@ -33,6 +33,7 @@
                   <Component id="btnSignup" alignment="2" min="-2" pref="322" max="-2" attributes="0"/>
                   <Component id="btnLogin" alignment="2" min="-2" max="-2" attributes="0"/>
                   <Component id="plInput" alignment="2" max="32767" attributes="0"/>
+                  <Component id="pgbLoading" alignment="2" min="-2" pref="315" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -47,6 +48,8 @@
               <Component id="cbAvatar" min="-2" pref="95" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
               <Component id="plInput" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+              <Component id="pgbLoading" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="btnSignup" min="-2" pref="63" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -182,7 +185,7 @@
                       <Component id="lbGender" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="cbGender" min="-2" pref="48" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="38" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -364,6 +367,11 @@
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnLoginMouseClicked"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JProgressBar" name="pgbLoading">
+      <Properties>
+        <Property name="indeterminate" type="boolean" value="true"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

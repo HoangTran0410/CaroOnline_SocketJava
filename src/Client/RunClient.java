@@ -40,56 +40,88 @@ public class RunClient {
 
     public RunClient() {
         socketHandler = new SocketHandler();
+        initScene();
         openScene(SceneName.CONNECTSERVER);
     }
 
+    public void initScene() {
+        connectServerScene = new ConnectServer();
+        loginScene = new Login();
+        signupScene = new Signup();
+        mainMenuScene = new MainMenu();
+        changePasswordScene = new ChangePassword();
+        inGameScene = new InGame();
+    }
+
     public static void openScene(SceneName sceneName) {
-
-        if (sceneName == SceneName.CONNECTSERVER) {
-            connectServerScene = new ConnectServer();
-            connectServerScene.setVisible(true);
-
-        } else if (sceneName == SceneName.LOGIN) {
-            loginScene = new Login();
-            loginScene.setVisible(true);
-
-        } else if (sceneName == SceneName.SIGNUP) {
-            signupScene = new Signup();
-            signupScene.setVisible(true);
-
-        } else if (sceneName == SceneName.MAINMENU) {
-            mainMenuScene = new MainMenu();
-            mainMenuScene.setVisible(true);
-
-        } else if (sceneName == SceneName.CHANGEPASSWORD) {
-            changePasswordScene = new ChangePassword();
-            changePasswordScene.setVisible(true);
-
-        } else if (sceneName == SceneName.INGAME) {
-            inGameScene = new InGame();
-            inGameScene.setVisible(true);
+        if (null != sceneName) {
+            switch (sceneName) {
+                case CONNECTSERVER:
+                    // tạo lại scene để tạo lại state mặc định
+                    // nếu chỉ setVisible(true) thì cũng open được scene cũ, nhưng state thì không phải mặc định
+                    connectServerScene = new ConnectServer();
+                    connectServerScene.setVisible(true);
+                    break;
+                case LOGIN:
+                    loginScene = new Login();
+                    loginScene.setVisible(true);
+                    break;
+                case SIGNUP:
+                    signupScene = new Signup();
+                    signupScene.setVisible(true);
+                    break;
+                case MAINMENU:
+                    mainMenuScene = new MainMenu();
+                    mainMenuScene.setVisible(true);
+                    break;
+                case CHANGEPASSWORD:
+                    changePasswordScene = new ChangePassword();
+                    changePasswordScene.setVisible(true);
+                    break;
+                case INGAME:
+                    inGameScene = new InGame();
+                    inGameScene.setVisible(true);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
     public static void closeScene(SceneName sceneName) {
-        if (sceneName == SceneName.CONNECTSERVER) {
-            connectServerScene.dispose();
-
-        } else if (sceneName == SceneName.LOGIN) {
-            loginScene.dispose();
-
-        } else if (sceneName == SceneName.SIGNUP) {
-            signupScene.dispose();
-
-        } else if (sceneName == SceneName.MAINMENU) {
-            mainMenuScene.dispose();
-
-        } else if (sceneName == SceneName.CHANGEPASSWORD) {
-            changePasswordScene.dispose();
-
-        } else if (sceneName == SceneName.INGAME) {
-            inGameScene.dispose();
+        if (null != sceneName) {
+            switch (sceneName) {
+                case CONNECTSERVER:
+                    connectServerScene.dispose();
+                    break;
+                case LOGIN:
+                    loginScene.dispose();
+                    break;
+                case SIGNUP:
+                    signupScene.dispose();
+                    break;
+                case MAINMENU:
+                    mainMenuScene.dispose();
+                    break;
+                case CHANGEPASSWORD:
+                    changePasswordScene.dispose();
+                    break;
+                case INGAME:
+                    inGameScene.dispose();
+                    break;
+                default:
+                    break;
+            }
         }
+    }
+
+    public static void closeAllScene() {
+        connectServerScene.dispose();
+        loginScene.dispose();
+        signupScene.dispose();
+        mainMenuScene.dispose();
+        changePasswordScene.dispose();
+        inGameScene.dispose();
     }
 
     public static void main(String[] args) {

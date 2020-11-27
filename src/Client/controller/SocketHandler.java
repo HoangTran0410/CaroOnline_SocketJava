@@ -126,7 +126,11 @@ public class SocketHandler {
 
             } catch (IOException ex) {
                 Logger.getLogger(SocketHandler.class.getName()).log(Level.SEVERE, null, ex);
-                break;
+                JOptionPane.showMessageDialog(null, "Mất kết nối tới server: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+                running = false;
+
+                RunClient.closeAllScene();
+                RunClient.openScene(RunClient.SceneName.CONNECTSERVER);
             }
         }
 
@@ -175,6 +179,10 @@ public class SocketHandler {
 
         // check status
         if (status.equals("failed")) {
+            // turn off loading
+            RunClient.signupScene.setLoading(false);
+
+            // show failed message
             String failedMsg = splitted[2];
             JOptionPane.showMessageDialog(RunClient.signupScene, failedMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
 

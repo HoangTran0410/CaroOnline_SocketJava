@@ -25,6 +25,7 @@ public class Login extends javax.swing.JFrame {
     }
 
     public void setLoading(boolean status) {
+        btnLogin.setEnabled(!status);
         pgbLoading.setVisible(status);
     }
 
@@ -173,7 +174,7 @@ public class Login extends javax.swing.JFrame {
         // TODO validate input
 
         RunClient.socketHandler.login(email, password);
-        pgbLoading.setVisible(true);
+        setLoading(true);
     }//GEN-LAST:event_btnLoginMouseClicked
 
     /**

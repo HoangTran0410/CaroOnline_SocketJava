@@ -28,6 +28,9 @@ public class Signup extends javax.swing.JFrame {
         for (String s : Avatar.LIST) {
             cbAvatar.addItem(new ImageIcon(Avatar.PATH + s));
         }
+
+        // default is hidden
+        pgbLoading.setVisible(false);
     }
 
     private String getAvatar() {
@@ -35,6 +38,18 @@ public class Signup extends javax.swing.JFrame {
         String[] splitted = fullPath.split("/");
 
         return splitted[splitted.length - 1];
+    }
+
+    public void setLoading(boolean status) {
+        if (status == true) {
+            pgbLoading.setVisible(true);
+            btnSignup.setEnabled(false);
+            btnSignup.setText("Đang xử lý..");
+        } else {
+            pgbLoading.setVisible(false);
+            btnSignup.setEnabled(true);
+            btnSignup.setText("Đăng ký");
+        }
     }
 
     /**
@@ -69,6 +84,7 @@ public class Signup extends javax.swing.JFrame {
         btnSignup = new javax.swing.JButton();
         cbAvatar = new javax.swing.JComboBox<>();
         btnLogin = new javax.swing.JButton();
+        pgbLoading = new javax.swing.JProgressBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Đăng ký");
@@ -209,7 +225,7 @@ public class Signup extends javax.swing.JFrame {
                         .addComponent(lbBirthday))
                     .addComponent(lbGender)
                     .addComponent(cbGender, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         btnSignup.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
@@ -233,6 +249,8 @@ public class Signup extends javax.swing.JFrame {
             }
         });
 
+        pgbLoading.setIndeterminate(true);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -244,7 +262,8 @@ public class Signup extends javax.swing.JFrame {
                     .addComponent(lbHeaderText)
                     .addComponent(btnSignup, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnLogin)
-                    .addComponent(plInput, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(plInput, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pgbLoading, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -256,6 +275,8 @@ public class Signup extends javax.swing.JFrame {
                 .addComponent(cbAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(plInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20)
+                .addComponent(pgbLoading, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSignup, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -306,6 +327,7 @@ public class Signup extends javax.swing.JFrame {
             // TODO validate email
 
             // call signup from socket handler
+            setLoading(true);
             RunClient.socketHandler.signup(email, password, name, gender, yearOfBirth, avatar);
 
         } catch (NumberFormatException e) {
@@ -373,6 +395,7 @@ public class Signup extends javax.swing.JFrame {
     private javax.swing.JLabel lbPassword;
     private javax.swing.JLabel lbPassword1;
     private javax.swing.JLabel lbUserName;
+    private javax.swing.JProgressBar pgbLoading;
     private javax.swing.JPanel plInput;
     private javax.swing.JTextField txEmail;
     private javax.swing.JTextField txName;

@@ -16,8 +16,8 @@ public class Avatar {
 
     // https://www.dropboxforum.com/t5/Dropbox-files-folders/How-to-Copy-file-Names-within-a-Folder-Create-a-table-of/td-p/253141
     public static final String[] LIST = {
-        "icons8_circled_user_female_skin_type_7_96px.png",
         "icons8_circled_user_male_skin_type_7_96px.png",
+        "icons8_circled_user_female_skin_type_7_96px.png",
         "icons8_alien_96px.png",
         "icons8_angry_face_meme_96px.png",
         "icons8_animation_96px.png",

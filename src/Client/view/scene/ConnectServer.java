@@ -25,6 +25,18 @@ public class ConnectServer extends javax.swing.JFrame {
         pgbLoading.setVisible(false);
     }
 
+    public void setLoading(boolean status, String btnText) {
+        if (status == true) {
+            btnConnect.setText(btnText);
+            pgbLoading.setVisible(true);
+            btnConnect.setEnabled(false);
+        } else {
+            btnConnect.setText("Kết nối");
+            pgbLoading.setVisible(false);
+            btnConnect.setEnabled(true);
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -148,9 +160,7 @@ public class ConnectServer extends javax.swing.JFrame {
 
     private void connect(String ip, int port) {
         // show loading
-        btnConnect.setText("Đang kết nối..");
-        pgbLoading.setVisible(true);
-        btnConnect.setEnabled(false);
+        setLoading(true, "Đang kết nối..");
 
         // connect to server
         new Thread(() -> {
@@ -171,19 +181,16 @@ public class ConnectServer extends javax.swing.JFrame {
         // Kết nối thành công nhưng vẫn chờ server gửi thông báo đã nhận AES key
         // Scene sẽ được chuyển qua LoginScene khi client nhận được phản hồi từ server
         // => code chuyển scene được đưa vào socket handler, lúc listen nhận được AESKEY từ server
-
 //        this.dispose();
-//        RunClient.changeScene(RunClient.SceneName.LOGIN);
+//        RunClient.openScene(RunClient.SceneName.LOGIN);
+
         // khi kết nối thành công sẽ đợi tạo kết nối bảo mật (gửi nhận AES key)
-        // => hiển thị ra cho người dùng thấy
-        btnConnect.setText("Đang bảo mật..");
+        setLoading(true, "Đang bảo mật..");
     }
 
     private void onFailed(String failedMsg) {
-        btnConnect.setText("Kết nối");
-        pgbLoading.setVisible(false);
-        btnConnect.setEnabled(true);
-        JOptionPane.showMessageDialog(ConnectServer.this, failedMsg, "Lỗi kết nối", JOptionPane.ERROR_MESSAGE);
+        setLoading(false, null);
+        JOptionPane.showMessageDialog(this, failedMsg, "Lỗi kết nối", JOptionPane.ERROR_MESSAGE);
     }
 
     /**

@@ -29,9 +29,12 @@ public class Client implements Runnable {
     DataOutputStream dos;
 
     boolean findingMatch = false;
-    String loginEmail; // if == null => chua dang nhap
+    String loginEmail = ""; // if == "" => chua dang nhap
     Room room; // if == null => chua vao phong nao het
     AES aes;
+
+    String competitorEmail = "";
+    String acceptPairMatchStatus = "_"; // yes/no/_
 
     public Client(Socket s) throws IOException {
         this.s = s;
@@ -113,6 +116,21 @@ public class Client implements Runnable {
                         onReceiveFindMatch(received);
                         break;
 
+                    case CANCEL_FIND_MATCH:
+                        onReceiveCancelFindMatch(received);
+                        break;
+
+                    case REQUEST_PAIR_MATCH:
+                        onReceiveRequestPairMatch(received);
+                        break;
+
+                    case RESULT_PAIR_MATCH:
+                        // type này có 1 chiều server->client
+                        // gửi khi ghép cặp bị đối thủ từ chối
+                        // nếu ghép cặp được đồng ý thì server gửi type join-room luôn chứ ko cần gửi type này
+                        // client không gửi type này cho server
+                        break;
+
                     case MOVE:
                     case UNDO:
                     case UNDO_ACCEPT:
@@ -135,6 +153,9 @@ public class Client implements Runnable {
             this.dos.close();
             System.out.println("- Client disconnected: " + s);
 
+            // remove from clientManager
+            RunServer.clientManager.remove(this);
+
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -147,7 +168,6 @@ public class Client implements Runnable {
 
         // decrypt key
         String aesKey = RunServer.serverSide.decrypt(keyEncrypted);
-        System.out.println("Server receive AES key: " + aesKey);
 
         // save AES
         setAes(new AES(aesKey));
@@ -161,6 +181,12 @@ public class Client implements Runnable {
         String[] splitted = received.split(";");
         String email = splitted[1];
         String password = splitted[2];
+
+        // check đã được đăng nhập ở nơi khác
+        if (RunServer.clientManager.find(email) != null) {
+            sendData(StreamData.Type.LOGIN.name() + ";failed;" + Code.ACCOUNT_LOGEDIN);
+            return;
+        }
 
         // check login
         String result = new PlayerBUS().checkLogin(email, password);
@@ -191,7 +217,7 @@ public class Client implements Runnable {
 
     private void onReceiveLogout(String received) {
         // log out now
-        this.loginEmail = null;
+        this.loginEmail = "";
         this.findingMatch = false;
 
         // TODO broadcast to all clients
@@ -295,31 +321,92 @@ public class Client implements Runnable {
         // nếu đang trong phòng rồi thì báo lỗi ngay
         if (this.room != null) {
             sendData(StreamData.Type.FIND_MATCH.name() + ";failed;" + Code.ALREADY_INROOM + " #" + this.room.getId());
+            return;
         }
 
         // kiểm tra xem có ai đang tìm phòng không
-        Client opponent = RunServer.clientManager.findClientFindingMatch();
+        Client cCompetitor = RunServer.clientManager.findClientFindingMatch();
 
-        if (opponent == null) {
-            // không có thì trả về success để client hiển thị giao diện Đang tìm phòng
+        if (cCompetitor == null) {
+            // đặt cờ là đang tìm phòng
+            this.findingMatch = true;
+
+            // trả về success để client hiển thị giao diện Đang tìm phòng
             sendData(StreamData.Type.FIND_MATCH.name() + ";success");
 
         } else {
-            // nếu có người cũng đang tìm trận thì ghép cặp luôn
-            // tạo phòng mới
-            Room newRoom = RunServer.roomManager.createRoom();
+            // nếu có người cũng đang tìm trận thì hỏi ghép cặp pairMatch
+            // trong lúc hỏi thì phải tắt tìm trận bên đối thủ đi (để nếu client khác tìm trận thì ko bị ghép đè)
+            cCompetitor.findingMatch = false;
+            this.findingMatch = false;
 
-            // join phòng luôn
-            this.joinRoom(newRoom);
-            opponent.joinRoom(newRoom);
+            // lưu email đối thủ để dùng khi server nhận được result-pair-match
+            this.competitorEmail = cCompetitor.loginEmail;
+            cCompetitor.competitorEmail = this.loginEmail;
 
-            // gửi dữ liệu join phòng cho 2 client được ghép
-            sendData(StreamData.Type.JOIN_ROOM.name() + ";success");
+            // lấy thông tin 2 người chơi
+            Player me = new PlayerBUS().getByEmail(loginEmail);
+            Player pCompetitor = new PlayerBUS().getByEmail(cCompetitor.loginEmail);
+
+            // trả thông tin đối thủ về cho 2 clients
+            this.sendData(StreamData.Type.REQUEST_PAIR_MATCH.name() + ";" + pCompetitor.getName() + " #" + pCompetitor.getId());
+            cCompetitor.sendData(StreamData.Type.REQUEST_PAIR_MATCH.name() + ";" + me.getName() + " #" + me.getId());
         }
     }
 
     private void onReceiveCancelFindMatch(String received) {
+        // gỡ cờ đang tìm phòng
+        this.findingMatch = false;
 
+        // báo cho client để tắt giao diện đang tìm phòng
+        sendData(StreamData.Type.CANCEL_FIND_MATCH.name() + ";success");
+    }
+
+    private void onReceiveRequestPairMatch(String received) {
+        String[] splitted = received.split(";");
+        String requestResult = splitted[1];
+
+        // save accept pair status
+        this.acceptPairMatchStatus = requestResult;
+
+        // get competitor
+        Client cCompetitor = RunServer.clientManager.find(this.competitorEmail);
+        if (cCompetitor == null) {
+            sendData(StreamData.Type.RESULT_PAIR_MATCH.name() + ";failed;" + Code.COMPETITOR_LEAVE);
+            return;
+        }
+
+        // if once say no
+        if (requestResult.equals("no")) {
+            this.sendData(StreamData.Type.RESULT_PAIR_MATCH.name() + ";failed;" + Code.YOU_CHOOSE_NO);
+            cCompetitor.sendData(StreamData.Type.RESULT_PAIR_MATCH.name() + ";failed;" + Code.COMPETITOR_CHOOSE_NO);
+
+            // reset acceptPairMatchStatus
+            this.acceptPairMatchStatus = "_";
+            cCompetitor.acceptPairMatchStatus = "_";
+        }
+
+        // if both say yes
+        if (requestResult.equals("yes") && cCompetitor.acceptPairMatchStatus.equals("yes")) {
+            // send success pair match
+            this.sendData(StreamData.Type.RESULT_PAIR_MATCH.name() + ";success");
+            cCompetitor.sendData(StreamData.Type.RESULT_PAIR_MATCH.name() + ";success");
+
+            // create new room
+            Room newRoom = RunServer.roomManager.createRoom();
+
+            // join room
+            this.joinRoom(newRoom);
+            cCompetitor.joinRoom(newRoom);
+
+            // send join room status to client
+            sendData(StreamData.Type.JOIN_ROOM.name() + ";success;" + newRoom.getId());
+            cCompetitor.sendData(StreamData.Type.JOIN_ROOM.name() + ";success;" + newRoom.getId());
+
+            // reset acceptPairMatchStatus
+            this.acceptPairMatchStatus = "_";
+            cCompetitor.acceptPairMatchStatus = "_";
+        }
     }
 
     // send data fucntions
@@ -401,7 +488,7 @@ public class Client implements Runnable {
     }
 
     public void setFindingMatch(boolean findingMatch) {
-        this.findingMatch = this.findingMatch;
+        this.findingMatch = findingMatch;
     }
 
     public void setAes(AES aes) {

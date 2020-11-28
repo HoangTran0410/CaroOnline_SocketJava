@@ -37,16 +37,20 @@ public class StreamData {
         EDIT_PROFILE, // chức năng chỉnh thông tin cá nhân / thông tin cá nhân mới / success hoặc failed
         CHANGE_PASSWORD, // chức năng đổi mật khẩu / mật khẩu cũ, mật khẩu mới / success hoặc failed
 
-        // game
+        // find match
         FIND_MATCH, // chức năng tìm trận / không cần dữ liệu thêm / success hoặc failed
         CANCEL_FIND_MATCH, // chức năng hủy tìm trận / không cần dữ liệu thêm / success hoặc failed
-        ACCEPT_FIND_MATCH, // chức năng đồng ý hoặc hủy kết trận / đồng ý hay không / đồng ý thì cho vào phòng, ko thì báo cho người kia biết
+        REQUEST_PAIR_MATCH, // chức năng hỏi user có đồng ý ghép cặp không / đồng ý hay không / thông tin user sẽ ghép cặp
+        RESULT_PAIR_MATCH, // chức năng gửi thông báo đồng ý ghép cặp / _chỉ có server gửi có client loại type này_ / kết quả ghép cặp
+
+        // caro game
         MOVE, // chức năng đánh caro tại 1 ô / vị trí ô / success thì broadcast vị trí ô cho mọi người trong phòng, failed khi vị trí không hợp lệ
         UNDO, // chức năng đánh lại / không cần dữ liệu thêm / gửi request broadcast (cho mọi người biết là muốn đánh lại, kể cả viewer)
         UNDO_ACCEPT, // chắc năng đồng ý đánh lại / đồng ý hay không / gửi result broadcast (cho mọi người biết người chơi có đồng ý cho đánh lại hay không)
         NEW_GAME, // chức năng tạo game mới / không cần dữ liệu thêm / nếu game chưa end thì gửi request accept tới đối thủ
         NEW_GAME_ACCEPT, // chức năng đồng ý tạo game mới / đồng ý hay không / gửi result broadcast làm mới trận
 
+        // specific
         UNKNOW_TYPE, // khi client gửi type không xác định
         EXIT, // chức năng tắt game / không cần dữ liệu thêm / bradcast thoát game
     }

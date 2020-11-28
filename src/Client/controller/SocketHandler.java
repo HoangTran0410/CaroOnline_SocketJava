@@ -7,6 +7,7 @@ package client.controller;
 
 import client.RunClient;
 import client.model.ProfileData;
+import client.view.scene.MainMenu;
 import shared.helper.Util;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -141,6 +142,18 @@ public class SocketHandler {
                         onReceiveFindMatch(received);
                         break;
 
+                    case CANCEL_FIND_MATCH:
+                        onReceiveCancelFindMatch(received);
+                        break;
+
+                    case REQUEST_PAIR_MATCH:
+                        onReceiveRequestPairMatch(received);
+                        break;
+
+                    case RESULT_PAIR_MATCH:
+                        onReceiveResultPairMatch(received);
+                        break;
+
                     case MOVE:
                     case UNDO:
                     case UNDO_ACCEPT:
@@ -152,11 +165,7 @@ public class SocketHandler {
 
             } catch (IOException ex) {
                 Logger.getLogger(SocketHandler.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(null, "Mất kết nối tới server: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
                 running = false;
-
-                RunClient.closeAllScene();
-                RunClient.openScene(RunClient.SceneName.CONNECTSERVER);
             }
         }
 
@@ -168,6 +177,11 @@ public class SocketHandler {
         } catch (IOException ex) {
             Logger.getLogger(SocketHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        // alert if connect interup
+        JOptionPane.showMessageDialog(null, "Mất kết nối tới server", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        RunClient.closeAllScene();
+        RunClient.openScene(RunClient.SceneName.CONNECTSERVER);
     }
 
     // listen events
@@ -194,7 +208,7 @@ public class SocketHandler {
 
         } else if (status.equals("success")) {
             // lưu email login
-            email = splitted[2];
+            this.email = splitted[2];
 
             // chuyển scene
             RunClient.closeScene(RunClient.SceneName.LOGIN);
@@ -212,10 +226,6 @@ public class SocketHandler {
 
         // check status
         if (status.equals("failed")) {
-            // turn off loading
-            RunClient.signupScene.setLoading(false);
-
-            // show failed message
             String failedMsg = splitted[2];
             JOptionPane.showMessageDialog(RunClient.signupScene, failedMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
 
@@ -228,7 +238,7 @@ public class SocketHandler {
 
     private void onReceiveLogout(String received) {
         // xóa email login
-        email = null;
+        this.email = null;
 
         // chuyển scene
         RunClient.closeAllScene();
@@ -244,7 +254,7 @@ public class SocketHandler {
     }
 
     private void onReceiveJoinRoom(String received) {
-
+        System.out.println("Join room roi ne");
     }
 
     private void onReceiveLeaveRoom(String received) {
@@ -294,13 +304,12 @@ public class SocketHandler {
                 int currentStreak = Integer.parseInt(currentStreakStr);
                 float winRate = Float.parseFloat(winRateStr);
 
-                // TODO check isMe
                 ProfileData p = new ProfileData(id, email, name, avatar, gender, yearOfBirth, score, matchCount, winCount, tieCount, loseCount, currentStreak, winRate);
 
                 // show data to UI
                 RunClient.profileScene.setProfileData(p);
 
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(RunClient.profileScene, "Dữ liệu hồ sơ bị lỗi: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
 
                 // tự động đóng scene profile nếu có lỗi
@@ -324,11 +333,10 @@ public class SocketHandler {
             JOptionPane.showMessageDialog(RunClient.profileScene, "Đổi thông tin thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);
 
             // lưu lại email
-            String newEmail = splitted[2];
-            RunClient.socketHandler.setEmail(newEmail);
+            this.email = splitted[2];
 
-            // load lại thông tin cá nhân mới - có thể ko cần! load lại cho chắc
-            getProfile(newEmail);
+            // load lại thông tin cá nhân mới - có thể ko cần! nhưng cứ load lại cho chắc
+            getProfile(this.email);
         }
     }
 
@@ -351,7 +359,59 @@ public class SocketHandler {
     }
 
     private void onReceiveFindMatch(String received) {
+        String[] splitted = received.split(";");
+        String status = splitted[1];
 
+        // check status
+        if (status.equals("failed")) {
+            String failedMsg = splitted[2];
+            JOptionPane.showMessageDialog(RunClient.mainMenuScene, failedMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
+
+        } else if (status.equals("success")) {
+            RunClient.mainMenuScene.setDisplayState(MainMenu.State.FINDING_MATCH);
+        }
+    }
+
+    private void onReceiveCancelFindMatch(String received) {
+        String[] splitted = received.split(";");
+        String status = splitted[1];
+
+        // check status
+        if (status.equals("failed")) {
+            String failedMsg = splitted[2];
+            JOptionPane.showMessageDialog(RunClient.mainMenuScene, failedMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
+
+        } else if (status.equals("success")) {
+            RunClient.mainMenuScene.setDisplayState(MainMenu.State.DEFAULT);
+        }
+    }
+
+    private void onReceiveRequestPairMatch(String received) {
+        String[] splitted = received.split(";");
+        String competitorName = splitted[1];
+
+        // show data
+        RunClient.mainMenuScene.foundMatch(competitorName);
+    }
+
+    private void onReceiveResultPairMatch(String received) {
+        String[] splitted = received.split(";");
+        String status = splitted[1];
+
+        if (status.equals("failed")) {
+            // set display state trước để tắt timer
+            // do nếu để showMessageDialog trước sẽ lock UI, không bấm gì được, nhưng timer bên mainmenu vẫn chạy = > gây lỗi
+            RunClient.mainMenuScene.setDisplayState(MainMenu.State.DEFAULT);
+
+            // hiện lỗi
+            String failedMsg = splitted[2];
+            JOptionPane.showMessageDialog(RunClient.mainMenuScene, failedMsg, "Không thể ghép trận", JOptionPane.ERROR_MESSAGE);
+
+        } else if (status.equals("success")) {
+            // không làm gì cả, đợi thông báo join phòng từ server
+            RunClient.mainMenuScene.setDisplayState(MainMenu.State.DEFAULT);
+            System.out.println("set display state roi ne");
+        }
     }
 
     // functions
@@ -442,6 +502,14 @@ public class SocketHandler {
 
     public void cancelFindMatch() {
         sendData(StreamData.Type.CANCEL_FIND_MATCH.name());
+    }
+
+    public void declinePairMatch() {
+        sendData(StreamData.Type.REQUEST_PAIR_MATCH.name() + ";no");
+    }
+
+    public void acceptPairMatch() {
+        sendData(StreamData.Type.REQUEST_PAIR_MATCH.name() + ";yes");
     }
 
     // send data fucntions

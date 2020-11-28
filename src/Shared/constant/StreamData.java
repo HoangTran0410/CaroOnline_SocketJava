@@ -30,16 +30,18 @@ public class StreamData {
         CREATE_ROOM, // chức năng tạo phòng / không cần dữ liệu thêm / success hoặc failed
         JOIN_ROOM, // chức năng vào phòng / id phòng / success hoặc failed
         LEAVE_ROOM, // chức năng thoát phòng / id phòng / success hoặc failed
-        ROOM_CHAT, // chức năng chat phòng / dữ liệu chat / dữ liệu chat (gửi broadcast trong phòng)
+        CHAT_ROOM, // chức năng chat phòng / dữ liệu chat / dữ liệu chat (gửi broadcast trong phòng)
 
         // profile
-        GET_PROFILE, // chức năng xem hồ sơ cá nhân / không cần dữ liệu thêm / dữ liệu người chơi (sau này có thể cho xem profile của người khác)
+        GET_PROFILE, // chức năng xem hồ sơ cá nhân / email user muốn xem thông tin / dữ liệu user
         EDIT_PROFILE, // chức năng chỉnh thông tin cá nhân / thông tin cá nhân mới / success hoặc failed
         CHANGE_PASSWORD, // chức năng đổi mật khẩu / mật khẩu cũ, mật khẩu mới / success hoặc failed
 
         // game
-        FIND_MATCH, // chức năng tìm trận / không cần dữ liệu thêm / id phòng sau khi ghép trận thành công
-        MOVE, // chức năng đánh caro tại 1 ô / vị trí ô / success hoặc failed
+        FIND_MATCH, // chức năng tìm trận / không cần dữ liệu thêm / success hoặc failed
+        CANCEL_FIND_MATCH, // chức năng hủy tìm trận / không cần dữ liệu thêm / success hoặc failed
+        ACCEPT_FIND_MATCH, // chức năng đồng ý hoặc hủy kết trận / đồng ý hay không / đồng ý thì cho vào phòng, ko thì báo cho người kia biết
+        MOVE, // chức năng đánh caro tại 1 ô / vị trí ô / success thì broadcast vị trí ô cho mọi người trong phòng, failed khi vị trí không hợp lệ
         UNDO, // chức năng đánh lại / không cần dữ liệu thêm / gửi request broadcast (cho mọi người biết là muốn đánh lại, kể cả viewer)
         UNDO_ACCEPT, // chắc năng đồng ý đánh lại / đồng ý hay không / gửi result broadcast (cho mọi người biết người chơi có đồng ý cho đánh lại hay không)
         NEW_GAME, // chức năng tạo game mới / không cần dữ liệu thêm / nếu game chưa end thì gửi request accept tới đối thủ

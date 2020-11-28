@@ -8,7 +8,6 @@ package server.controller;
 import server.game.caro.Caro;
 import server.game.GameLogic;
 import java.util.ArrayList;
-import java.util.UUID;
 
 /**
  *
@@ -21,9 +20,9 @@ public class Room {
     Client player1, player2; // TODO: tách người chơi và người xem
     ArrayList<Client> clients = new ArrayList<>();
 
-    public Room() {
+    public Room(String id) {
         // room id
-        this.id = UUID.randomUUID().toString();
+        this.id = id;
 
         // create game logic
         gamelogic = new Caro();

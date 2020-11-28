@@ -40,16 +40,11 @@ public class Signup extends javax.swing.JFrame {
         return splitted[splitted.length - 1];
     }
 
-    public void setLoading(boolean status) {
-        if (status == true) {
-            pgbLoading.setVisible(true);
-            btnSignup.setEnabled(false);
-            btnSignup.setText("Đang xử lý..");
-        } else {
-            pgbLoading.setVisible(false);
-            btnSignup.setEnabled(true);
-            btnSignup.setText("Đăng ký");
-        }
+    public void setLoading(boolean isLoading) {
+        pgbLoading.setVisible(isLoading);
+        btnSignup.setEnabled(!isLoading);
+        btnLogin.setEnabled(!isLoading);
+        btnSignup.setText(isLoading ? "Đang xử lý.." : "Đăng ký");
     }
 
     /**

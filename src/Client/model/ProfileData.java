@@ -20,13 +20,16 @@ public class ProfileData {
 
     int score = 0;
     int matchCount = 0;
+    int winCount = 0;
+    int tieCount = 0;
+    int loseCount = 0;
     int currentStreak = 0;
     float winRate = 0;
 
     public ProfileData() {
     }
 
-    public ProfileData(int id, String email, String name, String avatar, String gender, int yearOfBirth, int score, int matchCount, int currentStreak, float winRate) {
+    public ProfileData(int id, String email, String name, String avatar, String gender, int yearOfBirth, int score, int matchCount, int winCount, int tieCount, int loseCount, int currentStreak, float winRate) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -35,6 +38,9 @@ public class ProfileData {
         this.gender = gender;
         this.score = score;
         this.matchCount = matchCount;
+        this.winCount = winCount;
+        this.tieCount = tieCount;
+        this.loseCount = loseCount;
         this.currentStreak = currentStreak;
         this.winRate = winRate;
     }
@@ -101,6 +107,30 @@ public class ProfileData {
 
     public void setMatchCount(int matchCount) {
         this.matchCount = matchCount;
+    }
+
+    public int getWinCount() {
+        return winCount;
+    }
+
+    public void setWinCount(int winCount) {
+        this.winCount = winCount;
+    }
+
+    public int getTieCount() {
+        return tieCount;
+    }
+
+    public void setTieCount(int tieCount) {
+        this.tieCount = tieCount;
+    }
+
+    public int getLoseCount() {
+        return loseCount;
+    }
+
+    public void setLoseCount(int loseCount) {
+        this.loseCount = loseCount;
     }
 
     public int getCurrentStreak() {

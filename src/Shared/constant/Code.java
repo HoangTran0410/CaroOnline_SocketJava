@@ -11,8 +11,10 @@ package shared.constant;
  */
 public class Code {
 
-    public static String ACCOUNT_NOT_FOUND = "Không tìm thấy tài khoản";
-    public static String ACCOUNT_BLOCKED = "Tài khoản đang bị khóa";
-    public static String WRONG_PASSWORD = "Mật khẩu không đúng";
-    public static String EMAIL_EXISTED = "Email đã tồn tại";
+    public static String ACCOUNT_NOT_FOUND = "Không tìm thấy tài khoản.";
+    public static String ACCOUNT_BLOCKED = "Tài khoản đang bị khóa.";
+    public static String WRONG_PASSWORD = "Mật khẩu không đúng.";
+    public static String EMAIL_EXISTED = "Email đã tồn tại.";
+    public static String CANNOT_JOINROOM = "Không thể vào phòng.";
+    public static String ALREADY_INROOM = "Bạn đang ở trong phòng rồi.";
 }

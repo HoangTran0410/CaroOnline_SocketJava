@@ -24,12 +24,12 @@ public class MainMenu extends javax.swing.JFrame {
         setFindMatchLoading(false);
     }
 
-    public void setFindMatchLoading(boolean isfindgame) {
-        btnFindMatch.setEnabled(!isfindgame);
-        btnWatch.setEnabled(!isfindgame);
-        btnJoin.setEnabled(!isfindgame);
-        btnCreateRoom.setEnabled(!isfindgame);
-        plFindingGame.setVisible(isfindgame);
+    public void setFindMatchLoading(boolean isFindingMatch) {
+        btnFindMatch.setEnabled(!isFindingMatch);
+        btnWatch.setEnabled(!isFindingMatch);
+        btnJoin.setEnabled(!isFindingMatch);
+        btnCreateRoom.setEnabled(!isFindingMatch);
+        plFindingGame.setVisible(isFindingMatch);
     }
 
     /**
@@ -330,10 +330,12 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void btnFindMatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindMatchActionPerformed
         setFindMatchLoading(true);
+        // TODO find match 
     }//GEN-LAST:event_btnFindMatchActionPerformed
 
     private void btnCancelFindMatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelFindMatchActionPerformed
         setFindMatchLoading(false);
+        // TODO cancel find match
     }//GEN-LAST:event_btnCancelFindMatchActionPerformed
 
     /**

@@ -24,20 +24,12 @@ public class ChangePassword extends javax.swing.JFrame {
         pgbLoading.setVisible(false);
     }
 
-    public void setLoading(boolean status) {
-        if (status == true) {
-            pgbLoading.setVisible(true);
-            btnCancel.setEnabled(false);
-            btnSave.setEnabled(false);
+    public void setLoading(boolean isLoading) {
+        pgbLoading.setVisible(isLoading);
+        btnCancel.setEnabled(!isLoading);
+        btnSave.setEnabled(!isLoading);
 
-            btnSave.setText("Đang xử lý..");
-        } else {
-            pgbLoading.setVisible(false);
-            btnCancel.setEnabled(true);
-            btnSave.setEnabled(true);
-
-            btnSave.setText("Lưu");
-        }
+        btnSave.setText(isLoading ? "Đang xử lý.." : "Lưu");
     }
 
     /**

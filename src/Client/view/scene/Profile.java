@@ -70,7 +70,11 @@ public class Profile extends javax.swing.JFrame {
         boolean isMe = p.getEmail().equals(RunClient.socketHandler.getEmail());
 
         // put data to form
-        plContainer.setBorder(javax.swing.BorderFactory.createTitledBorder("Người chơi #" + p.getId()));
+        lbWinCount.setText("" + p.getWinCount());
+        lbTieCount.setText("" + p.getTieCount());
+        lbLoseCount.setText("" + p.getLoseCount());
+
+        plContainer.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Người chơi #" + p.getId(), javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Consolas", 1, 14))); // NOI18N
         txEmail.setText(p.getEmail());
         txName.setText(p.getName());
         txYearOfBirth.setText("" + p.getYearOfBirth());
@@ -90,16 +94,16 @@ public class Profile extends javax.swing.JFrame {
         plProfileBtn.setVisible(isMe);
     }
 
-    public void setProfileSaveLoading(boolean status) {
-        btnProfileSave.setText(status ? "Đang xử lý" : "Lưu");
-        btnProfileSave.setEnabled(!status);
-        btnProfileCancel.setEnabled(!status);
+    public void setProfileSaveLoading(boolean isLoading) {
+        btnProfileSave.setText(isLoading ? "Đang xử lý" : "Lưu");
+        btnProfileSave.setEnabled(!isLoading);
+        btnProfileCancel.setEnabled(!isLoading);
 
-        pgbProfileLoading.setVisible(status);
+        pgbProfileLoading.setVisible(isLoading);
     }
 
-    public void setLoading(boolean status) {
-        pgbProfileLoading.setVisible(status);
+    public void setLoading(boolean isLoading) {
+        pgbProfileLoading.setVisible(isLoading);
     }
 
     /**
@@ -138,11 +142,20 @@ public class Profile extends javax.swing.JFrame {
         lbMatchCount = new javax.swing.JLabel();
         lbCurrentStreak = new javax.swing.JLabel();
         lbWinRate = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        lbWinCount = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        lbTieCount = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        lbLoseCount = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Hồ sơ");
 
-        plContainer.setBorder(javax.swing.BorderFactory.createTitledBorder("Người chơi"));
+        plContainer.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Người chơi", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Consolas", 1, 14))); // NOI18N
 
         lbEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_email_48px.png"))); // NOI18N
 
@@ -178,8 +191,8 @@ public class Profile extends javax.swing.JFrame {
         });
 
         btnProfileCancel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        btnProfileCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_cancel_24px.png"))); // NOI18N
-        btnProfileCancel.setText("Hủy");
+        btnProfileCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_replay_24px.png"))); // NOI18N
+        btnProfileCancel.setText("Làm mới");
         btnProfileCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnProfileCancelActionPerformed(evt);
@@ -292,13 +305,13 @@ public class Profile extends javax.swing.JFrame {
         jLabel1.setText("Điểm");
 
         jLabel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel2.setText("Số trận");
+        jLabel2.setText("Trận");
 
         jLabel3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel3.setText("Chuỗi");
 
         jLabel4.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel4.setText("Tỉ lệ thắng");
+        jLabel4.setText("Thắng");
 
         lbScore.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
         lbScore.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
@@ -331,7 +344,7 @@ public class Profile extends javax.swing.JFrame {
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbScore, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
+                    .addComponent(lbScore, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
                     .addComponent(lbMatchCount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbWinRate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbCurrentStreak, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -380,21 +393,133 @@ public class Profile extends javax.swing.JFrame {
                 .addContainerGap(11, Short.MAX_VALUE))
         );
 
+        jPanel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 204, 102), 2, true));
+        jPanel1.setToolTipText("Số trận thắng");
+        jPanel1.setPreferredSize(new java.awt.Dimension(80, 80));
+
+        jLabel5.setText("Thắng");
+
+        lbWinCount.setFont(new java.awt.Font("Consolas", 1, 18)); // NOI18N
+        lbWinCount.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbWinCount.setText("0");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbWinCount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(0, 29, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbWinCount, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jPanel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 0), 2, true));
+        jPanel2.setToolTipText("Số trận hòa");
+        jPanel2.setPreferredSize(new java.awt.Dimension(80, 80));
+
+        jLabel6.setText("Hòa");
+
+        lbTieCount.setFont(new java.awt.Font("Consolas", 1, 18)); // NOI18N
+        lbTieCount.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbTieCount.setText("0");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbTieCount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addGap(0, 42, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbTieCount, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jPanel4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 0, 0), 2, true));
+        jPanel4.setToolTipText("Số trận thua");
+        jPanel4.setPreferredSize(new java.awt.Dimension(80, 80));
+
+        jLabel7.setText("Thua");
+
+        lbLoseCount.setFont(new java.awt.Font("Consolas", 1, 18)); // NOI18N
+        lbLoseCount.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbLoseCount.setText("0");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbLoseCount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addGap(0, 36, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbLoseCount, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout plContainerLayout = new javax.swing.GroupLayout(plContainer);
         plContainer.setLayout(plContainerLayout);
         plContainerLayout.setHorizontalGroup(
             plContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(plContainerLayout.createSequentialGroup()
-                .addGap(5, 5, 5)
-                .addGroup(plContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(plContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(plContainerLayout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addGroup(plContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(plContainerLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         plContainerLayout.setVerticalGroup(
             plContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(plContainerLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
+                .addGroup(plContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -441,7 +566,8 @@ public class Profile extends javax.swing.JFrame {
     }//GEN-LAST:event_btnProfileSaveActionPerformed
 
     private void btnProfileCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProfileCancelActionPerformed
-        setProfileData(currentProfile);
+        setLoading(true);
+        loadProfileData(currentProfile.getEmail());
     }//GEN-LAST:event_btnProfileCancelActionPerformed
 
     /**
@@ -489,17 +615,26 @@ public class Profile extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JLabel lbBirthday;
     private javax.swing.JLabel lbCurrentStreak;
     private javax.swing.JLabel lbEmail;
     private javax.swing.JLabel lbGender;
+    private javax.swing.JLabel lbLoseCount;
     private javax.swing.JLabel lbMatchCount;
     private javax.swing.JLabel lbPassword;
     private javax.swing.JLabel lbScore;
+    private javax.swing.JLabel lbTieCount;
     private javax.swing.JLabel lbUserName;
+    private javax.swing.JLabel lbWinCount;
     private javax.swing.JLabel lbWinRate;
     private javax.swing.JProgressBar pgbProfileLoading;
     private javax.swing.JPanel plContainer;

@@ -24,9 +24,10 @@ public class Login extends javax.swing.JFrame {
         pgbLoading.setVisible(false);
     }
 
-    public void setLoading(boolean status) {
-        btnLogin.setEnabled(!status);
-        pgbLoading.setVisible(status);
+    public void setLoading(boolean isLoading) {
+        btnSignup.setEnabled(!isLoading);
+        btnLogin.setEnabled(!isLoading);
+        pgbLoading.setVisible(isLoading);
     }
 
     /**

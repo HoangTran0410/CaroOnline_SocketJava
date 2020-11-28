@@ -25,16 +25,10 @@ public class ConnectServer extends javax.swing.JFrame {
         pgbLoading.setVisible(false);
     }
 
-    public void setLoading(boolean status, String btnText) {
-        if (status == true) {
-            btnConnect.setText(btnText);
-            pgbLoading.setVisible(true);
-            btnConnect.setEnabled(false);
-        } else {
-            btnConnect.setText("Kết nối");
-            pgbLoading.setVisible(false);
-            btnConnect.setEnabled(true);
-        }
+    public void setLoading(boolean isLoading, String btnText) {
+        pgbLoading.setVisible(isLoading);
+        btnConnect.setEnabled(!isLoading);
+        btnConnect.setText(isLoading ? btnText : "Kết nối");
     }
 
     /**

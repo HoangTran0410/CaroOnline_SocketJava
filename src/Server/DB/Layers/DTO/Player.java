@@ -69,6 +69,10 @@ public class Player {
         this.currentStreak = p.currentStreak;
         this.blocked = p.blocked;
     }
+    
+    public int calculateTieCount() {
+        return matchCount - winCount - loseCount;
+    }
 
     public float calculateWinRate() {
         if (this.matchCount == 0) {

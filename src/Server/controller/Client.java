@@ -28,11 +28,10 @@ public class Client implements Runnable {
     DataInputStream dis;
     DataOutputStream dos;
 
+    boolean findingMatch = false;
     String loginEmail; // if == null => chua dang nhap
     Room room; // if == null => chua vao phong nao het
     AES aes;
-
-    boolean findingMatch = false;
 
     public Client(Socket s) throws IOException {
         this.s = s;
@@ -79,10 +78,25 @@ public class Client implements Runnable {
                         break;
 
                     case LIST_ROOM:
+                        onReceiveListRoom(received);
+                        break;
+
                     case CREATE_ROOM:
+                        onReceiveCreateRoom(received);
+                        break;
+
                     case JOIN_ROOM:
+                        onReceiveJoinRoom(received);
+                        break;
+
                     case LEAVE_ROOM:
-                    case ROOM_CHAT:
+                        onReceiveLeaveRoom(received);
+                        break;
+
+                    case CHAT_ROOM:
+                        onReceiveChatRoom(received);
+                        break;
+
                     case GET_PROFILE:
                         onReceiveGetProfile(received);
                         break;
@@ -135,8 +149,8 @@ public class Client implements Runnable {
         String aesKey = RunServer.serverSide.decrypt(keyEncrypted);
         System.out.println("Server receive AES key: " + aesKey);
 
-        // save AES key
-        setSecretKey(aesKey);
+        // save AES
+        setAes(new AES(aesKey));
 
         // notify client
         sendData(StreamData.Type.AESKEY.name());
@@ -180,8 +194,29 @@ public class Client implements Runnable {
         this.loginEmail = null;
         this.findingMatch = false;
 
+        // TODO broadcast to all clients
         // send status
         sendData(StreamData.Type.LOGOUT.name() + ";success");
+    }
+
+    private void onReceiveListRoom(String received) {
+
+    }
+
+    private void onReceiveCreateRoom(String received) {
+
+    }
+
+    private void onReceiveJoinRoom(String received) {
+
+    }
+
+    private void onReceiveLeaveRoom(String received) {
+
+    }
+
+    private void onReceiveChatRoom(String received) {
+
     }
 
     private void onReceiveGetProfile(String received) {
@@ -204,6 +239,9 @@ public class Client implements Runnable {
                     + p.getYearOfBirth() + ";"
                     + p.getScore() + ";"
                     + p.getMatchCount() + ";"
+                    + p.getWinCount() + ";"
+                    + p.calculateTieCount() + ";"
+                    + p.getLoseCount() + ";"
                     + p.getCurrentStreak() + ";"
                     + p.calculateWinRate();
         }
@@ -254,15 +292,37 @@ public class Client implements Runnable {
     }
 
     private void onReceiveFindMatch(String received) {
+        // nếu đang trong phòng rồi thì báo lỗi ngay
+        if (this.room != null) {
+            sendData(StreamData.Type.FIND_MATCH.name() + ";failed;" + Code.ALREADY_INROOM + " #" + this.room.getId());
+        }
+
+        // kiểm tra xem có ai đang tìm phòng không
+        Client opponent = RunServer.clientManager.findClientFindingMatch();
+
+        if (opponent == null) {
+            // không có thì trả về success để client hiển thị giao diện Đang tìm phòng
+            sendData(StreamData.Type.FIND_MATCH.name() + ";success");
+
+        } else {
+            // nếu có người cũng đang tìm trận thì ghép cặp luôn
+            // tạo phòng mới
+            Room newRoom = RunServer.roomManager.createRoom();
+
+            // join phòng luôn
+            this.joinRoom(newRoom);
+            opponent.joinRoom(newRoom);
+
+            // gửi dữ liệu join phòng cho 2 client được ghép
+            sendData(StreamData.Type.JOIN_ROOM.name() + ";success");
+        }
+    }
+
+    private void onReceiveCancelFindMatch(String received) {
 
     }
 
-    // security handlers
-    public void setSecretKey(String seckey) {
-        aes = new AES(seckey);
-    }
-
-    // communicating handlers
+    // send data fucntions
     public String sendData(String data) {
         try {
             if (aes != null) {
@@ -290,16 +350,20 @@ public class Client implements Runnable {
 
     // room handlers
     public String joinRoom(String id) {
-        // đang trong phòng rồi ?
-        if (this.room != null) {
-            return "failed;Không thể chuyển phòng. Đang trong phòng " + this.room.getId() + " rồi!";
-        }
-
-        Room room = RunServer.roomManager.find(id);
+        Room found = RunServer.roomManager.find(id);
 
         // không tìm thấy phòng cần join ?
-        if (room == null) {
+        if (found == null) {
             return "failed;Không tìm thấy phòng " + id;
+        }
+
+        return joinRoom(found);
+    }
+
+    public String joinRoom(Room room) {
+        // đang trong phòng rồi ?
+        if (this.room != null) {
+            return "failed;" + Code.CANNOT_JOINROOM + Code.ALREADY_INROOM + " #" + this.room.getId();
         }
 
         // join vào phòng thanh cong hay khong ?
@@ -308,11 +372,7 @@ public class Client implements Runnable {
             return "success";
         }
 
-        return "failed;Không thể tham gia phòng";
-    }
-
-    public String joinRoom(Room room) {
-        return joinRoom(room.getId());
+        return "failed;" + Code.CANNOT_JOINROOM + " room.addClient trả về false";
     }
 
     // TODO chuyển return type về String
@@ -331,7 +391,7 @@ public class Client implements Runnable {
         return false;
     }
 
-    // gets sets
+    // get set
     public String getLoginEmail() {
         return loginEmail;
     }
@@ -342,6 +402,10 @@ public class Client implements Runnable {
 
     public void setFindingMatch(boolean findingMatch) {
         this.findingMatch = this.findingMatch;
+    }
+
+    public void setAes(AES aes) {
+        this.aes = aes;
     }
 
 }

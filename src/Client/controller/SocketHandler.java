@@ -106,10 +106,25 @@ public class SocketHandler {
                         break;
 
                     case LIST_ROOM:
+                        onReceiveListRoom(received);
+                        break;
+
                     case CREATE_ROOM:
+                        onReceiveCreateRoom(received);
+                        break;
+
                     case JOIN_ROOM:
+                        onReceiveJoinRoom(received);
+                        break;
+
                     case LEAVE_ROOM:
-                    case ROOM_CHAT:
+                        onReceiveLeaveRoom(received);
+                        break;
+
+                    case CHAT_ROOM:
+                        onReceiveChatRoom(received);
+                        break;
+
                     case GET_PROFILE:
                         onReceiveGetProfile(received);
                         break;
@@ -220,6 +235,26 @@ public class SocketHandler {
         RunClient.openScene(RunClient.SceneName.LOGIN);
     }
 
+    private void onReceiveListRoom(String received) {
+
+    }
+
+    private void onReceiveCreateRoom(String received) {
+
+    }
+
+    private void onReceiveJoinRoom(String received) {
+
+    }
+
+    private void onReceiveLeaveRoom(String received) {
+
+    }
+
+    private void onReceiveChatRoom(String received) {
+
+    }
+
     private void onReceiveGetProfile(String received) {
         String[] splitted = received.split(";");
         String status = splitted[1];
@@ -241,8 +276,11 @@ public class SocketHandler {
             String yearOfBirthStr = splitted[7];
             String scoreStr = splitted[8];
             String matchCountStr = splitted[9];
-            String currentStreakStr = splitted[10];
-            String winRateStr = splitted[11];
+            String winCountStr = splitted[10];
+            String tieCountStr = splitted[11];
+            String loseCountStr = splitted[12];
+            String currentStreakStr = splitted[13];
+            String winRateStr = splitted[14];
 
             // validate
             try {
@@ -250,11 +288,14 @@ public class SocketHandler {
                 int yearOfBirth = Integer.parseInt(yearOfBirthStr);
                 int score = Integer.parseInt(scoreStr);
                 int matchCount = Integer.parseInt(matchCountStr);
+                int winCount = Integer.parseInt(winCountStr);
+                int tieCount = Integer.parseInt(tieCountStr);
+                int loseCount = Integer.parseInt(loseCountStr);
                 int currentStreak = Integer.parseInt(currentStreakStr);
                 float winRate = Float.parseFloat(winRateStr);
 
                 // TODO check isMe
-                ProfileData p = new ProfileData(id, email, name, avatar, gender, yearOfBirth, score, matchCount, currentStreak, winRate);
+                ProfileData p = new ProfileData(id, email, name, avatar, gender, yearOfBirth, score, matchCount, winCount, tieCount, loseCount, currentStreak, winRate);
 
                 // show data to UI
                 RunClient.profileScene.setProfileData(p);
@@ -397,6 +438,10 @@ public class SocketHandler {
 
     public void findMatch() {
         sendData(StreamData.Type.FIND_MATCH.name());
+    }
+
+    public void cancelFindMatch() {
+        sendData(StreamData.Type.CANCEL_FIND_MATCH.name());
     }
 
     // send data fucntions

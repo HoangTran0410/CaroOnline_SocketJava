@@ -50,7 +50,7 @@ public class ClientManager {
         });
     }
 
-    public Client findClientFindingGame() {
+    public Client findClientFindingMatch() {
         for (Client c : clients) {
             if (c.isFindingMatch()) {
                 return c;

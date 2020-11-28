@@ -6,6 +6,7 @@
 package server.controller;
 
 import java.util.ArrayList;
+import shared.helper.RandomString;
 
 /**
  *
@@ -14,9 +15,18 @@ import java.util.ArrayList;
 public class RoomManager {
 
     ArrayList<Room> rooms;
+    RandomString idGenerator;
 
     public RoomManager() {
         rooms = new ArrayList<>();
+        idGenerator = new RandomString(5);
+    }
+
+    public Room createRoom() {
+        Room room = new Room(idGenerator.nextString());
+        rooms.add(room);
+
+        return room;
     }
 
     public boolean add(Room r) {
@@ -43,7 +53,7 @@ public class RoomManager {
         }
         return null;
     }
-    
+
     public int getSize() {
         return rooms.size();
     }

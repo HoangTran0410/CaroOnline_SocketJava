@@ -5,12 +5,9 @@
  */
 package client.view.helper;
 
-import client.RunClient;
+import java.text.Normalizer;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javafx.util.converter.LocalDateTimeStringConverter;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
@@ -20,40 +17,44 @@ import javax.swing.SwingUtilities;
  */
 public class Validation {
 
-    private final String SPECIAL_CHARS = "[$&+,:;=\\\\\\\\?@#|/'<>^*()%!-]";
-
     public Validation() {
     }
 
-    public boolean checkSpecialChar(String source) {
-        Pattern pattern = Pattern.compile(SPECIAL_CHARS);
-        Matcher matcher = pattern.matcher(source);
-        return matcher.find();
-    }
-
     public boolean checkEmail(String email) {
-        String[] parts = email.split("@");
-        String[] dotParts = email.split("\\.");
-        if (parts.length != 2
-                || checkSpecialChar(parts[0])
-                || checkSpecialChar(parts[1])
-                || email.endsWith("@")
-                || email.endsWith("\\.")
-                || dotParts.length < 2) {
-            return false;
-        }
-
-        String TLD = dotParts[dotParts.length - 1];
-        return email.indexOf(TLD) > email.indexOf("@");
+        String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+        return email.matches(regex);
     }
 
+//    public boolean checkEmail(String email) {
+//        String[] parts = email.split("@");
+//        String[] dotParts = email.split("\\.");
+//        if (parts.length != 2
+//                || checkSpecialChar(parts[0])
+//                || checkSpecialChar(parts[1])
+//                || email.endsWith("@")
+//                || email.endsWith("\\.")
+//                || dotParts.length < 2) {
+//            return false;
+//        }
+//
+//        String TLD = dotParts[dotParts.length - 1];
+//        return email.indexOf(TLD) > email.indexOf("@");
+//    }
     public boolean checkPassword(String pass) {
-
         return pass.length() >= 6 && pass.length() <= 30;
     }
-
+//  Name is invalid if it changed after removing accents, or it has blank space
     public boolean checkName(String name) {
-        return name.length() > 0 && name.length() <= 15 && !checkSpecialChar(name) ;
+        if(!removeAccent(name).equalsIgnoreCase(name) || name.contains(" "))
+            return false;
+        return name.length() > 0 && name.length() <= 15;
+    }
+    
+//http://sinhviencntt.blogspot.com/2015/01/code-java-chuyen-oi-tieng-viet-co-dau.html
+    public String removeAccent(String s) {
+        String temp = Normalizer.normalize(s, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(temp).replaceAll("");
     }
 
     public boolean checkYearOfBirth(int year) {
@@ -70,18 +71,24 @@ public class Validation {
         }
     }
 
-    public void checkNumberInputChanged(JTextField txYearOfBirth) {
+//     Listener for NumberInput fields.
+//     Need to invoke changes to the document from the Event Dispatcher Thread,
+//     otherwise 'Attempt to mutate notification' exception is Throwed
+//     https://stackoverflow.com/questions/15206586/getting-attempt-to-mutate-notification-exception
+    public void checkNumberInputChanged(JTextField numberFormatedField) {
         Runnable doAssist = new Runnable() {
-            String temp = txYearOfBirth.getText();
+            String temp = numberFormatedField.getText();//temp = 1234a
 
             @Override
             public void run() {
-                if (!checkInt(temp)) {
-                    while (!checkInt(temp)) {
-                        temp = temp.substring(0, temp.length() - 1);
+//      check if input is Integer
+                if (!checkInt(temp)) {          // temp = 1234a
+//      loop to remove the last char if not Integer until temp is Integer
+                    while (!checkInt(temp)) {   // temp = 1234a
+                        temp = temp.substring(0, temp.length() - 1);// temp = 1234
                     }
-                    System.out.println("done");
-                    txYearOfBirth.setText(temp);
+//                  Set temp as text for the textField
+                    numberFormatedField.setText(temp);
                 }
 
             }

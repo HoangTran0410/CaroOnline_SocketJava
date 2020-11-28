@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -213,6 +214,9 @@ public class SocketHandler {
             // chuyển scene
             RunClient.closeScene(RunClient.SceneName.LOGIN);
             RunClient.openScene(RunClient.SceneName.MAINMENU);
+
+            // tự động lấy danh sách phòng
+            listRoom();
         }
     }
 
@@ -246,7 +250,40 @@ public class SocketHandler {
     }
 
     private void onReceiveListRoom(String received) {
+        String[] splitted = received.split(";");
+        String status = splitted[1];
 
+        if (status.equals("failed")) {
+
+        } else if (status.equals("success")) {
+            int roomCount = Integer.parseInt(splitted[2]);
+
+            // https://niithanoi.edu.vn/huong-dan-thao-tac-voi-jtable-lap-trinh-java-swing.html
+            Vector vheader = new Vector();
+            vheader.add("Mã");
+            vheader.add("Cặp đấu");
+            vheader.add("Số người");
+
+            Vector vdata = new Vector();
+
+            // i += 3 -> 3 là số cột trong bảng
+            // i = 3 tới roomCount + 3 -> đến từ vị trí 3 mới là dữ liệu của phòng
+            for (int i = 3; i < roomCount + 3; i += 3) {
+
+                String roomId = splitted[i];
+                String title = splitted[i + 1];
+                String clientCount = splitted[i + 2];
+
+                Vector vrow = new Vector();
+                vrow.add(roomId);
+                vrow.add(title);
+                vrow.add(clientCount);
+
+                vdata.add(vrow);
+            }
+
+            RunClient.mainMenuScene.setListRoom(vdata, vheader);
+        }
     }
 
     private void onReceiveCreateRoom(String received) {
@@ -398,19 +435,18 @@ public class SocketHandler {
         String[] splitted = received.split(";");
         String status = splitted[1];
 
-        if (status.equals("failed")) {
-            // set display state trước để tắt timer
-            // do nếu để showMessageDialog trước sẽ lock UI, không bấm gì được, nhưng timer bên mainmenu vẫn chạy = > gây lỗi
-            RunClient.mainMenuScene.setDisplayState(MainMenu.State.DEFAULT);
+        // reset display state of main menu
+        RunClient.mainMenuScene.setDisplayState(MainMenu.State.DEFAULT);
 
-            // hiện lỗi
+        if (status.equals("failed")) {
             String failedMsg = splitted[2];
             JOptionPane.showMessageDialog(RunClient.mainMenuScene, failedMsg, "Không thể ghép trận", JOptionPane.ERROR_MESSAGE);
 
         } else if (status.equals("success")) {
-            // không làm gì cả, đợi thông báo join phòng từ server
             RunClient.mainMenuScene.setDisplayState(MainMenu.State.DEFAULT);
-            System.out.println("set display state roi ne");
+
+            // get list room
+            listRoom();
         }
     }
 
@@ -461,6 +497,10 @@ public class SocketHandler {
 
         // send data
         sendData(data);
+    }
+
+    public void listRoom() {
+        sendData(StreamData.Type.LIST_ROOM.name());
     }
 
     public void changePassword(String oldPassword, String newPassword) {

@@ -9,6 +9,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import server.RunServer;
@@ -29,11 +30,13 @@ public class Client implements Runnable {
     DataOutputStream dos;
 
     boolean findingMatch = false;
-    String loginEmail = ""; // if == "" => chua dang nhap
+    Player loginPlayer;
+    Client cCompetitor;
     Room room; // if == null => chua vao phong nao het
     AES aes;
 
-    String competitorEmail = "";
+    // String loginEmail = ""; // if == "" => chua dang nhap
+    // String competitorEmail = "";
     String acceptPairMatchStatus = "_"; // yes/no/_
 
     public Client(Socket s) throws IOException {
@@ -192,7 +195,7 @@ public class Client implements Runnable {
         String result = new PlayerBUS().checkLogin(email, password);
 
         // set login email
-        this.loginEmail = email;
+        this.loginPlayer = new PlayerBUS().getByEmail(email);
 
         // send result
         sendData(StreamData.Type.LOGIN.name() + ";" + result);
@@ -217,16 +220,38 @@ public class Client implements Runnable {
 
     private void onReceiveLogout(String received) {
         // log out now
-        this.loginEmail = "";
+        this.loginPlayer = null;
         this.findingMatch = false;
 
+        // TODO leave room
         // TODO broadcast to all clients
         // send status
         sendData(StreamData.Type.LOGOUT.name() + ";success");
     }
 
     private void onReceiveListRoom(String received) {
+        // prepare data
+        String result = "success;";
+        ArrayList<Room> listRoom = RunServer.roomManager.getRooms();
+        int roomCount = listRoom.size();
 
+        result += roomCount + ";";
+
+        for (Room r : listRoom) {
+            String pairData = "";
+            pairData += ((r.getClient1() != null) ? r.getClient1().getLoginPlayer().getNameId() : "_");
+            pairData += " vs ";
+            pairData += ((r.getClient1() != null) ? r.getClient2().getLoginPlayer().getNameId() : "_");
+
+            result += r.getId() + ";"
+                    + pairData + ";"
+                    + r.clients.size();
+        }
+
+        System.out.println("list room " + result);
+
+        // send data
+        sendData(StreamData.Type.LIST_ROOM.name() + ";" + result);
     }
 
     private void onReceiveCreateRoom(String received) {
@@ -287,12 +312,12 @@ public class Client implements Runnable {
             String gender = splitted[5];
 
             // edit profile
-            String result = new PlayerBUS().editProfile(loginEmail, newEmail, name, avatar, yearOfBirth, gender);
+            String result = new PlayerBUS().editProfile(loginPlayer.getEmail(), newEmail, name, avatar, yearOfBirth, gender);
 
             // lưu lại newEmail vào Client nếu cập nhật thành công
             String status = result.split(";")[0];
             if (status.equals("success")) {
-                loginEmail = newEmail;
+                loginPlayer = new PlayerBUS().getByEmail(newEmail);
             }
 
             // send result
@@ -311,7 +336,7 @@ public class Client implements Runnable {
         String newPassword = splitted[2];
 
         // check change pass
-        String result = new PlayerBUS().changePassword(loginEmail, oldPassword, newPassword);
+        String result = new PlayerBUS().changePassword(loginPlayer.getEmail(), oldPassword, newPassword);
 
         // send result
         sendData(StreamData.Type.CHANGE_PASSWORD.name() + ";" + result);
@@ -341,16 +366,12 @@ public class Client implements Runnable {
             this.findingMatch = false;
 
             // lưu email đối thủ để dùng khi server nhận được result-pair-match
-            this.competitorEmail = cCompetitor.loginEmail;
-            cCompetitor.competitorEmail = this.loginEmail;
-
-            // lấy thông tin 2 người chơi
-            Player me = new PlayerBUS().getByEmail(loginEmail);
-            Player pCompetitor = new PlayerBUS().getByEmail(cCompetitor.loginEmail);
+            this.cCompetitor = cCompetitor;
+            cCompetitor.cCompetitor = this;
 
             // trả thông tin đối thủ về cho 2 clients
-            this.sendData(StreamData.Type.REQUEST_PAIR_MATCH.name() + ";" + pCompetitor.getName() + " #" + pCompetitor.getId());
-            cCompetitor.sendData(StreamData.Type.REQUEST_PAIR_MATCH.name() + ";" + me.getName() + " #" + me.getId());
+            this.sendData(StreamData.Type.REQUEST_PAIR_MATCH.name() + ";" + cCompetitor.loginPlayer.getNameId());
+            cCompetitor.sendData(StreamData.Type.REQUEST_PAIR_MATCH.name() + ";" + this.loginPlayer.getNameId());
         }
     }
 
@@ -370,7 +391,6 @@ public class Client implements Runnable {
         this.acceptPairMatchStatus = requestResult;
 
         // get competitor
-        Client cCompetitor = RunServer.clientManager.find(this.competitorEmail);
         if (cCompetitor == null) {
             sendData(StreamData.Type.RESULT_PAIR_MATCH.name() + ";failed;" + Code.COMPETITOR_LEAVE);
             return;
@@ -420,7 +440,7 @@ public class Client implements Runnable {
             }
             return "success";
         } catch (IOException e) {
-            System.err.println("Send data failed to " + this.getLoginEmail());
+            System.err.println("Send data failed to " + this.loginPlayer.getEmail());
             return "failed;" + e.getMessage();
         }
     }
@@ -430,7 +450,7 @@ public class Client implements Runnable {
             this.dos.writeUTF(data);
             return "success";
         } catch (IOException e) {
-            System.err.println("Send data failed to " + this.getLoginEmail());
+            System.err.println("Send data failed to " + this.loginPlayer.getEmail());
             return "failed;" + e.getMessage();
         }
     }
@@ -479,10 +499,6 @@ public class Client implements Runnable {
     }
 
     // get set
-    public String getLoginEmail() {
-        return loginEmail;
-    }
-
     public boolean isFindingMatch() {
         return findingMatch;
     }
@@ -493,6 +509,38 @@ public class Client implements Runnable {
 
     public void setAes(AES aes) {
         this.aes = aes;
+    }
+
+    public Player getLoginPlayer() {
+        return loginPlayer;
+    }
+
+    public void setLoginPlayer(Player loginPlayer) {
+        this.loginPlayer = loginPlayer;
+    }
+
+    public Client getcCompetitor() {
+        return cCompetitor;
+    }
+
+    public void setcCompetitor(Client cCompetitor) {
+        this.cCompetitor = cCompetitor;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
+    public String getAcceptPairMatchStatus() {
+        return acceptPairMatchStatus;
+    }
+
+    public void setAcceptPairMatchStatus(String acceptPairMatchStatus) {
+        this.acceptPairMatchStatus = acceptPairMatchStatus;
     }
 
 }

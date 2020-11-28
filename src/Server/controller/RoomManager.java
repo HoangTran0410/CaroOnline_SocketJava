@@ -58,4 +58,7 @@ public class RoomManager {
         return rooms.size();
     }
 
+    public ArrayList<Room> getRooms() {
+        return rooms;
+    }
 }

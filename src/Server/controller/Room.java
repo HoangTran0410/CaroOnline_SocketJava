@@ -17,7 +17,7 @@ public class Room {
 
     String id;
     GameLogic gamelogic;
-    Client player1, player2; // TODO: tách người chơi và người xem
+    Client client1 = null, client2 = null; // TODO: tách người chơi và người xem
     ArrayList<Client> clients = new ArrayList<>();
 
     public Room(String id) {
@@ -32,6 +32,13 @@ public class Room {
     public boolean addClient(Client c) {
         if (!clients.contains(c)) {
             clients.add(c);
+
+            if (client1 == null) {
+                client1 = c;
+            } else if (client2 == null) {
+                client2 = c;
+            }
+
             return true;
         }
         return false;
@@ -68,4 +75,29 @@ public class Room {
     public void setGamelogic(GameLogic gamelogic) {
         this.gamelogic = gamelogic;
     }
+
+    public Client getClient1() {
+        return client1;
+    }
+
+    public void setClient1(Client client1) {
+        this.client1 = client1;
+    }
+
+    public Client getClient2() {
+        return client2;
+    }
+
+    public void setClient2(Client client2) {
+        this.client2 = client2;
+    }
+
+    public ArrayList<Client> getClients() {
+        return clients;
+    }
+
+    public void setClients(ArrayList<Client> clients) {
+        this.clients = clients;
+    }
+
 }

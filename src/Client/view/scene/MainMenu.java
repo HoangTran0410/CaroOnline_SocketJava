@@ -9,6 +9,8 @@ import client.RunClient;
 import client.view.helper.LookAndFeel;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Vector;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -39,6 +41,10 @@ public class MainMenu extends javax.swing.JFrame {
 
         // default to hidden
         setDisplayState(State.DEFAULT);
+    }
+
+    public void setListRoom(Vector vdata, Vector vheader) {
+        tbListRoom.setModel(new DefaultTableModel(vdata, vheader));
     }
 
     public void foundMatch(String competitorName) {
@@ -330,33 +336,20 @@ public class MainMenu extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        tbListRoom.setAutoCreateRowSorter(true);
         tbListRoom.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         tbListRoom.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {},
+                {},
+                {},
+                {}
             },
             new String [] {
-                "Mã", "Chủ phòng", "Số người", "Đang chơi", "Thời gian chơi"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
-            };
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
             }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+        ));
+        tbListRoom.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jScrollPane1.setViewportView(tbListRoom);
 
         tpRoomAndUser.addTab("Danh sách phòng", jScrollPane1);

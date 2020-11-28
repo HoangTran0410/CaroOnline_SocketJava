@@ -25,31 +25,18 @@ public class Validation {
         return email.matches(regex);
     }
 
-//    public boolean checkEmail(String email) {
-//        String[] parts = email.split("@");
-//        String[] dotParts = email.split("\\.");
-//        if (parts.length != 2
-//                || checkSpecialChar(parts[0])
-//                || checkSpecialChar(parts[1])
-//                || email.endsWith("@")
-//                || email.endsWith("\\.")
-//                || dotParts.length < 2) {
-//            return false;
-//        }
-//
-//        String TLD = dotParts[dotParts.length - 1];
-//        return email.indexOf(TLD) > email.indexOf("@");
-//    }
     public boolean checkPassword(String pass) {
         return pass.length() >= 6 && pass.length() <= 30;
     }
+
 //  Name is invalid if it changed after removing accents, or it has blank space
     public boolean checkName(String name) {
-        if(!removeAccent(name).equalsIgnoreCase(name) || name.contains(" "))
+        if (!removeAccent(name).equalsIgnoreCase(name) || name.contains(" ")) {
             return false;
+        }
         return name.length() > 0 && name.length() <= 15;
     }
-    
+
 //http://sinhviencntt.blogspot.com/2015/01/code-java-chuyen-oi-tieng-viet-co-dau.html
     public String removeAccent(String s) {
         String temp = Normalizer.normalize(s, Normalizer.Form.NFD);

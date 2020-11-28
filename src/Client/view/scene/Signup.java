@@ -39,12 +39,12 @@ public class Signup extends javax.swing.JFrame {
 
             @Override
             public void removeUpdate(DocumentEvent de) {
-                
+
             }
 
             @Override
             public void changedUpdate(DocumentEvent de) {
-                
+
             }
         });
 
@@ -329,7 +329,8 @@ public class Signup extends javax.swing.JFrame {
                 return;
             }
             if (!RunClient.validation.checkName(name)) {
-                JOptionPane.showMessageDialog(this, "Chưa nhập tên", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Tên là tiếng việt không dấu và"
+                        + " không quá 15 ký tự", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 txName.requestFocus();
                 return;
             }
@@ -338,8 +339,6 @@ public class Signup extends javax.swing.JFrame {
                 txYearOfBirth.requestFocus();
                 return;
             }
-            // TODO validate email
-
             // call signup from socket handler
             setLoading(true);
             RunClient.socketHandler.signup(email, password, name, gender, yearOfBirth, avatar);

@@ -44,7 +44,7 @@ public class Profile extends javax.swing.JFrame {
             public void insertUpdate(DocumentEvent de) {
                 RunClient.validation.checkNumberInputChanged(txYearOfBirth);
 //                System.out.println("inserted"); 
-           }
+            }
 
             @Override
             public void removeUpdate(DocumentEvent de) {
@@ -593,21 +593,27 @@ public class Profile extends javax.swing.JFrame {
         if (!RunClient.validation.checkEmail(email)) {
             JOptionPane.showMessageDialog(this, "Email không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
             txEmail.requestFocus();
+            setProfileSaveLoading(false);
             return;
         }
         if (!RunClient.validation.checkName(name)) {
-            JOptionPane.showMessageDialog(this, "Chưa nhập tên", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Tên là tiếng việt không dấu và"
+                    + " không quá 15 ký tự", "Lỗi", JOptionPane.ERROR_MESSAGE);
             txName.requestFocus();
+            setProfileSaveLoading(false);
             return;
         }
         try {
             if (!RunClient.validation.checkYearOfBirth(Integer.parseInt(yearOfBirth))) {
                 JOptionPane.showMessageDialog(this, "Chưa sinh ra hoặc quá 100 tuổi vui lòng đừng chơi!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 txYearOfBirth.requestFocus();
+                setProfileSaveLoading(false);
                 return;
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Năm sinh phải là số", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            setProfileSaveLoading(false);
+            return;
         }
         // call sockethandler function
         RunClient.socketHandler.editProfile(email, name, avatar, yearOfBirth, gender);

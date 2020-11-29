@@ -34,6 +34,7 @@ public class SocketHandler {
     DataOutputStream dos;
 
     String email = null; // lưu tài khoản đăng nhập hiện tại
+    String roomId = null; // lưu room hiện tại
 
     Thread listener = null;
     AES aes;
@@ -111,6 +112,10 @@ public class SocketHandler {
                         onReceiveListRoom(received);
                         break;
 
+                    case LIST_ONLINE:
+                        onReceiveListOnline(received);
+                        break;
+
                     case CREATE_ROOM:
                         onReceiveCreateRoom(received);
                         break;
@@ -119,12 +124,20 @@ public class SocketHandler {
                         onReceiveJoinRoom(received);
                         break;
 
-                    case LEAVE_ROOM:
-                        onReceiveLeaveRoom(received);
+                    case WATCH_ROOM:
+                        onReceiveWatchRoom(received);
+                        break;
+
+                    case DATA_ROOM:
+                        onReceiveDataRoom(received);
                         break;
 
                     case CHAT_ROOM:
                         onReceiveChatRoom(received);
+                        break;
+
+                    case LEAVE_ROOM:
+                        onReceiveLeaveRoom(received);
                         break;
 
                     case GET_PROFILE:
@@ -185,7 +198,8 @@ public class SocketHandler {
         RunClient.openScene(RunClient.SceneName.CONNECTSERVER);
     }
 
-    // listen events
+    // ================ listen events ============
+    // auth
     private void onReceiveAESKey(String received) {
         // khi client nhận được phản hồi "đã nhận được aes key" từ server
         // tắt scene connectServer
@@ -249,6 +263,7 @@ public class SocketHandler {
         RunClient.openScene(RunClient.SceneName.LOGIN);
     }
 
+    // main menu
     private void onReceiveListRoom(String received) {
         String[] splitted = received.split(";");
         String status = splitted[1];
@@ -266,8 +281,8 @@ public class SocketHandler {
 
             Vector vdata = new Vector();
 
-            // i += 3 -> 3 là số cột trong bảng
-            // i = 3 tới roomCount + 3 -> đến từ vị trí 3 mới là dữ liệu của phòng
+            // i += 3: 3 là số cột trong bảng
+            // i = 3; i < roomCount + 3: dữ liệu phòng bắt đầu từ index 3 trong mảng splitted
             for (int i = 3; i < roomCount + 3; i += 3) {
 
                 String roomId = splitted[i];
@@ -286,15 +301,92 @@ public class SocketHandler {
         }
     }
 
+    private void onReceiveListOnline(String received) {
+
+    }
+
     private void onReceiveCreateRoom(String received) {
 
     }
 
     private void onReceiveJoinRoom(String received) {
-        System.out.println("Join room roi ne");
+        String[] splitted = received.split(";");
+        String roomId = splitted[2];
+
+        // save room id
+        this.roomId = roomId;
+
+        // change scene
+        RunClient.closeScene(RunClient.SceneName.MAINMENU);
+        RunClient.openScene(RunClient.SceneName.INGAME);
+        RunClient.inGameScene.setTitle("Phòng #" + roomId);
+
+        // get room data
+        dataRoom(roomId);
     }
 
-    private void onReceiveLeaveRoom(String received) {
+    private void onReceiveWatchRoom(String received) {
+
+    }
+
+    // pair match
+    private void onReceiveFindMatch(String received) {
+        String[] splitted = received.split(";");
+        String status = splitted[1];
+
+        // check status
+        if (status.equals("failed")) {
+            String failedMsg = splitted[2];
+            JOptionPane.showMessageDialog(RunClient.mainMenuScene, failedMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
+
+        } else if (status.equals("success")) {
+            RunClient.mainMenuScene.setDisplayState(MainMenu.State.FINDING_MATCH);
+        }
+    }
+
+    private void onReceiveCancelFindMatch(String received) {
+        String[] splitted = received.split(";");
+        String status = splitted[1];
+
+        // check status
+        if (status.equals("failed")) {
+            String failedMsg = splitted[2];
+            JOptionPane.showMessageDialog(RunClient.mainMenuScene, failedMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
+
+        } else if (status.equals("success")) {
+            RunClient.mainMenuScene.setDisplayState(MainMenu.State.DEFAULT);
+        }
+    }
+
+    private void onReceiveRequestPairMatch(String received) {
+        String[] splitted = received.split(";");
+        String competitorName = splitted[1];
+
+        // show data
+        RunClient.mainMenuScene.foundMatch(competitorName);
+    }
+
+    private void onReceiveResultPairMatch(String received) {
+        String[] splitted = received.split(";");
+        String status = splitted[1];
+
+        // reset display state of main menu
+        RunClient.mainMenuScene.setDisplayState(MainMenu.State.DEFAULT);
+
+        if (status.equals("failed")) {
+            String failedMsg = splitted[2];
+            JOptionPane.showMessageDialog(RunClient.mainMenuScene, failedMsg, "Không thể ghép trận", JOptionPane.ERROR_MESSAGE);
+
+        } else if (status.equals("success")) {
+            RunClient.mainMenuScene.setDisplayState(MainMenu.State.DEFAULT);
+
+            // get list room
+            listRoom();
+        }
+    }
+
+    // in game
+    private void onReceiveDataRoom(String received) {
 
     }
 
@@ -302,6 +394,11 @@ public class SocketHandler {
 
     }
 
+    private void onReceiveLeaveRoom(String received) {
+
+    }
+
+    // profile
     private void onReceiveGetProfile(String received) {
         String[] splitted = received.split(";");
         String status = splitted[1];
@@ -395,62 +492,8 @@ public class SocketHandler {
         }
     }
 
-    private void onReceiveFindMatch(String received) {
-        String[] splitted = received.split(";");
-        String status = splitted[1];
-
-        // check status
-        if (status.equals("failed")) {
-            String failedMsg = splitted[2];
-            JOptionPane.showMessageDialog(RunClient.mainMenuScene, failedMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
-
-        } else if (status.equals("success")) {
-            RunClient.mainMenuScene.setDisplayState(MainMenu.State.FINDING_MATCH);
-        }
-    }
-
-    private void onReceiveCancelFindMatch(String received) {
-        String[] splitted = received.split(";");
-        String status = splitted[1];
-
-        // check status
-        if (status.equals("failed")) {
-            String failedMsg = splitted[2];
-            JOptionPane.showMessageDialog(RunClient.mainMenuScene, failedMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
-
-        } else if (status.equals("success")) {
-            RunClient.mainMenuScene.setDisplayState(MainMenu.State.DEFAULT);
-        }
-    }
-
-    private void onReceiveRequestPairMatch(String received) {
-        String[] splitted = received.split(";");
-        String competitorName = splitted[1];
-
-        // show data
-        RunClient.mainMenuScene.foundMatch(competitorName);
-    }
-
-    private void onReceiveResultPairMatch(String received) {
-        String[] splitted = received.split(";");
-        String status = splitted[1];
-
-        // reset display state of main menu
-        RunClient.mainMenuScene.setDisplayState(MainMenu.State.DEFAULT);
-
-        if (status.equals("failed")) {
-            String failedMsg = splitted[2];
-            JOptionPane.showMessageDialog(RunClient.mainMenuScene, failedMsg, "Không thể ghép trận", JOptionPane.ERROR_MESSAGE);
-
-        } else if (status.equals("success")) {
-            RunClient.mainMenuScene.setDisplayState(MainMenu.State.DEFAULT);
-
-            // get list room
-            listRoom();
-        }
-    }
-
-    // functions
+    // ============= functions ===============
+    // auth
     private void initSecurityAES() {
         // create new key
         aes = new AES();
@@ -499,10 +542,34 @@ public class SocketHandler {
         sendData(data);
     }
 
+    // main menu
     public void listRoom() {
         sendData(StreamData.Type.LIST_ROOM.name());
     }
 
+    // pair match
+    public void findMatch() {
+        sendData(StreamData.Type.FIND_MATCH.name());
+    }
+
+    public void cancelFindMatch() {
+        sendData(StreamData.Type.CANCEL_FIND_MATCH.name());
+    }
+
+    public void declinePairMatch() {
+        sendData(StreamData.Type.REQUEST_PAIR_MATCH.name() + ";no");
+    }
+
+    public void acceptPairMatch() {
+        sendData(StreamData.Type.REQUEST_PAIR_MATCH.name() + ";yes");
+    }
+
+    // in game
+    public void dataRoom(String roomId) {
+        sendData(StreamData.Type.DATA_ROOM.name() + ";" + roomId);
+    }
+
+    // profile
     public void changePassword(String oldPassword, String newPassword) {
         // hasing password
         String oldPasswordHash = Util.hash(oldPassword);
@@ -536,23 +603,7 @@ public class SocketHandler {
         sendData(data);
     }
 
-    public void findMatch() {
-        sendData(StreamData.Type.FIND_MATCH.name());
-    }
-
-    public void cancelFindMatch() {
-        sendData(StreamData.Type.CANCEL_FIND_MATCH.name());
-    }
-
-    public void declinePairMatch() {
-        sendData(StreamData.Type.REQUEST_PAIR_MATCH.name() + ";no");
-    }
-
-    public void acceptPairMatch() {
-        sendData(StreamData.Type.REQUEST_PAIR_MATCH.name() + ";yes");
-    }
-
-    // send data fucntions
+    // send data
     public void sendPureData(String data) {
         try {
             dos.writeUTF(data);

@@ -144,7 +144,7 @@ public class Client implements Runnable {
                 }
 
             } catch (IOException ex) {
-                System.out.println("Connection lost with " + s.getPort());
+                // System.out.println("Connection lost with " + s.getPort());
                 break;
             }
         }
@@ -154,7 +154,7 @@ public class Client implements Runnable {
             this.s.close();
             this.dis.close();
             this.dos.close();
-            System.out.println("- Client disconnected: " + s);
+            // System.out.println("- Client disconnected: " + s);
 
             // remove from clientManager
             RunServer.clientManager.remove(this);
@@ -165,6 +165,7 @@ public class Client implements Runnable {
     }
 
     // listen events
+    // auth
     private void onReceiveAESKey(String received) {
         // get encrypted key
         String keyEncrypted = received.split(";")[1];
@@ -229,6 +230,7 @@ public class Client implements Runnable {
         sendData(StreamData.Type.LOGOUT.name() + ";success");
     }
 
+    // main menu
     private void onReceiveListRoom(String received) {
         // prepare data
         String result = "success;";
@@ -240,15 +242,13 @@ public class Client implements Runnable {
         for (Room r : listRoom) {
             String pairData = "";
             pairData += ((r.getClient1() != null) ? r.getClient1().getLoginPlayer().getNameId() : "_");
-            pairData += " vs ";
+            pairData += " VS ";
             pairData += ((r.getClient1() != null) ? r.getClient2().getLoginPlayer().getNameId() : "_");
 
             result += r.getId() + ";"
                     + pairData + ";"
                     + r.clients.size();
         }
-
-        System.out.println("list room " + result);
 
         // send data
         sendData(StreamData.Type.LIST_ROOM.name() + ";" + result);
@@ -262,86 +262,7 @@ public class Client implements Runnable {
 
     }
 
-    private void onReceiveLeaveRoom(String received) {
-
-    }
-
-    private void onReceiveChatRoom(String received) {
-
-    }
-
-    private void onReceiveGetProfile(String received) {
-        String result;
-
-        // get email from data
-        String email = received.split(";")[1];
-
-        // get player data
-        Player p = new PlayerBUS().getByEmail(email);
-        if (p == null) {
-            result = "failed;" + Code.ACCOUNT_NOT_FOUND;
-        } else {
-            result = "success;"
-                    + p.getId() + ";"
-                    + p.getEmail() + ";"
-                    + p.getName() + ";"
-                    + p.getAvatar() + ";"
-                    + p.getGender() + ";"
-                    + p.getYearOfBirth() + ";"
-                    + p.getScore() + ";"
-                    + p.getMatchCount() + ";"
-                    + p.getWinCount() + ";"
-                    + p.calculateTieCount() + ";"
-                    + p.getLoseCount() + ";"
-                    + p.getCurrentStreak() + ";"
-                    + p.calculateWinRate();
-        }
-
-        // send result
-        sendData(StreamData.Type.GET_PROFILE.name() + ";" + result);
-    }
-
-    private void onReceiveEditProfile(String received) {
-        try {
-            // get data from received
-            String[] splitted = received.split(";");
-            String newEmail = splitted[1];
-            String name = splitted[2];
-            String avatar = splitted[3];
-            int yearOfBirth = Integer.parseInt(splitted[4]);
-            String gender = splitted[5];
-
-            // edit profile
-            String result = new PlayerBUS().editProfile(loginPlayer.getEmail(), newEmail, name, avatar, yearOfBirth, gender);
-
-            // lưu lại newEmail vào Client nếu cập nhật thành công
-            String status = result.split(";")[0];
-            if (status.equals("success")) {
-                loginPlayer = new PlayerBUS().getByEmail(newEmail);
-            }
-
-            // send result
-            sendData(StreamData.Type.EDIT_PROFILE + ";" + result);
-
-        } catch (NumberFormatException e) {
-            // send failed format
-            sendData(StreamData.Type.EDIT_PROFILE + ";failed;Năm sinh phải là số nguyên");
-        }
-    }
-
-    private void onReceiveChangePassword(String received) {
-        // get old pass, new pass from data
-        String[] splitted = received.split(";");
-        String oldPassword = splitted[1];
-        String newPassword = splitted[2];
-
-        // check change pass
-        String result = new PlayerBUS().changePassword(loginPlayer.getEmail(), oldPassword, newPassword);
-
-        // send result
-        sendData(StreamData.Type.CHANGE_PASSWORD.name() + ";" + result);
-    }
-
+    // pair match
     private void onReceiveFindMatch(String received) {
         // nếu đang trong phòng rồi thì báo lỗi ngay
         if (this.room != null) {
@@ -427,6 +348,88 @@ public class Client implements Runnable {
             this.acceptPairMatchStatus = "_";
             cCompetitor.acceptPairMatchStatus = "_";
         }
+    }
+
+    // in game
+    private void onReceiveLeaveRoom(String received) {
+
+    }
+
+    private void onReceiveChatRoom(String received) {
+
+    }
+
+    // profile
+    private void onReceiveGetProfile(String received) {
+        String result;
+
+        // get email from data
+        String email = received.split(";")[1];
+
+        // get player data
+        Player p = new PlayerBUS().getByEmail(email);
+        if (p == null) {
+            result = "failed;" + Code.ACCOUNT_NOT_FOUND;
+        } else {
+            result = "success;"
+                    + p.getId() + ";"
+                    + p.getEmail() + ";"
+                    + p.getName() + ";"
+                    + p.getAvatar() + ";"
+                    + p.getGender() + ";"
+                    + p.getYearOfBirth() + ";"
+                    + p.getScore() + ";"
+                    + p.getMatchCount() + ";"
+                    + p.getWinCount() + ";"
+                    + p.calculateTieCount() + ";"
+                    + p.getLoseCount() + ";"
+                    + p.getCurrentStreak() + ";"
+                    + p.calculateWinRate();
+        }
+
+        // send result
+        sendData(StreamData.Type.GET_PROFILE.name() + ";" + result);
+    }
+
+    private void onReceiveEditProfile(String received) {
+        try {
+            // get data from received
+            String[] splitted = received.split(";");
+            String newEmail = splitted[1];
+            String name = splitted[2];
+            String avatar = splitted[3];
+            int yearOfBirth = Integer.parseInt(splitted[4]);
+            String gender = splitted[5];
+
+            // edit profile
+            String result = new PlayerBUS().editProfile(loginPlayer.getEmail(), newEmail, name, avatar, yearOfBirth, gender);
+
+            // lưu lại newEmail vào Client nếu cập nhật thành công
+            String status = result.split(";")[0];
+            if (status.equals("success")) {
+                loginPlayer = new PlayerBUS().getByEmail(newEmail);
+            }
+
+            // send result
+            sendData(StreamData.Type.EDIT_PROFILE + ";" + result);
+
+        } catch (NumberFormatException e) {
+            // send failed format
+            sendData(StreamData.Type.EDIT_PROFILE + ";failed;Năm sinh phải là số nguyên");
+        }
+    }
+
+    private void onReceiveChangePassword(String received) {
+        // get old pass, new pass from data
+        String[] splitted = received.split(";");
+        String oldPassword = splitted[1];
+        String newPassword = splitted[2];
+
+        // check change pass
+        String result = new PlayerBUS().changePassword(loginPlayer.getEmail(), oldPassword, newPassword);
+
+        // send result
+        sendData(StreamData.Type.CHANGE_PASSWORD.name() + ";" + result);
     }
 
     // send data fucntions

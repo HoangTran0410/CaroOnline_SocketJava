@@ -74,7 +74,7 @@ public class Profile extends javax.swing.JFrame {
         lbTieCount.setText("" + p.getTieCount());
         lbLoseCount.setText("" + p.getLoseCount());
 
-        plContainer.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Người chơi #" + p.getId(), javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Consolas", 1, 14))); // NOI18N
+        plContainer.setBorder(javax.swing.BorderFactory.createTitledBorder(null, p.getName() + " #" + p.getId(), javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Consolas", 1, 16))); // NOI18N
         txEmail.setText(p.getEmail());
         txName.setText(p.getName());
         txYearOfBirth.setText("" + p.getYearOfBirth());

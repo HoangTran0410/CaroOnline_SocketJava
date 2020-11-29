@@ -62,7 +62,7 @@ public class RunServer {
                 try {
                     // socket object to receive incoming client requests
                     Socket s = ss.accept();
-                    System.out.println("+ New Client connected: " + s);
+                    // System.out.println("+ New Client connected: " + s);
 
                     // create new client runnable object
                     Client c = new Client(s);

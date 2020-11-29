@@ -25,23 +25,28 @@ public class StreamData {
         SIGNUP, // chức năng đăng ký / thông tin đăng ký / success hoặc failed
         LOGOUT, // chức năng đăng xuất / không cần dữ liệu thêm / success hoặc failed
 
-        // room
+        // main menu
         LIST_ROOM, // lấy danh sách phòng hiện tại / ko cần dữ liệu thêm / dữ liệu danh sách phòng
+        LIST_ONLINE, // lấy danh sách người chơi đang online / không cần dữ liệu thêm / dữ liệu danh sách online
         CREATE_ROOM, // chức năng tạo phòng / không cần dữ liệu thêm / success hoặc failed
-        JOIN_ROOM, // chức năng vào phòng / id phòng / success hoặc failed
-        LEAVE_ROOM, // chức năng thoát phòng / id phòng / success hoặc failed
+        JOIN_ROOM, // chức năng vào phòng, nếu chưa có đủ người thì chơi, đủ rồi thì xem / id phòng / success hoặc failed
+        WATCH_ROOM, // chức năng vào xem / id phòng / success hoặc failed
+
+        // pair match
+        FIND_MATCH, // chức năng tìm trận / không cần dữ liệu thêm / success hoặc failed
+        CANCEL_FIND_MATCH, // chức năng hủy tìm trận / không cần dữ liệu thêm / success hoặc failed
+        REQUEST_PAIR_MATCH, // chức năng hỏi user có đồng ý ghép cặp không / đồng ý hay không / thông tin user sẽ ghép cặp
+        RESULT_PAIR_MATCH, // chức năng gửi thông báo đồng ý ghép cặp / _chỉ có server gửi có client loại type này_ / kết quả ghép cặp
+
+        // in game
+        DATA_ROOM, // dữ liệu phòng khi vừa vào phòng / id phòng / dữ liệu phòng
         CHAT_ROOM, // chức năng chat phòng / dữ liệu chat / dữ liệu chat (gửi broadcast trong phòng)
+        LEAVE_ROOM, // chức năng thoát phòng / id phòng / success hoặc failed
 
         // profile
         GET_PROFILE, // chức năng xem hồ sơ cá nhân / email user muốn xem thông tin / dữ liệu user
         EDIT_PROFILE, // chức năng chỉnh thông tin cá nhân / thông tin cá nhân mới / success hoặc failed
         CHANGE_PASSWORD, // chức năng đổi mật khẩu / mật khẩu cũ, mật khẩu mới / success hoặc failed
-
-        // find match
-        FIND_MATCH, // chức năng tìm trận / không cần dữ liệu thêm / success hoặc failed
-        CANCEL_FIND_MATCH, // chức năng hủy tìm trận / không cần dữ liệu thêm / success hoặc failed
-        REQUEST_PAIR_MATCH, // chức năng hỏi user có đồng ý ghép cặp không / đồng ý hay không / thông tin user sẽ ghép cặp
-        RESULT_PAIR_MATCH, // chức năng gửi thông báo đồng ý ghép cặp / _chỉ có server gửi có client loại type này_ / kết quả ghép cặp
 
         // caro game
         MOVE, // chức năng đánh caro tại 1 ô / vị trí ô / success thì broadcast vị trí ô cho mọi người trong phòng, failed khi vị trí không hợp lệ

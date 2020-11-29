@@ -19,6 +19,7 @@ import server.game.caro.Caro;
 import shared.constant.Code;
 import shared.constant.StreamData;
 import shared.helper.CustumDateTimeFormatter;
+import shared.helper.Line;
 import shared.security.AES;
 
 /**
@@ -514,7 +515,7 @@ public class Client implements Runnable {
                 int column = Integer.parseInt(splitted[3]);
 
                 if (caroGame.move(row, column, loginPlayer.getEmail())) {
-                    String successData
+                    String moveData
                             = StreamData.Type.GAME_EVENT + ";"
                             + StreamData.Type.MOVE + ";"
                             + row + ";"
@@ -522,9 +523,19 @@ public class Client implements Runnable {
                             + loginPlayer.getEmail();
 
                     // broadcast to all client in room
-                    joinedRoom.broadcast(successData);
+                    joinedRoom.broadcast(moveData);
 
-                    // TODO check win
+                    // check win
+                    Line winPath = caroGame.CheckWin(row, column);
+                    if (winPath != null) {
+                        String winData
+                                = StreamData.Type.GAME_EVENT + ";"
+                                + StreamData.Type.WIN + ";"
+                                + loginPlayer.getEmail();
+
+                        // broadcast to all client in room
+                        joinedRoom.broadcast(winData);
+                    }
                 } else {
                     // do nothing
                 }

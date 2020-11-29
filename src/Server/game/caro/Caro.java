@@ -69,8 +69,8 @@ public class Caro extends GameLogic {
         return " ";
     }
 
-    public Line CheckWin(int x, int y) {
-        Point currentCell = new Point(x, y);
+    public Line CheckWin(int row, int column) {
+        Point currentCell = new Point(column, row);
         Point backDir, frontDir;
         Line winPath;
 

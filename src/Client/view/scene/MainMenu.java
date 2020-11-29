@@ -37,7 +37,7 @@ public class MainMenu extends javax.swing.JFrame {
     public MainMenu() {
         initComponents();
         this.setLocationRelativeTo(null);
-        this.setTitle("Caro Game - " + RunClient.socketHandler.getEmail());
+        this.setTitle("Caro Game - " + RunClient.socketHandler.getLoginEmail());
 
         // default to hidden
         setDisplayState(State.DEFAULT);
@@ -504,7 +504,7 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void btnProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProfileActionPerformed
         RunClient.openScene(RunClient.SceneName.PROFILE);
-        RunClient.profileScene.loadProfileData(RunClient.socketHandler.getEmail());
+        RunClient.profileScene.loadProfileData(RunClient.socketHandler.getLoginEmail());
     }//GEN-LAST:event_btnProfileActionPerformed
 
     private void btnFindMatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindMatchActionPerformed

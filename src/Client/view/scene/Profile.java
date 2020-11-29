@@ -67,7 +67,7 @@ public class Profile extends javax.swing.JFrame {
 
         // save current profile
         currentProfile = p;
-        boolean isMe = p.getEmail().equals(RunClient.socketHandler.getEmail());
+        boolean isMe = p.getEmail().equals(RunClient.socketHandler.getLoginEmail());
 
         // put data to form
         lbWinCount.setText("" + p.getWinCount());

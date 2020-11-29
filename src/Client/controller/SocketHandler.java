@@ -35,7 +35,7 @@ public class SocketHandler {
     DataInputStream dis;
     DataOutputStream dos;
 
-    String email = null; // lưu tài khoản đăng nhập hiện tại
+    String loginEmail = null; // lưu tài khoản đăng nhập hiện tại
     String roomId = null; // lưu room hiện tại
 
     Thread listener = null;
@@ -224,7 +224,7 @@ public class SocketHandler {
 
         } else if (status.equals("success")) {
             // lưu email login
-            this.email = splitted[2];
+            this.loginEmail = splitted[2];
 
             // chuyển scene
             RunClient.closeScene(RunClient.SceneName.LOGIN);
@@ -257,7 +257,7 @@ public class SocketHandler {
 
     private void onReceiveLogout(String received) {
         // xóa email login
-        this.email = null;
+        this.loginEmail = null;
 
         // chuyển scene
         RunClient.closeAllScene();
@@ -493,10 +493,10 @@ public class SocketHandler {
             JOptionPane.showMessageDialog(RunClient.profileScene, "Đổi thông tin thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);
 
             // lưu lại email
-            this.email = splitted[2];
+            this.loginEmail = splitted[2];
 
             // load lại thông tin cá nhân mới - có thể ko cần! nhưng cứ load lại cho chắc
-            getProfile(this.email);
+            getProfile(this.loginEmail);
         }
     }
 
@@ -523,8 +523,6 @@ public class SocketHandler {
         String[] splitted = received.split(";");
         StreamData.Type gameEventType = StreamData.getType(splitted[1]);
 
-        System.out.println("receive game event " + received);
-
         switch (gameEventType) {
             case MOVE:
                 int row = Integer.parseInt(splitted[2]);
@@ -533,6 +531,11 @@ public class SocketHandler {
 
                 RunClient.inGameScene.addPoint(row, column, _email);
                 RunClient.inGameScene.changeTurnFrom(_email);
+                break;
+
+            case WIN:
+                String winEmail = splitted[2];
+                RunClient.inGameScene.setWin(winEmail);
                 break;
         }
     }
@@ -689,11 +692,11 @@ public class SocketHandler {
     }
 
     // get set
-    public String getEmail() {
-        return email;
+    public String getLoginEmail() {
+        return loginEmail;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setLoginEmail(String email) {
+        this.loginEmail = email;
     }
 }

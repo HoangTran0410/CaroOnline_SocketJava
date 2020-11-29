@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -80,6 +81,29 @@ public class InGame extends javax.swing.JFrame {
         // reset turn
         lbActive1.setVisible(false);
         lbActive2.setVisible(false);
+    }
+
+    public void setWin(String winEmail) {
+        String myEmail = RunClient.socketHandler.getLoginEmail();
+
+        if (winEmail.equals(myEmail)) {
+            // là email của mình thì win
+            JOptionPane.showMessageDialog(this, "Chúc mừng. Bạn đã chiến thắng.", "Chiến thắng", JOptionPane.INFORMATION_MESSAGE);
+
+        } else if (myEmail.equals(player1.getEmail()) || myEmail.equals(player2.getEmail())) {
+            // nếu mình là 1 trong 2 người chơi, mà winEmail ko phải mình => thua
+            JOptionPane.showMessageDialog(this, "Rất tiếc. Bạn đã thua cuộc.", "Thua cuộc", JOptionPane.INFORMATION_MESSAGE);
+
+        } else {
+            // còn lại là viewers
+            String nameId = "";
+            if (player1.getEmail().equals(winEmail)) {
+                nameId = player1.getNameId();
+            } else {
+                nameId = player2.getNameId();
+            }
+            JOptionPane.showMessageDialog(this, "Người chơi " + nameId + " đã thắng", "Kết quả", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     // change turn sang cho email đầu vào

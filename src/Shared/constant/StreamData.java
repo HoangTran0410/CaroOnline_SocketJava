@@ -49,14 +49,15 @@ public class StreamData {
         CHANGE_PASSWORD, // chức năng đổi mật khẩu / mật khẩu cũ, mật khẩu mới / success hoặc failed
 
         // game
-        GAME_EVENT,
-        
+        GAME_EVENT, //
+
         // caro game
         MOVE, // chức năng đánh caro tại 1 ô / vị trí ô / success thì broadcast vị trí ô cho mọi người trong phòng, failed khi vị trí không hợp lệ
         UNDO, // chức năng đánh lại / không cần dữ liệu thêm / gửi request broadcast (cho mọi người biết là muốn đánh lại, kể cả viewer)
         UNDO_ACCEPT, // chắc năng đồng ý đánh lại / đồng ý hay không / gửi result broadcast (cho mọi người biết người chơi có đồng ý cho đánh lại hay không)
         NEW_GAME, // chức năng tạo game mới / không cần dữ liệu thêm / nếu game chưa end thì gửi request accept tới đối thủ
         NEW_GAME_ACCEPT, // chức năng đồng ý tạo game mới / đồng ý hay không / gửi result broadcast làm mới trận
+        WIN, // chỉ có server mới gửi type này cho client
 
         // specific
         UNKNOW_TYPE, // khi client gửi type không xác định

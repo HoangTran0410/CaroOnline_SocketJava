@@ -252,14 +252,14 @@ public class Client implements Runnable {
         result += roomCount + ";";
 
         for (Room r : listRoom) {
-            String pairData = "";
-            pairData += ((r.getClient1() != null) ? r.getClient1().getLoginPlayer().getNameId() : "_");
-            pairData += " VS ";
-            pairData += ((r.getClient1() != null) ? r.getClient2().getLoginPlayer().getNameId() : "_");
+            String pairData
+                    = ((r.getClient1() != null) ? r.getClient1().getLoginPlayer().getNameId() : "_")
+                    + " VS "
+                    + ((r.getClient1() != null) ? r.getClient2().getLoginPlayer().getNameId() : "_");
 
             result += r.getId() + ";"
                     + pairData + ";"
-                    + r.clients.size();
+                    + r.clients.size() + ";";
         }
 
         // send data
@@ -364,6 +364,7 @@ public class Client implements Runnable {
             sendData(StreamData.Type.JOIN_ROOM.name() + ";success;" + newRoom.getId());
             cCompetitor.sendData(StreamData.Type.JOIN_ROOM.name() + ";success;" + newRoom.getId());
 
+            // TODO update list room to all client
             // reset acceptPairMatchStatus
             this.acceptPairMatchStatus = "_";
             cCompetitor.acceptPairMatchStatus = "_";
@@ -372,7 +373,23 @@ public class Client implements Runnable {
 
     // in game
     private void onReceiveDataRoom(String received) {
+        // get room id
+        String[] splitted = received.split(";");
+        String roomId = splitted[1];
 
+        // check roomid is valid
+        Room room = RunServer.roomManager.find(roomId);
+        if (room == null) {
+            sendData(StreamData.Type.DATA_ROOM.name() + ";failed;" + Code.ROOM_NOTFOUND + " #" + roomId);
+            return;
+        }
+
+        // prepare data
+        String data = room.getClient12InGameData();
+        // TODO prepare more data: game data, viewer, chat, timer
+
+        // send data
+        sendData(StreamData.Type.DATA_ROOM.name() + ";success;" + data);
     }
 
     private void onReceiveChatRoom(String received) {
@@ -526,6 +543,17 @@ public class Client implements Runnable {
     }
 
     // get set
+    public static String getEmptyInGameData() {
+        return ";;";
+    }
+
+    public String getInGameData() {
+        if (loginPlayer == null) {
+            return getEmptyInGameData(); // trả về rỗng
+        }
+        return loginPlayer.getEmail() + ";" + loginPlayer.getNameId() + ";" + loginPlayer.getAvatar();
+    }
+
     public boolean isFindingMatch() {
         return findingMatch;
     }

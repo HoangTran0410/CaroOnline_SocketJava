@@ -60,6 +60,15 @@ public class Room {
     }
 
     // gets sets
+    public String getClient12InGameData() {
+        String data = "";
+
+        data += (client1 == null ? Client.getEmptyInGameData() : client1.getInGameData() + ";");
+        data += (client2 == null ? Client.getEmptyInGameData() : client2.getInGameData());
+
+        return data;
+    }
+
     public String getId() {
         return id;
     }

@@ -21,4 +21,5 @@ public class Code {
     public static String COMPETITOR_LEAVE = "Đối thủ đã thoát.";
     public static String COMPETITOR_CHOOSE_NO = "Đối thủ đã không đồng ý ghép cặp.";
     public static String YOU_CHOOSE_NO = "Bạn đã không đồng ý ghép cặp.";
+    public static String ROOM_NOTFOUND = "Không tìm thấy phòng.";
 }

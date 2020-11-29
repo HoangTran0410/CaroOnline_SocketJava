@@ -13,6 +13,7 @@ public class Avatar {
 
     public static final String PATH = "src/client/view/asset/avatar/";
     public static final String PATH_RESOURCE = "/client/view/asset/avatar/";
+    public static final String EMPTY_AVATAR = "icons8_confusion_96px.png";
 
     // https://www.dropboxforum.com/t5/Dropbox-files-folders/How-to-Copy-file-Names-within-a-Folder-Create-a-table-of/td-p/253141
     public static final String[] LIST = {

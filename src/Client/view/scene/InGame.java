@@ -5,6 +5,7 @@
  */
 package client.view.scene;
 
+import client.model.PlayerInGame;
 import client.view.helper.CustomListCellRenderer;
 import server.db.layers.DTO.Player;
 import shared.constant.Avatar;
@@ -20,9 +21,9 @@ import javax.swing.ImageIcon;
 public class InGame extends javax.swing.JFrame {
 
     DefaultListModel<String> chatModel;
-    ArrayList<Player> listPlayers;
-    Player player1;
-    Player player2;
+    ArrayList<PlayerInGame> listPlayers;
+    PlayerInGame player1;
+    PlayerInGame player2;
 
     /**
      * Creates new form InGame
@@ -41,15 +42,55 @@ public class InGame extends javax.swing.JFrame {
 
         // ======================== test ============================
         // avatar
-        int avatars_size = Avatar.LIST.length;
-        int ava1 = (int) (Math.random() * avatars_size);
-        int ava2 = (int) (Math.random() * avatars_size);
+//        int avatars_size = Avatar.LIST.length;
+//        int ava1 = (int) (Math.random() * avatars_size);
+//        int ava2 = (int) (Math.random() * avatars_size);
+//
+//        lbAvatar1.setIcon(new ImageIcon(Avatar.PATH + Avatar.LIST[ava1]));
+//        lbAvatar2.setIcon(new ImageIcon(Avatar.PATH + Avatar.LIST[ava2]));
+    }
 
-        lbAvatar1.setIcon(new ImageIcon(Avatar.PATH + Avatar.LIST[ava1]));
-        lbAvatar2.setIcon(new ImageIcon(Avatar.PATH + Avatar.LIST[ava2]));
+    public void setPlayerInGame(PlayerInGame p1, PlayerInGame p2) {
+        // save data
+        player1 = p1;
+        player2 = p2;
 
-        // turn
-        lbAvatar1.setBorder(javax.swing.BorderFactory.createTitledBorder("Đang đánh"));
+        // player 1
+        lbPlayerNameId1.setText(p1.getNameId());
+        if (p1.getAvatar().equals("")) {
+            lbAvatar1.setIcon(new ImageIcon(Avatar.PATH + Avatar.EMPTY_AVATAR));
+        } else {
+            lbAvatar1.setIcon(new ImageIcon(Avatar.PATH + p1.getAvatar()));
+        }
+
+        // player 2
+        lbPlayerNameId2.setText(p2.getNameId());
+        lbAvatar2.setIcon(new ImageIcon(Avatar.PATH + Avatar.EMPTY_AVATAR));
+//        if (p2.getAvatar().equals("")) {
+//            lbAvatar2.setIcon(new ImageIcon(Avatar.PATH + Avatar.EMPTY_AVATAR));
+//        } else {
+//            lbAvatar2.setIcon(new ImageIcon(Avatar.PATH + p2.getAvatar()));
+//        }
+
+        // reset turn
+        lbActive1.setVisible(false);
+        lbActive2.setVisible(false);
+    }
+
+    public void setTurn(String email) {
+        if (player1.getEmail().equals(email)) {
+            lbActive1.setVisible(true);
+            lbActive2.setVisible(false);
+            lbAvatar1.setBorder(javax.swing.BorderFactory.createTitledBorder("Đang đánh"));
+            lbAvatar2.setBorder(javax.swing.BorderFactory.createTitledBorder("Chờ"));
+        }
+
+        if (player2.getEmail().equals(email)) {
+            lbActive1.setVisible(false);
+            lbActive2.setVisible(true);
+            lbAvatar1.setBorder(javax.swing.BorderFactory.createTitledBorder("Chờ"));
+            lbAvatar2.setBorder(javax.swing.BorderFactory.createTitledBorder("Đang đánh"));
+        }
     }
 
     /**
@@ -69,11 +110,11 @@ public class InGame extends javax.swing.JFrame {
         plPlayerContainer = new javax.swing.JPanel();
         plPlayer = new javax.swing.JPanel();
         lbAvatar1 = new javax.swing.JLabel();
-        lbPlayerName1 = new javax.swing.JLabel();
+        lbPlayerNameId1 = new javax.swing.JLabel();
         lbActive1 = new javax.swing.JLabel();
         lbVersus = new javax.swing.JLabel();
         lbAvatar2 = new javax.swing.JLabel();
-        lbPlayerName2 = new javax.swing.JLabel();
+        lbPlayerNameId2 = new javax.swing.JLabel();
         lbActive2 = new javax.swing.JLabel();
         plTimer = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
@@ -92,7 +133,7 @@ public class InGame extends javax.swing.JFrame {
         jList1 = new javax.swing.JList<>();
         plBoardContainer = new javax.swing.JPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Caro Game");
         setResizable(false);
 
@@ -143,9 +184,9 @@ public class InGame extends javax.swing.JFrame {
         lbAvatar1.setBorder(javax.swing.BorderFactory.createTitledBorder("Đang đánh"));
         lbAvatar1.setOpaque(true);
 
-        lbPlayerName1.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
-        lbPlayerName1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbPlayerName1.setText("Hoang");
+        lbPlayerNameId1.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
+        lbPlayerNameId1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbPlayerNameId1.setText("Hoang");
 
         lbActive1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_sphere_30px.png"))); // NOI18N
 
@@ -156,9 +197,9 @@ public class InGame extends javax.swing.JFrame {
         lbAvatar2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/avatar/icons8_circled_user_female_skin_type_7_96px.png"))); // NOI18N
         lbAvatar2.setBorder(javax.swing.BorderFactory.createTitledBorder("Chờ"));
 
-        lbPlayerName2.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
-        lbPlayerName2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbPlayerName2.setText("Hien");
+        lbPlayerNameId2.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
+        lbPlayerNameId2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbPlayerNameId2.setText("Hien");
 
         lbActive2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_sphere_30px.png"))); // NOI18N
 
@@ -170,7 +211,7 @@ public class InGame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(plPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lbAvatar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbPlayerName1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbPlayerNameId1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(plPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(plPlayerLayout.createSequentialGroup()
@@ -181,7 +222,7 @@ public class InGame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(plPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lbAvatar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbPlayerName2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbPlayerNameId2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         plPlayerLayout.setVerticalGroup(
@@ -192,11 +233,11 @@ public class InGame extends javax.swing.JFrame {
                     .addGroup(plPlayerLayout.createSequentialGroup()
                         .addComponent(lbAvatar1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbPlayerName1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(lbPlayerNameId1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(plPlayerLayout.createSequentialGroup()
                         .addComponent(lbAvatar2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbPlayerName2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(lbPlayerNameId2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, plPlayerLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(lbActive1))
@@ -428,29 +469,6 @@ public class InGame extends javax.swing.JFrame {
         // TODO add chat
     }
 
-    public void setTurn(int playerId) {
-        if (player1.getId() == playerId) {
-            lbAvatar1.setBorder(javax.swing.BorderFactory.createTitledBorder("Đang đánh"));
-            lbAvatar2.setBorder(javax.swing.BorderFactory.createTitledBorder("Chờ"));
-        } else {
-            lbAvatar2.setBorder(javax.swing.BorderFactory.createTitledBorder("Đang đánh"));
-            lbAvatar1.setBorder(javax.swing.BorderFactory.createTitledBorder("Chờ"));
-        }
-    }
-
-    public void setPlayer(Player p1, Player p2) {
-        this.player1 = p1;
-        this.player2 = p2;
-
-        // player 1
-        lbPlayerName1.setText(p1.getName());
-        lbAvatar1.setIcon(new ImageIcon(Avatar.PATH + p1.getAvatar()));
-
-        // player 2
-        lbPlayerName2.setText(p1.getName());
-        lbAvatar2.setIcon(new ImageIcon(Avatar.PATH + p2.getAvatar()));
-    }
-
     /**
      * @param args the command line arguments
      */
@@ -505,8 +523,8 @@ public class InGame extends javax.swing.JFrame {
     private javax.swing.JLabel lbActive2;
     private javax.swing.JLabel lbAvatar1;
     private javax.swing.JLabel lbAvatar2;
-    private javax.swing.JLabel lbPlayerName1;
-    private javax.swing.JLabel lbPlayerName2;
+    private javax.swing.JLabel lbPlayerNameId1;
+    private javax.swing.JLabel lbPlayerNameId2;
     private javax.swing.JLabel lbVersus;
     private javax.swing.JProgressBar pgbMatchTimer;
     private javax.swing.JProgressBar pgbTurnTimer;

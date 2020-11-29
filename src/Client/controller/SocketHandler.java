@@ -6,6 +6,7 @@
 package client.controller;
 
 import client.RunClient;
+import client.model.PlayerInGame;
 import client.model.ProfileData;
 import client.view.scene.MainMenu;
 import shared.helper.Util;
@@ -378,16 +379,27 @@ public class SocketHandler {
             JOptionPane.showMessageDialog(RunClient.mainMenuScene, failedMsg, "Không thể ghép trận", JOptionPane.ERROR_MESSAGE);
 
         } else if (status.equals("success")) {
-            RunClient.mainMenuScene.setDisplayState(MainMenu.State.DEFAULT);
-
-            // get list room
-            listRoom();
+            System.out.println("Ghép trận thành công, đang chờ server cho vào phòng.");
         }
     }
 
     // in game
     private void onReceiveDataRoom(String received) {
+        String[] splitted = received.split(";");
+        String status = splitted[1];
 
+        if (status.equals("failed")) {
+            String failedMsg = splitted[2];
+            JOptionPane.showMessageDialog(RunClient.mainMenuScene, failedMsg, "Không lấy được dữ liệu phòng", JOptionPane.ERROR_MESSAGE);
+
+        } else if (status.equals("success")) {
+            PlayerInGame p1 = new PlayerInGame(splitted[2], splitted[3], splitted[4]);
+            PlayerInGame p2 = new PlayerInGame(splitted[5], splitted[6], splitted[7]);
+
+            System.out.println(p1.getAvatar() + ", " + p2.getAvatar());
+
+            RunClient.inGameScene.setPlayerInGame(p1, p2);
+        }
     }
 
     private void onReceiveChatRoom(String received) {

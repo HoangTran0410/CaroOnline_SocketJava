@@ -18,7 +18,8 @@ public class CoTuong extends GameLogic {
     }
 
     @Override
-    public void receiveDataFromClient(String received) {
+    public String receiveDataFromClient(String received) {
         System.out.println("Game CoTuong received: " + received);
+        return "";
     }
 }

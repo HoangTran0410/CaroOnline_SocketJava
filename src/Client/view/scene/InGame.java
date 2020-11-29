@@ -9,12 +9,15 @@ import client.RunClient;
 import client.model.ChatItem;
 import client.model.PlayerInGame;
 import client.view.helper.ChatCellRenderer;
-import server.db.layers.DTO.Player;
+import java.awt.Color;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
 import shared.constant.Avatar;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 
 /**
  *
@@ -26,6 +29,11 @@ public class InGame extends javax.swing.JFrame {
     ArrayList<PlayerInGame> listPlayers;
     PlayerInGame player1;
     PlayerInGame player2;
+
+    // https://codelearn.io/sharing/lam-game-caro-don-gian-bang-java
+    final int COLUMN = 16, ROW = 16;
+    JButton btnOnBoard[][];
+    JButton lastMove = null;
 
     /**
      * Creates new form InGame
@@ -41,6 +49,10 @@ public class InGame extends javax.swing.JFrame {
 
         // list players (player + viewer)
         listPlayers = new ArrayList<>();
+
+        // board
+        plBoardContainer.setLayout(new GridLayout(ROW, COLUMN));
+        initBoard();
     }
 
     public void setPlayerInGame(PlayerInGame p1, PlayerInGame p2) {
@@ -70,11 +82,12 @@ public class InGame extends javax.swing.JFrame {
         lbActive2.setVisible(false);
     }
 
+    // change turn sang cho email đầu vào
     public void setTurn(String email) {
         if (player1.getEmail().equals(email)) {
             lbActive1.setVisible(true);
             lbActive2.setVisible(false);
-            lbAvatar1.setBorder(javax.swing.BorderFactory.createTitledBorder("Đang đánh"));
+            lbAvatar1.setBorder(javax.swing.BorderFactory.createTitledBorder("Đang đánh.."));
             lbAvatar2.setBorder(javax.swing.BorderFactory.createTitledBorder("Chờ"));
         }
 
@@ -82,8 +95,79 @@ public class InGame extends javax.swing.JFrame {
             lbActive1.setVisible(false);
             lbActive2.setVisible(true);
             lbAvatar1.setBorder(javax.swing.BorderFactory.createTitledBorder("Chờ"));
-            lbAvatar2.setBorder(javax.swing.BorderFactory.createTitledBorder("Đang đánh"));
+            lbAvatar2.setBorder(javax.swing.BorderFactory.createTitledBorder("Đang đánh.."));
         }
+    }
+
+    // change turn sang cho đối thủ của email đầu vào
+    public void changeTurnFrom(String email) {
+        if (email.equals(player1.getEmail())) {
+            setTurn(player2.getEmail());
+        } else {
+            setTurn(player1.getEmail());
+        }
+    }
+
+    public void initBoard() {
+        plBoardContainer.removeAll();
+        btnOnBoard = new JButton[COLUMN + 2][ROW + 2];
+
+        for (int row = 0; row < ROW; row++) {
+            for (int column = 0; column < COLUMN; column++) {
+                btnOnBoard[row][column] = createBoardButton(row, column);
+                plBoardContainer.add(btnOnBoard[row][column]);
+            }
+        }
+    }
+
+    public void setLastMove(int row, int column) {
+        lastMove = btnOnBoard[row][column];
+    }
+
+    public void addPoint(int row, int column, String email) {
+        if (lastMove != null) {
+            lastMove.setBackground(new Color(180, 180, 180));
+        }
+
+        lastMove = btnOnBoard[row][column];
+        lastMove.setBackground(Color.yellow);
+
+        if (email.equals(player1 != null ? player1.getEmail() : "")) {
+            lastMove.setIcon(new ImageIcon(Avatar.ASSET_PATH + "icons8_round_24px.png"));
+        } else {
+            lastMove.setIcon(new ImageIcon(Avatar.ASSET_PATH + "icons8_delete_24px_1.png"));
+        }
+    }
+
+    public void removePoint(int row, int column) {
+        btnOnBoard[row][column].setText("");
+    }
+
+    public void clickOnBoard(int row, int column) {
+        RunClient.socketHandler.move(row, column);
+    }
+
+    private JButton createBoardButton(int row, int column) {
+        JButton b = new JButton();
+        b.setFocusPainted(false);
+        b.setBackground(new Color(180, 180, 180));
+
+        b.addActionListener((ActionEvent e) -> {
+            clickOnBoard(row, column);
+
+            // test
+            // addPoint(row, column, "");
+        });
+
+        return b;
+    }
+
+    public void addChat(ChatItem c) {
+        chatModel.addElement(c);
+
+        // scroll into view
+        lChatContainer.ensureIndexIsVisible(lChatContainer.getModel().getSize() - 1);
+        lChatContainer.repaint();
     }
 
     /**
@@ -109,6 +193,8 @@ public class InGame extends javax.swing.JFrame {
         lbAvatar2 = new javax.swing.JLabel();
         lbPlayerNameId2 = new javax.swing.JLabel();
         lbActive2 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         plTimer = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -126,7 +212,7 @@ public class InGame extends javax.swing.JFrame {
         jList1 = new javax.swing.JList<>();
         plBoardContainer = new javax.swing.JPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Caro Game");
         setResizable(false);
 
@@ -179,7 +265,7 @@ public class InGame extends javax.swing.JFrame {
 
         lbAvatar1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbAvatar1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/avatar/icons8_circled_user_male_skin_type_7_96px.png"))); // NOI18N
-        lbAvatar1.setBorder(javax.swing.BorderFactory.createTitledBorder("Đang đánh"));
+        lbAvatar1.setBorder(javax.swing.BorderFactory.createTitledBorder("..."));
         lbAvatar1.setOpaque(true);
 
         lbPlayerNameId1.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
@@ -193,13 +279,19 @@ public class InGame extends javax.swing.JFrame {
 
         lbAvatar2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbAvatar2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/avatar/icons8_circled_user_female_skin_type_7_96px.png"))); // NOI18N
-        lbAvatar2.setBorder(javax.swing.BorderFactory.createTitledBorder("Chờ"));
+        lbAvatar2.setBorder(javax.swing.BorderFactory.createTitledBorder("..."));
 
         lbPlayerNameId2.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
         lbPlayerNameId2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbPlayerNameId2.setText("Hien");
 
         lbActive2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_sphere_30px.png"))); // NOI18N
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_round_24px.png"))); // NOI18N
+
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_delete_24px_1.png"))); // NOI18N
 
         javax.swing.GroupLayout plPlayerLayout = new javax.swing.GroupLayout(plPlayer);
         plPlayer.setLayout(plPlayerLayout);
@@ -209,18 +301,20 @@ public class InGame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(plPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lbAvatar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbPlayerNameId1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbPlayerNameId1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(plPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbVersus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(plPlayerLayout.createSequentialGroup()
                         .addComponent(lbActive1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lbActive2))
-                    .addComponent(lbVersus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(lbActive2)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(plPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lbAvatar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbPlayerNameId2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbPlayerNameId2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         plPlayerLayout.setVerticalGroup(
@@ -229,20 +323,28 @@ public class InGame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(plPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(plPlayerLayout.createSequentialGroup()
-                        .addComponent(lbAvatar1)
+                        .addGroup(plPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(plPlayerLayout.createSequentialGroup()
+                                .addComponent(lbAvatar1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lbPlayerNameId1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(plPlayerLayout.createSequentialGroup()
+                                .addComponent(lbAvatar2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lbPlayerNameId2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbPlayerNameId1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(plPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(plPlayerLayout.createSequentialGroup()
-                        .addComponent(lbAvatar2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbPlayerNameId2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, plPlayerLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(lbActive1))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, plPlayerLayout.createSequentialGroup()
-                        .addComponent(lbVersus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbActive2)))
+                        .addGroup(plPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbVersus, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(plPlayerLayout.createSequentialGroup()
+                                .addGap(125, 125, 125)
+                                .addGroup(plPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lbActive1)
+                                    .addComponent(lbActive2))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -301,8 +403,7 @@ public class InGame extends javax.swing.JFrame {
                 .addGap(3, 3, 3)
                 .addComponent(plPlayer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(plTimer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(plTimer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         lChatContainer.setFont(new java.awt.Font("Consolas", 0, 14)); // NOI18N
@@ -361,7 +462,7 @@ public class InGame extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -388,7 +489,7 @@ public class InGame extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -407,24 +508,12 @@ public class InGame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, plRightContainerLayout.createSequentialGroup()
                 .addComponent(plToolContainer, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(plPlayerContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(plPlayerContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tpChatAndViewerContainer, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(tpChatAndViewerContainer, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        plBoardContainer.setBackground(new java.awt.Color(102, 102, 102));
-        plBoardContainer.setPreferredSize(new java.awt.Dimension(639, 639));
-
-        javax.swing.GroupLayout plBoardContainerLayout = new javax.swing.GroupLayout(plBoardContainer);
-        plBoardContainer.setLayout(plBoardContainerLayout);
-        plBoardContainerLayout.setHorizontalGroup(
-            plBoardContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 660, Short.MAX_VALUE)
-        );
-        plBoardContainerLayout.setVerticalGroup(
-            plBoardContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
+        plBoardContainer.setLayout(new java.awt.GridLayout(1, 0));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -432,9 +521,9 @@ public class InGame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(plBoardContainer, javax.swing.GroupLayout.PREFERRED_SIZE, 660, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(plRightContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(plBoardContainer, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(plRightContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -442,7 +531,7 @@ public class InGame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(plBoardContainer, javax.swing.GroupLayout.DEFAULT_SIZE, 660, Short.MAX_VALUE)
+                    .addComponent(plBoardContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(plRightContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -469,14 +558,6 @@ public class InGame extends javax.swing.JFrame {
         RunClient.socketHandler.leaveRoom();
     }//GEN-LAST:event_btnLeaveRoomActionPerformed
 
-    public void addChat(ChatItem c) {
-        chatModel.addElement(c);
-
-        // scroll into view
-        lChatContainer.ensureIndexIsVisible(lChatContainer.getModel().getSize() - 1);
-        lChatContainer.repaint();
-    }
-
     /**
      * @param args the command line arguments
      */
@@ -491,16 +572,24 @@ public class InGame extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(InGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InGame.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(InGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InGame.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(InGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InGame.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(InGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InGame.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -518,6 +607,8 @@ public class InGame extends javax.swing.JFrame {
     private javax.swing.JButton btnNewGame;
     private javax.swing.JButton btnSendMessage;
     private javax.swing.JButton btnUndo;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JList<String> jList1;

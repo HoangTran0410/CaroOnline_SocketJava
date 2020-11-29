@@ -107,6 +107,7 @@ public class MainMenu extends javax.swing.JFrame {
         plFindingMatch.setVisible(true);
         btnAcceptPairMatch.setEnabled(true);
         btnDeclinePairMatch.setEnabled(true);
+        btnLogout.setEnabled(true);
 
         // xong đóng từng cái tùy theo state
         switch (s) {
@@ -122,6 +123,7 @@ public class MainMenu extends javax.swing.JFrame {
                 stopAcceptPairMatchTimer();
                 LookAndFeel.enableComponents(plBtns, false);
                 plFoundMatch.setVisible(false);
+                btnLogout.setEnabled(false);
                 break;
 
             case WAITING_ACCEPT:
@@ -130,6 +132,7 @@ public class MainMenu extends javax.swing.JFrame {
                 pairAcceptChoosed = false;
                 LookAndFeel.enableComponents(plBtns, false);
                 plFindingMatch.setVisible(false);
+                btnLogout.setEnabled(false);
                 break;
 
             case WAITING_COMPETITOR_ACCEPT:
@@ -138,6 +141,7 @@ public class MainMenu extends javax.swing.JFrame {
                 plFindingMatch.setVisible(false);
                 btnAcceptPairMatch.setEnabled(false);
                 btnDeclinePairMatch.setEnabled(false);
+                btnLogout.setEnabled(false);
                 lbFoundMatch.setText("Đang chờ đối thủ..");
                 break;
         }
@@ -350,6 +354,7 @@ public class MainMenu extends javax.swing.JFrame {
             }
         ));
         tbListRoom.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tbListRoom.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(tbListRoom);
 
         tpRoomAndUser.addTab("Danh sách phòng", jScrollPane1);

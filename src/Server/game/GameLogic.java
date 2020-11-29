@@ -14,7 +14,8 @@ public class GameLogic {
     public GameLogic() {
     }
 
-    public void receiveDataFromClient(String received) {
+    public String receiveDataFromClient(String received) {
+        return "";
     }
 
 }

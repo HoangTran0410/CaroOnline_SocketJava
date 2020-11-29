@@ -11,6 +11,7 @@ package shared.constant;
  */
 public class Avatar {
 
+    public static final String ASSET_PATH = "src/client/view/asset/";
     public static final String PATH = "src/client/view/asset/avatar/";
     public static final String PATH_RESOURCE = "/client/view/asset/avatar/";
     public static final String EMPTY_AVATAR = "icons8_confusion_96px.png";

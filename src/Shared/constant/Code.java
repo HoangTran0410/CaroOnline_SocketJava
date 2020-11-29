@@ -23,4 +23,5 @@ public class Code {
     public static String YOU_CHOOSE_NO = "Bạn đã không đồng ý ghép cặp.";
     public static String ROOM_NOTFOUND = "Không tìm thấy phòng.";
     public static String CANT_LEAVE_ROOM = "Không thể thoát phòng.";
+    public static String UNKNOW_GAME_EVENT = "Game event không xác định.";
 }

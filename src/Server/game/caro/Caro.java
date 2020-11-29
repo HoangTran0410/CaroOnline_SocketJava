@@ -5,6 +5,7 @@
  */
 package server.game.caro;
 
+import java.util.ArrayList;
 import shared.helper.Line;
 import shared.helper.Point;
 import server.game.GameLogic;
@@ -16,40 +17,56 @@ import server.game.GameLogic;
 public class Caro extends GameLogic {
 
     final int ROW = 16, COL = 16;
-    char[][] board;
+
+    ArrayList<History> history;
+    History preMove;
+    String[][] board;
 
     public Caro() {
-        board = new char[ROW][COL];
+        history = new ArrayList<>();
+        preMove = null;
+
+        board = new String[ROW][COL];
         for (int i = 0; i < ROW; i++) {
             for (int j = 0; j < COL; j++) {
-                board[i][j] = ' ';
+                board[i][j] = " ";
             }
         }
     }
 
-    @Override
-    public void receiveDataFromClient(String received) {
-        // TODO: return gì đó cho client
-
-        if (received.indexOf("move") == 0) {
-            // TODO game event here
-        }
+    private void addHistory(int row, int col, String playerId) {
+        History newHis = new History(row, col, playerId);
+        history.add(newHis);
+        preMove = newHis;
     }
 
-    public boolean setValueAt(char value, int x, int y) {
-        if (x >= 0 && x < COL && y >= 0 && y < ROW) {
-            board[y][y] = value;
-            return true;
+    public boolean move(int row, int col, String playerId) {
+        // nếu người này đã đánh trước đó thì không cho đánh nữa
+        if (preMove != null && preMove.getPlayerId().equals(playerId)) {
+            return false;
         }
-        return false;
+
+        // nếu vị trí đánh nằm ngoài board
+        if (row < 0 && row >= ROW && col < 0 && col >= COL) {
+            return false;
+        }
+
+        // nếu vị trí đó đã đánh rồi
+        if (!board[row][col].equals(" ")) {
+            return false;
+        }
+
+        board[row][col] = playerId;
+        addHistory(row, col, playerId);
+        return true;
     }
 
-    public char getValueAt(int x, int y) {
+    public String getValueAt(int x, int y) {
         if (x >= 0 && x < COL && y >= 0 && y < ROW) {
             return board[y][x];
         }
 
-        return ' ';
+        return " ";
     }
 
     public Line CheckWin(int x, int y) {
@@ -91,10 +108,10 @@ public class Caro extends GameLogic {
 
     public Line checkWinTemplate(Point currentCell, Point backDir, Point frontDir) {
         // get data from current cell
-        int currentData = this.getValueAt(currentCell.x, currentCell.y);
+        String currentData = this.getValueAt(currentCell.x, currentCell.y);
 
         // if there is nodata => out
-        if (currentData == ' ') {
+        if (currentData.equals(" ")) {
             return null;
         }
 
@@ -106,9 +123,9 @@ public class Caro extends GameLogic {
         from = currentCell;
         while (true) {
             temp = new Point(from.x + backDir.x, from.y + backDir.y);
-            char data = this.getValueAt(temp.x, temp.y);
+            String data = this.getValueAt(temp.x, temp.y);
 
-            if (data != currentData) {
+            if (!data.equals(currentData)) {
                 break;
             }
             from = temp;
@@ -119,9 +136,9 @@ public class Caro extends GameLogic {
         to = currentCell;
         while (true) {
             temp = new Point(to.x + frontDir.x, to.y + frontDir.y);
-            char data = this.getValueAt(temp.x, temp.y);
+            String data = this.getValueAt(temp.x, temp.y);
 
-            if (data != currentData) {
+            if (!data.equals(currentData)) {
                 break;
             }
             to = temp;

@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import server.RunServer;
 import server.db.layers.BUS.PlayerBUS;
 import server.db.layers.DTO.Player;
+import server.game.caro.Caro;
 import shared.constant.Code;
 import shared.constant.StreamData;
 import shared.helper.CustumDateTimeFormatter;
@@ -145,11 +146,10 @@ public class Client implements Runnable {
                         onReceiveChangePassword(received);
                         break;
 
-                    case MOVE:
-                    case UNDO:
-                    case UNDO_ACCEPT:
-                    case NEW_GAME:
-                    case NEW_GAME_ACCEPT:
+                    case GAME_EVENT:
+                        onReceiveGameEvent(received);
+                        break;
+
                     case EXIT:
                         running = false;
                 }
@@ -499,6 +499,42 @@ public class Client implements Runnable {
 
         // send result
         sendData(StreamData.Type.CHANGE_PASSWORD.name() + ";" + result);
+    }
+
+    // game event
+    private void onReceiveGameEvent(String received) {
+        String[] splitted = received.split(";");
+        StreamData.Type gameEventType = StreamData.getType(splitted[1]);
+
+        Caro caroGame = (Caro) joinedRoom.getGamelogic();
+
+        switch (gameEventType) {
+            case MOVE:
+                int row = Integer.parseInt(splitted[2]);
+                int column = Integer.parseInt(splitted[3]);
+
+                if (caroGame.move(row, column, loginPlayer.getEmail())) {
+                    String successData
+                            = StreamData.Type.GAME_EVENT + ";"
+                            + StreamData.Type.MOVE + ";"
+                            + row + ";"
+                            + column + ";"
+                            + loginPlayer.getEmail();
+
+                    // broadcast to all client in room
+                    joinedRoom.broadcast(successData);
+
+                    // TODO check win
+                } else {
+                    // do nothing
+                }
+                break;
+
+            case UNDO:
+            case UNDO_ACCEPT:
+            case NEW_GAME:
+            case NEW_GAME_ACCEPT:
+        }
     }
 
     // send data fucntions

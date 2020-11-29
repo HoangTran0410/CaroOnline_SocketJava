@@ -170,11 +170,10 @@ public class SocketHandler {
                         onReceiveChangePassword(received);
                         break;
 
-                    case MOVE:
-                    case UNDO:
-                    case UNDO_ACCEPT:
-                    case NEW_GAME:
-                    case NEW_GAME_ACCEPT:
+                    case GAME_EVENT:
+                        onReceiveGameEvent(received);
+                        break;
+
                     case EXIT:
                         running = false;
                 }
@@ -380,7 +379,7 @@ public class SocketHandler {
             JOptionPane.showMessageDialog(RunClient.mainMenuScene, failedMsg, "Không thể ghép trận", JOptionPane.ERROR_MESSAGE);
 
         } else if (status.equals("success")) {
-            System.out.println("Ghép trận thành công, đang chờ server cho vào phòng.");
+            // System.out.println("Ghép trận thành công, đang chờ server cho vào phòng.");
         }
     }
 
@@ -397,8 +396,7 @@ public class SocketHandler {
             PlayerInGame p1 = new PlayerInGame(splitted[2], splitted[3], splitted[4]);
             PlayerInGame p2 = new PlayerInGame(splitted[5], splitted[6], splitted[7]);
 
-            System.out.println(p1.getAvatar() + ", " + p2.getAvatar());
-
+            // System.out.println(p1.getAvatar() + ", " + p2.getAvatar());
             RunClient.inGameScene.setPlayerInGame(p1, p2);
         }
     }
@@ -520,6 +518,25 @@ public class SocketHandler {
         }
     }
 
+    // game
+    public void onReceiveGameEvent(String received) {
+        String[] splitted = received.split(";");
+        StreamData.Type gameEventType = StreamData.getType(splitted[1]);
+
+        System.out.println("receive game event " + received);
+
+        switch (gameEventType) {
+            case MOVE:
+                int row = Integer.parseInt(splitted[2]);
+                int column = Integer.parseInt(splitted[3]);
+                String _email = splitted[4];
+
+                RunClient.inGameScene.addPoint(row, column, _email);
+                RunClient.inGameScene.changeTurnFrom(_email);
+                break;
+        }
+    }
+
     // ============= functions ===============
     // auth
     private void initSecurityAES() {
@@ -637,6 +654,15 @@ public class SocketHandler {
 
         // send data
         sendData(data);
+    }
+
+    // game event
+    public void sendGameEvent(String gameEventData) {
+        sendData(StreamData.Type.GAME_EVENT.name() + ";" + gameEventData);
+    }
+
+    public void move(int x, int y) {
+        sendGameEvent(StreamData.Type.MOVE + ";" + x + ";" + y);
     }
 
     // send data

@@ -20,6 +20,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.text.DefaultCaret;
 
 /**
  *
@@ -56,6 +57,9 @@ public class InGame extends javax.swing.JFrame {
         // board
         plBoardContainer.setLayout(new GridLayout(ROW, COLUMN));
         initBoard();
+
+        // https://stackoverflow.com/a/1627068
+        ((DefaultCaret) txaChat.getCaret()).setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
         // close window event
         this.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -246,7 +250,7 @@ public class InGame extends javax.swing.JFrame {
     }
 
     public void addChat(ChatItem c) {
-        txaChat.setText(txaChat.getText() + "\n" + c.toString());
+        txaChat.append(c.toString() + "\n");
     }
 
     /**

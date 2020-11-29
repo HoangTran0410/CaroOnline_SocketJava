@@ -66,11 +66,11 @@ public class InGame extends javax.swing.JFrame {
         // player 2
         lbPlayerNameId2.setText(p2.getNameId());
         lbAvatar2.setIcon(new ImageIcon(Avatar.PATH + Avatar.EMPTY_AVATAR));
-//        if (p2.getAvatar().equals("")) {
-//            lbAvatar2.setIcon(new ImageIcon(Avatar.PATH + Avatar.EMPTY_AVATAR));
-//        } else {
-//            lbAvatar2.setIcon(new ImageIcon(Avatar.PATH + p2.getAvatar()));
-//        }
+        if (p2.getAvatar().equals("")) {
+            lbAvatar2.setIcon(new ImageIcon(Avatar.PATH + Avatar.EMPTY_AVATAR));
+        } else {
+            lbAvatar2.setIcon(new ImageIcon(Avatar.PATH + p2.getAvatar()));
+        }
 
         // reset turn
         lbActive1.setVisible(false);

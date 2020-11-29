@@ -30,6 +30,10 @@ public class InGame extends javax.swing.JFrame {
     ArrayList<PlayerInGame> listPlayers;
     PlayerInGame player1;
     PlayerInGame player2;
+    int turn = 0;
+
+    final ImageIcon p1Icon = new ImageIcon(Avatar.ASSET_PATH + "icons8_round_24px.png");
+    final ImageIcon p2Icon = new ImageIcon(Avatar.ASSET_PATH + "icons8_delete_24px_1.png");
 
     // https://codelearn.io/sharing/lam-game-caro-don-gian-bang-java
     final int COLUMN = 16, ROW = 16;
@@ -54,6 +58,19 @@ public class InGame extends javax.swing.JFrame {
         // board
         plBoardContainer.setLayout(new GridLayout(ROW, COLUMN));
         initBoard();
+
+        // close event
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                if (JOptionPane.showConfirmDialog(InGame.this,
+                        "Bạn có chắc muốn thoát phòng?", "Thoát phòng?",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                    RunClient.socketHandler.leaveRoom();
+                }
+            }
+        });
     }
 
     public void setPlayerInGame(PlayerInGame p1, PlayerInGame p2) {
@@ -109,6 +126,7 @@ public class InGame extends javax.swing.JFrame {
     // change turn sang cho email đầu vào
     public void setTurn(String email) {
         if (player1.getEmail().equals(email)) {
+            turn = 1;
             lbActive1.setVisible(true);
             lbActive2.setVisible(false);
             lbAvatar1.setBorder(javax.swing.BorderFactory.createTitledBorder("Đang đánh.."));
@@ -116,6 +134,7 @@ public class InGame extends javax.swing.JFrame {
         }
 
         if (player2.getEmail().equals(email)) {
+            turn = 2;
             lbActive1.setVisible(false);
             lbActive2.setVisible(true);
             lbAvatar1.setBorder(javax.swing.BorderFactory.createTitledBorder("Chờ"));
@@ -155,16 +174,19 @@ public class InGame extends javax.swing.JFrame {
 
         lastMove = btnOnBoard[row][column];
         lastMove.setBackground(Color.yellow);
+        lastMove.setActionCommand(email); // save email as state
 
         if (email.equals(player1 != null ? player1.getEmail() : "")) {
-            lastMove.setIcon(new ImageIcon(Avatar.ASSET_PATH + "icons8_round_24px.png"));
+            lastMove.setIcon(p1Icon);
         } else {
-            lastMove.setIcon(new ImageIcon(Avatar.ASSET_PATH + "icons8_delete_24px_1.png"));
+            lastMove.setIcon(p2Icon);
         }
     }
 
     public void removePoint(int row, int column) {
-        btnOnBoard[row][column].setText("");
+        https://stackoverflow.com/a/2235596
+        btnOnBoard[row][column].setIcon(null);
+        btnOnBoard[row][column].setActionCommand("");
     }
 
     public void clickOnBoard(int row, int column) {
@@ -175,12 +197,37 @@ public class InGame extends javax.swing.JFrame {
         JButton b = new JButton();
         b.setFocusPainted(false);
         b.setBackground(new Color(180, 180, 180));
+        b.setActionCommand("");
 
         b.addActionListener((ActionEvent e) -> {
             clickOnBoard(row, column);
 
             // test
             // addPoint(row, column, "");
+        });
+
+        // https://stackoverflow.com/a/22639054
+        b.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                if (b.getActionCommand().equals("")) {
+
+                    String myEmail = RunClient.socketHandler.getLoginEmail();
+
+                    if (myEmail.equals(player1.getEmail()) && (turn == 1 || turn == 0)) {
+                        b.setIcon(p1Icon);
+                    }
+
+                    if (myEmail.equals(player2.getEmail()) && (turn == 2 || turn == 0)) {
+                        b.setIcon(p2Icon);
+                    }
+                }
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                if (b.getActionCommand().equals("")) {
+                    b.setIcon(null);
+                }
+            }
         });
 
         return b;
@@ -579,7 +626,13 @@ public class InGame extends javax.swing.JFrame {
     }//GEN-LAST:event_txChatInputKeyPressed
 
     private void btnLeaveRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLeaveRoomActionPerformed
-        RunClient.socketHandler.leaveRoom();
+        // https://stackoverflow.com/a/8689130
+        if (JOptionPane.showConfirmDialog(this,
+                "Bạn có chắc muốn thoát phòng?", "Warning",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+            RunClient.socketHandler.leaveRoom();
+        }
     }//GEN-LAST:event_btnLeaveRoomActionPerformed
 
     /**

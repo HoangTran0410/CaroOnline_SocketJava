@@ -23,10 +23,14 @@ public class Caro extends GameLogic {
     String[][] board;
 
     public Caro() {
+        reset();
+    }
+
+    public void reset() {
         history = new ArrayList<>();
         preMove = null;
-
         board = new String[ROW][COL];
+
         for (int i = 0; i < ROW; i++) {
             for (int j = 0; j < COL; j++) {
                 board[i][j] = " ";

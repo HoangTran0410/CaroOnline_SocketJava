@@ -47,7 +47,7 @@ public class Client implements Runnable {
         String received;
         boolean running = true;
 
-        while (running) {
+        while (running && !RunServer.shutDown) {
             try {
                 // receive the request from client
                 received = dis.readUTF();

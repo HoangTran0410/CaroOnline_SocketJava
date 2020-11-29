@@ -28,13 +28,16 @@ public class RunServer {
     public static volatile ClientManager clientManager;
     public static volatile RoomManager roomManager;
     public static volatile RSA serverSide;
+    public static boolean shutDown;
+    public static volatile ServerSocket ss;
+    ThreadPoolExecutor executor;
 
     public RunServer() {
 
         try {
             int port = 5056;
 
-            ServerSocket ss = new ServerSocket(port);
+            ss = new ServerSocket(port);
             System.out.println("Created Server at port " + port + ".");
 
             // init rsa key
@@ -44,9 +47,10 @@ public class RunServer {
             // init managers
             clientManager = new ClientManager();
             roomManager = new RoomManager();
+            shutDown = false;
 
             // create threadpool
-            ThreadPoolExecutor executor = new ThreadPoolExecutor(
+            executor = new ThreadPoolExecutor(
                     10, // corePoolSize
                     100, // maximumPoolSize
                     10, // thread timeout
@@ -58,7 +62,7 @@ public class RunServer {
             executor.execute(new Admin());
 
             // server main loop - listen to client's connection
-            while (true) {
+            while (!shutDown) {
                 try {
                     // socket object to receive incoming client requests
                     Socket s = ss.accept();
@@ -72,12 +76,14 @@ public class RunServer {
                     executor.execute(c);
 
                 } catch (IOException ex) {
-                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println("ServerSocket closed, shutting down server...");
                 }
             }
         } catch (IOException ex) {
             Logger.getLogger(RunServer.class.getName()).log(Level.SEVERE, null, ex);
         }
+        executor.shutdownNow(); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("Shut down success!");
     }
 
     public static void main(String[] args) {

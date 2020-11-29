@@ -438,43 +438,23 @@ public class SocketHandler {
 
         } else if (status.equals("success")) {
             // get player data from received
-            String idStr = splitted[2];
-            String email = splitted[3];
-            String name = splitted[4];
-            String avatar = splitted[5];
-            String gender = splitted[6];
-            String yearOfBirthStr = splitted[7];
-            String scoreStr = splitted[8];
-            String matchCountStr = splitted[9];
-            String winCountStr = splitted[10];
-            String tieCountStr = splitted[11];
-            String loseCountStr = splitted[12];
-            String currentStreakStr = splitted[13];
-            String winRateStr = splitted[14];
+            ProfileData p = new ProfileData(
+                    Integer.parseInt(splitted[2]), // id
+                    splitted[3], // email
+                    splitted[4], // name
+                    splitted[5], // avatar
+                    splitted[6], // gender
+                    Integer.parseInt(splitted[7]), // year of birth
+                    Integer.parseInt(splitted[8]), // score
+                    Integer.parseInt(splitted[9]), // match count
+                    Integer.parseInt(splitted[10]), // win count
+                    Integer.parseInt(splitted[11]), // tie count
+                    Integer.parseInt(splitted[12]), // lose count
+                    Integer.parseInt(splitted[13]), // current streak
+                    Float.parseFloat(splitted[14])); // win rate
 
-            // validate
-            try {
-                int id = Integer.parseInt(idStr);
-                int yearOfBirth = Integer.parseInt(yearOfBirthStr);
-                int score = Integer.parseInt(scoreStr);
-                int matchCount = Integer.parseInt(matchCountStr);
-                int winCount = Integer.parseInt(winCountStr);
-                int tieCount = Integer.parseInt(tieCountStr);
-                int loseCount = Integer.parseInt(loseCountStr);
-                int currentStreak = Integer.parseInt(currentStreakStr);
-                float winRate = Float.parseFloat(winRateStr);
-
-                ProfileData p = new ProfileData(id, email, name, avatar, gender, yearOfBirth, score, matchCount, winCount, tieCount, loseCount, currentStreak, winRate);
-
-                // show data to UI
-                RunClient.profileScene.setProfileData(p);
-
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(RunClient.profileScene, "Dữ liệu hồ sơ bị lỗi: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
-
-                // tự động đóng scene profile nếu có lỗi
-                RunClient.closeScene(RunClient.SceneName.PROFILE);
-            }
+            // show data to UI
+            RunClient.profileScene.setProfileData(p);
         }
     }
 

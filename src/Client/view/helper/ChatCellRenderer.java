@@ -5,6 +5,7 @@
  */
 package client.view.helper;
 
+import client.model.ChatItem;
 import java.awt.Component;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
@@ -14,25 +15,27 @@ import javax.swing.JList;
  * @author Hoang Tran < hoang at 99.hoangtran@gmail.com >
  */
 // https://stackoverflow.com/questions/8197167/word-wrap-in-jlist-items
-// hay: https://cachhoc.net/2014/04/25/java-swing-tuy-bien-jlist-jlist-custom-renderer/
-public class CustomListCellRenderer extends DefaultListCellRenderer {
-    
+// hay: //https://www.codejava.net/java-se/swing/jlist-custom-renderer-example
+public class ChatCellRenderer extends DefaultListCellRenderer {
+
     private int width;
 
-    public CustomListCellRenderer(int width) {
+    public ChatCellRenderer(int width) {
         this.width = width;
     }
 
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        
+
+        ChatItem c = (ChatItem) value;
+
         String text = String.format(
                 "<html>"
                 + "<body style='width: %spx'>"
-                + "%s"
+                + "<i>[%s]</i> <u><b>%s</b></u>: <span>%s<span>"
                 + "</body>"
                 + "</html>",
-                String.valueOf(width), value.toString());
+                String.valueOf(width), c.getTime(), c.getOwner(), c.getContent());
 
         return super.getListCellRendererComponent(list, text, index, isSelected, cellHasFocus);
     }

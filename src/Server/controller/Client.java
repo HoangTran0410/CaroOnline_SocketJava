@@ -17,6 +17,7 @@ import server.db.layers.BUS.PlayerBUS;
 import server.db.layers.DTO.Player;
 import shared.constant.Code;
 import shared.constant.StreamData;
+import shared.helper.CustumDateTimeFormatter;
 import shared.security.AES;
 
 /**
@@ -29,14 +30,12 @@ public class Client implements Runnable {
     DataInputStream dis;
     DataOutputStream dos;
 
-    boolean findingMatch = false;
     Player loginPlayer;
     Client cCompetitor;
-    Room room; // if == null => chua vao phong nao het
+    Room joinedRoom; // if == null => chua vao phong nao het
     AES aes;
 
-    // String loginEmail = ""; // if == "" => chua dang nhap
-    // String competitorEmail = "";
+    boolean findingMatch = false;
     String acceptPairMatchStatus = "_"; // yes/no/_
 
     public Client(Socket s) throws IOException {
@@ -157,6 +156,9 @@ public class Client implements Runnable {
 
             } catch (IOException ex) {
                 // System.out.println("Connection lost with " + s.getPort());
+
+                // leave room if needed
+                onReceiveLeaveRoom("");
                 break;
             }
         }
@@ -285,8 +287,8 @@ public class Client implements Runnable {
     // pair match
     private void onReceiveFindMatch(String received) {
         // nếu đang trong phòng rồi thì báo lỗi ngay
-        if (this.room != null) {
-            sendData(StreamData.Type.FIND_MATCH.name() + ";failed;" + Code.ALREADY_INROOM + " #" + this.room.getId());
+        if (this.joinedRoom != null) {
+            sendData(StreamData.Type.FIND_MATCH.name() + ";failed;" + Code.ALREADY_INROOM + " #" + this.joinedRoom.getId());
             return;
         }
 
@@ -393,11 +395,37 @@ public class Client implements Runnable {
     }
 
     private void onReceiveChatRoom(String received) {
+        String[] splitted = received.split(";");
+        String chatMsg = splitted[1];
 
+        if (joinedRoom != null) {
+            String data = CustumDateTimeFormatter.getCurrentTimeFormatted() + ";"
+                    + loginPlayer.getNameId() + ";"
+                    + chatMsg;
+
+            joinedRoom.broadcast(StreamData.Type.CHAT_ROOM.name() + ";" + data);
+        }
     }
 
     private void onReceiveLeaveRoom(String received) {
+        if (joinedRoom == null || !joinedRoom.removeClient(this)) {
+            sendData(StreamData.Type.LEAVE_ROOM.name() + ";failed" + Code.CANT_LEAVE_ROOM);
+            return;
+        }
 
+        // broadcast to all clients in room
+        String data = CustumDateTimeFormatter.getCurrentTimeFormatted() + ";"
+                + "SERVER" + ";"
+                + loginPlayer.getNameId() + " đã thoát";
+
+        joinedRoom.broadcast(StreamData.Type.CHAT_ROOM + ";" + data);
+
+        // delete refernce to room
+        joinedRoom = null;
+
+        // TODO if this client is player -> close room
+        // send result
+        sendData(StreamData.Type.LEAVE_ROOM.name() + ";success");
     }
 
     // profile
@@ -513,33 +541,17 @@ public class Client implements Runnable {
 
     public String joinRoom(Room room) {
         // đang trong phòng rồi ?
-        if (this.room != null) {
-            return "failed;" + Code.CANNOT_JOINROOM + Code.ALREADY_INROOM + " #" + this.room.getId();
+        if (this.joinedRoom != null) {
+            return "failed;" + Code.CANNOT_JOINROOM + Code.ALREADY_INROOM + " #" + this.joinedRoom.getId();
         }
 
         // join vào phòng thanh cong hay khong ?
         if (room.addClient(this)) {
-            this.room = room;
+            this.joinedRoom = room;
             return "success";
         }
 
         return "failed;" + Code.CANNOT_JOINROOM + " room.addClient trả về false";
-    }
-
-    // TODO chuyển return type về String
-    public boolean leaveRoom() {
-        // hien tai chua trong phong nao het ?
-        if (this.room == null) {
-            return false;
-        }
-
-        // roi phong thanh cong hay khong ?
-        if (this.room.removeClient(this)) {
-            this.room = null;
-            return true;
-        }
-
-        return false;
     }
 
     // get set
@@ -583,11 +595,11 @@ public class Client implements Runnable {
     }
 
     public Room getRoom() {
-        return room;
+        return joinedRoom;
     }
 
     public void setRoom(Room room) {
-        this.room = room;
+        this.joinedRoom = room;
     }
 
     public String getAcceptPairMatchStatus() {

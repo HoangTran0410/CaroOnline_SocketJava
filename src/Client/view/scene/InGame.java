@@ -5,8 +5,10 @@
  */
 package client.view.scene;
 
+import client.RunClient;
+import client.model.ChatItem;
 import client.model.PlayerInGame;
-import client.view.helper.CustomListCellRenderer;
+import client.view.helper.ChatCellRenderer;
 import server.db.layers.DTO.Player;
 import shared.constant.Avatar;
 import java.awt.event.KeyEvent;
@@ -20,7 +22,7 @@ import javax.swing.ImageIcon;
  */
 public class InGame extends javax.swing.JFrame {
 
-    DefaultListModel<String> chatModel;
+    DefaultListModel<ChatItem> chatModel;
     ArrayList<PlayerInGame> listPlayers;
     PlayerInGame player1;
     PlayerInGame player2;
@@ -35,19 +37,10 @@ public class InGame extends javax.swing.JFrame {
         // jlist chat
         chatModel = new DefaultListModel<>();
         lChatContainer.setModel(chatModel);
-        lChatContainer.setCellRenderer(new CustomListCellRenderer(230));
+        lChatContainer.setCellRenderer(new ChatCellRenderer(230));
 
         // list players (player + viewer)
         listPlayers = new ArrayList<>();
-
-        // ======================== test ============================
-        // avatar
-//        int avatars_size = Avatar.LIST.length;
-//        int ava1 = (int) (Math.random() * avatars_size);
-//        int ava2 = (int) (Math.random() * avatars_size);
-//
-//        lbAvatar1.setIcon(new ImageIcon(Avatar.PATH + Avatar.LIST[ava1]));
-//        lbAvatar2.setIcon(new ImageIcon(Avatar.PATH + Avatar.LIST[ava2]));
     }
 
     public void setPlayerInGame(PlayerInGame p1, PlayerInGame p2) {
@@ -106,7 +99,7 @@ public class InGame extends javax.swing.JFrame {
         plToolContainer = new javax.swing.JPanel();
         btnNewGame = new javax.swing.JButton();
         btnUndo = new javax.swing.JButton();
-        btnExitRoom = new javax.swing.JButton();
+        btnLeaveRoom = new javax.swing.JButton();
         plPlayerContainer = new javax.swing.JPanel();
         plPlayer = new javax.swing.JPanel();
         lbAvatar1 = new javax.swing.JLabel();
@@ -147,9 +140,14 @@ public class InGame extends javax.swing.JFrame {
         btnUndo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_undo_24px.png"))); // NOI18N
         btnUndo.setText("Đánh lại");
 
-        btnExitRoom.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        btnExitRoom.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_exit_sign_24px.png"))); // NOI18N
-        btnExitRoom.setText("Thoát phòng");
+        btnLeaveRoom.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnLeaveRoom.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_exit_sign_24px.png"))); // NOI18N
+        btnLeaveRoom.setText("Thoát phòng");
+        btnLeaveRoom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLeaveRoomActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout plToolContainerLayout = new javax.swing.GroupLayout(plToolContainer);
         plToolContainer.setLayout(plToolContainerLayout);
@@ -162,7 +160,7 @@ public class InGame extends javax.swing.JFrame {
                         .addComponent(btnNewGame)
                         .addGap(6, 6, 6)
                         .addComponent(btnUndo))
-                    .addComponent(btnExitRoom))
+                    .addComponent(btnLeaveRoom))
                 .addGap(42, 42, 42))
         );
         plToolContainerLayout.setVerticalGroup(
@@ -173,7 +171,7 @@ public class InGame extends javax.swing.JFrame {
                     .addComponent(btnNewGame)
                     .addComponent(btnUndo))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnExitRoom)
+                .addComponent(btnLeaveRoom)
                 .addGap(18, 18, 18))
         );
 
@@ -307,11 +305,11 @@ public class InGame extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        lChatContainer.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+        lChatContainer.setFont(new java.awt.Font("Consolas", 0, 14)); // NOI18N
+        lChatContainer.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        lChatContainer.setOpaque(false);
+        lChatContainer.setSelectionBackground(new java.awt.Color(255, 255, 255));
+        lChatContainer.setSelectionForeground(new java.awt.Color(51, 51, 51));
         jScrollPane1.setViewportView(lChatContainer);
 
         txChatInput.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -453,20 +451,30 @@ public class InGame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSendMessageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSendMessageMouseClicked
+        String chatMsg = txChatInput.getText();
+        txChatInput.setText("");
 
+        if (!chatMsg.equals("")) {
+            RunClient.socketHandler.chatRoom(chatMsg);
+        }
     }//GEN-LAST:event_btnSendMessageMouseClicked
 
     private void txChatInputKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txChatInputKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            chatModel.addElement(txChatInput.getText());
-
-            // scroll into view
-            lChatContainer.ensureIndexIsVisible(lChatContainer.getModel().getSize() - 1);
+            btnSendMessageMouseClicked(null);
         }
     }//GEN-LAST:event_txChatInputKeyPressed
 
-    public void addChat() {
-        // TODO add chat
+    private void btnLeaveRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLeaveRoomActionPerformed
+        RunClient.socketHandler.leaveRoom();
+    }//GEN-LAST:event_btnLeaveRoomActionPerformed
+
+    public void addChat(ChatItem c) {
+        chatModel.addElement(c);
+
+        // scroll into view
+        lChatContainer.ensureIndexIsVisible(lChatContainer.getModel().getSize() - 1);
+        lChatContainer.repaint();
     }
 
     /**
@@ -506,7 +514,7 @@ public class InGame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnExitRoom;
+    private javax.swing.JButton btnLeaveRoom;
     private javax.swing.JButton btnNewGame;
     private javax.swing.JButton btnSendMessage;
     private javax.swing.JButton btnUndo;
@@ -518,7 +526,7 @@ public class InGame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JList<String> lChatContainer;
+    private javax.swing.JList<ChatItem> lChatContainer;
     private javax.swing.JLabel lbActive1;
     private javax.swing.JLabel lbActive2;
     private javax.swing.JLabel lbAvatar1;

@@ -58,6 +58,10 @@ public class Room {
             c.sendData(msg);
         });
     }
+    
+    public void close() {
+        // TODO code here
+    }
 
     // gets sets
     public String getClient12InGameData() {

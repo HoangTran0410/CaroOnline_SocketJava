@@ -6,6 +6,7 @@
 package client.controller;
 
 import client.RunClient;
+import client.model.ChatItem;
 import client.model.PlayerInGame;
 import client.model.ProfileData;
 import client.view.scene.MainMenu;
@@ -403,11 +404,26 @@ public class SocketHandler {
     }
 
     private void onReceiveChatRoom(String received) {
-
+        String[] splitted = received.split(";");
+        ChatItem c = new ChatItem(splitted[1], splitted[2], splitted[3]);
+        RunClient.inGameScene.addChat(c);
     }
 
     private void onReceiveLeaveRoom(String received) {
+        String[] splitted = received.split(";");
+        String status = splitted[1];
 
+        if (status.equals("failed")) {
+            String failedMsg = splitted[2];
+            JOptionPane.showMessageDialog(RunClient.inGameScene, failedMsg, "Không thể thoát phòng", JOptionPane.ERROR_MESSAGE);
+
+        } else if (status.equals("success")) {
+            RunClient.closeScene(RunClient.SceneName.INGAME);
+            RunClient.openScene(RunClient.SceneName.MAINMENU);
+
+            // get list room again
+            listRoom();
+        }
     }
 
     // profile
@@ -579,6 +595,14 @@ public class SocketHandler {
     // in game
     public void dataRoom(String roomId) {
         sendData(StreamData.Type.DATA_ROOM.name() + ";" + roomId);
+    }
+
+    public void chatRoom(String chatMsg) {
+        sendData(StreamData.Type.CHAT_ROOM.name() + ";" + chatMsg);
+    }
+
+    public void leaveRoom() {
+        sendData(StreamData.Type.LEAVE_ROOM.name());
     }
 
     // profile

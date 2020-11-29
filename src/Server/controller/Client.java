@@ -87,6 +87,10 @@ public class Client implements Runnable {
                         onReceiveListRoom(received);
                         break;
 
+                    case LIST_ONLINE:
+                        onReceiveListOnline(received);
+                        break;
+
                     case CREATE_ROOM:
                         onReceiveCreateRoom(received);
                         break;
@@ -95,24 +99,8 @@ public class Client implements Runnable {
                         onReceiveJoinRoom(received);
                         break;
 
-                    case LEAVE_ROOM:
-                        onReceiveLeaveRoom(received);
-                        break;
-
-                    case CHAT_ROOM:
-                        onReceiveChatRoom(received);
-                        break;
-
-                    case GET_PROFILE:
-                        onReceiveGetProfile(received);
-                        break;
-
-                    case EDIT_PROFILE:
-                        onReceiveEditProfile(received);
-                        break;
-
-                    case CHANGE_PASSWORD:
-                        onReceiveChangePassword(received);
+                    case WATCH_ROOM:
+                        onReceiveWatchRoom(received);
                         break;
 
                     case FIND_MATCH:
@@ -132,6 +120,30 @@ public class Client implements Runnable {
                         // gửi khi ghép cặp bị đối thủ từ chối
                         // nếu ghép cặp được đồng ý thì server gửi type join-room luôn chứ ko cần gửi type này
                         // client không gửi type này cho server
+                        break;
+
+                    case DATA_ROOM:
+                        onReceiveDataRoom(received);
+                        break;
+
+                    case CHAT_ROOM:
+                        onReceiveChatRoom(received);
+                        break;
+
+                    case LEAVE_ROOM:
+                        onReceiveLeaveRoom(received);
+                        break;
+
+                    case GET_PROFILE:
+                        onReceiveGetProfile(received);
+                        break;
+
+                    case EDIT_PROFILE:
+                        onReceiveEditProfile(received);
+                        break;
+
+                    case CHANGE_PASSWORD:
+                        onReceiveChangePassword(received);
                         break;
 
                     case MOVE:
@@ -254,11 +266,19 @@ public class Client implements Runnable {
         sendData(StreamData.Type.LIST_ROOM.name() + ";" + result);
     }
 
+    private void onReceiveListOnline(String received) {
+
+    }
+
     private void onReceiveCreateRoom(String received) {
 
     }
 
     private void onReceiveJoinRoom(String received) {
+
+    }
+
+    private void onReceiveWatchRoom(String received) {
 
     }
 
@@ -351,11 +371,15 @@ public class Client implements Runnable {
     }
 
     // in game
-    private void onReceiveLeaveRoom(String received) {
+    private void onReceiveDataRoom(String received) {
 
     }
 
     private void onReceiveChatRoom(String received) {
+
+    }
+
+    private void onReceiveLeaveRoom(String received) {
 
     }
 

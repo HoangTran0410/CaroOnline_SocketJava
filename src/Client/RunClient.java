@@ -31,7 +31,7 @@ public class RunClient {
         PROFILE
     }
 
-    // các scenes
+    // scenes
     public static ConnectServer connectServerScene;
     public static Login loginScene;
     public static Signup signupScene;

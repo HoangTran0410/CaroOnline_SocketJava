@@ -128,6 +128,22 @@ public class SocketHandler {
                         onReceiveWatchRoom(received);
                         break;
 
+                    case FIND_MATCH:
+                        onReceiveFindMatch(received);
+                        break;
+
+                    case CANCEL_FIND_MATCH:
+                        onReceiveCancelFindMatch(received);
+                        break;
+
+                    case REQUEST_PAIR_MATCH:
+                        onReceiveRequestPairMatch(received);
+                        break;
+
+                    case RESULT_PAIR_MATCH:
+                        onReceiveResultPairMatch(received);
+                        break;
+
                     case DATA_ROOM:
                         onReceiveDataRoom(received);
                         break;
@@ -150,22 +166,6 @@ public class SocketHandler {
 
                     case CHANGE_PASSWORD:
                         onReceiveChangePassword(received);
-                        break;
-
-                    case FIND_MATCH:
-                        onReceiveFindMatch(received);
-                        break;
-
-                    case CANCEL_FIND_MATCH:
-                        onReceiveCancelFindMatch(received);
-                        break;
-
-                    case REQUEST_PAIR_MATCH:
-                        onReceiveRequestPairMatch(received);
-                        break;
-
-                    case RESULT_PAIR_MATCH:
-                        onReceiveResultPairMatch(received);
                         break;
 
                     case MOVE:

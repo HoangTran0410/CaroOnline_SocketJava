@@ -1,0 +1,66 @@
+
+File này note ý tưởng của Văn Hoàng
+Chủ yếu để lưu ý tưởng để t dùng chứ ko phải giải thích ý tưởng
+Nên đọc không hiểu thì thôi nhé :))
+
+
+https://www.geeksforgeeks.org/multi-threaded-chat-application-set-1/
+https://viblo.asia/p/gioi-thieu-uuid-trong-java-ORNZq4B3K0n
+
+
+
+Server:
++ Main Thread
+  - ListRoomsController Thread
+    - RoomController
+      - Players
+      - Watchers
+      - Chat Thread
+      - Broadcast method
+  - ClientHandler
+     
+  - ClientConnectListener Thread
+
+Client:
++ Room (InGame)
+  - GameBoard: Khung chứa các thứ thuộc về game đang chơi
+     - Bàn caro 
+     - Chức năng
+     - Lượt, thời gian
+  - PlayersBoard: Khung chứa thông tin người chơi và người xem trong room
+  => Tách riêng GameBoard và PlayersBoard 
+     để có sau này có thể chọn game để chơi cho Room
+     PlayerBoard giữ nguyên, chỉ có GameBoard là được đổi qua game khác.
+
++ Dashboard
++ Profile
+
+=== Chat ====
+while (in.readLine() != -1) => Lấy tất cả data có trong socket buffer
+
+
+=== cấu trúc ===
+Main
+ - Room
+   - hashmap ClientHandler
+   - CaroLogic extends Game
+ - 
+
+
+======================================
+socket:
++ type: 
+	- chung: exit, 
+	- client->server: login, logout, signup
+	- server->client: login_result, logout_result, signup_result
++ data
+
+=======================================
+game events:
+{
+	type: Type.GAME_EVENT,
+	game_event: UNDO, NEWGAME, CLICK, SURRENDER,
+
+	x: 4,
+	y: 5
+}

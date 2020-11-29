@@ -58,6 +58,10 @@ public class StreamData {
         NEW_GAME, // chức năng tạo game mới / không cần dữ liệu thêm / nếu game chưa end thì gửi request accept tới đối thủ
         NEW_GAME_ACCEPT, // chức năng đồng ý tạo game mới / đồng ý hay không / gửi result broadcast làm mới trận
         WIN, // chỉ có server mới gửi type này cho client
+        TURN_TICK,
+        MATCH_TICK,
+        MATCH_TIMER_END, // hết giờ / server gửi tới client
+        TURN_TIMER_END, // hết thời gian turn / server gửi tới client
 
         // specific
         UNKNOW_TYPE, // khi client gửi type không xác định

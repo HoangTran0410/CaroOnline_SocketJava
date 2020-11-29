@@ -6,6 +6,13 @@
 package server.game.caro;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import shared.helper.Line;
 import shared.helper.Point;
 import server.game.GameLogic;
@@ -17,20 +24,28 @@ import server.game.GameLogic;
 public class Caro extends GameLogic {
 
     final int ROW = 16, COL = 16;
+    final int TURN_TIME_LIMIT = 15, MATCH_TIME_LIMIT = 10 * 60;
 
     ArrayList<History> history;
     History preMove;
     String[][] board;
 
+    CountDownTimer turnTimer;
+    CountDownTimer matchTimer;
+
     public Caro() {
-        reset();
+        init();
     }
 
-    public void reset() {
+    public void init() {
+        turnTimer = new CountDownTimer(TURN_TIME_LIMIT);
+        matchTimer = new CountDownTimer(MATCH_TIME_LIMIT);
+
+        board = new String[ROW][COL];
         history = new ArrayList<>();
         preMove = null;
-        board = new String[ROW][COL];
 
+        // init board
         for (int i = 0; i < ROW; i++) {
             for (int j = 0; j < COL; j++) {
                 board[i][j] = " ";
@@ -38,7 +53,17 @@ public class Caro extends GameLogic {
         }
     }
 
-    private void addHistory(int row, int col, String playerId) {
+    public void cancelTimer() {
+        if (turnTimer != null) {
+            turnTimer.cancel();
+        }
+
+        if (matchTimer != null) {
+            matchTimer.cancel();
+        }
+    }
+
+    public void addHistory(int row, int col, String playerId) {
         History newHis = new History(row, col, playerId);
         history.add(newHis);
         preMove = newHis;
@@ -155,5 +180,13 @@ public class Caro extends GameLogic {
         }
 
         return null;
+    }
+
+    public CountDownTimer getTurnTimer() {
+        return turnTimer;
+    }
+
+    public CountDownTimer getMatchTimer() {
+        return matchTimer;
     }
 }

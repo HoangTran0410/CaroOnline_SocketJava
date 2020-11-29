@@ -65,6 +65,7 @@ public class MainMenu extends javax.swing.JFrame {
         acceptPairMatchTimer.scheduleAtFixedRate(new TimerTask() {
             int i = acceptWaitingTime;
 
+            @Override
             public void run() {
                 i--;
                 if (i < 0) {

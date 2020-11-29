@@ -517,6 +517,10 @@ public class SocketHandler {
                 String winEmail = splitted[2];
                 RunClient.inGameScene.setWin(winEmail);
                 break;
+
+            case TURN_TICK:
+
+                break;
         }
     }
 

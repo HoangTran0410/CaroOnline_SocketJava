@@ -8,6 +8,8 @@ package server.controller;
 import server.game.caro.Caro;
 import server.game.GameLogic;
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
+import shared.constant.StreamData;
 
 /**
  *
@@ -16,7 +18,7 @@ import java.util.ArrayList;
 public class Room {
 
     String id;
-    GameLogic gamelogic;
+    Caro gamelogic;
     Client client1 = null, client2 = null; // TODO: tách người chơi và người xem
     ArrayList<Client> clients = new ArrayList<>();
 
@@ -26,6 +28,42 @@ public class Room {
 
         // create game logic
         gamelogic = new Caro();
+    }
+
+    public void startGame() {
+        gamelogic.getTurnTimer()
+                .setTimerCallBack(
+                        // end turn callback
+                        (Callable) () -> {
+                            broadcast(StreamData.Type.TURN_TIMER_END.name());
+                            return null;
+                        },
+                        // tick turn callback
+                        (Callable) () -> {
+                            broadcast(
+                                    StreamData.Type.TURN_TICK.name() + ";"
+                                    + gamelogic.getTurnTimer().getCurrentTick()
+                            );
+                            return null;
+                        }
+                );
+
+        gamelogic.getMatchTimer()
+                .setTimerCallBack(
+                        // end match callback
+                        (Callable) () -> {
+                            broadcast(StreamData.Type.MATCH_TIMER_END.name());
+                            return null;
+                        },
+                        // tick match callback
+                        (Callable) () -> {
+                            broadcast(
+                                    StreamData.Type.MATCH_TICK.name() + ";"
+                                    + gamelogic.getMatchTimer().getCurrentTick()
+                            );
+                            return null;
+                        }
+                );
     }
 
     // add/remove client
@@ -58,7 +96,7 @@ public class Room {
             c.sendData(msg);
         });
     }
-    
+
     public void close() {
         // TODO code here
     }
@@ -85,7 +123,7 @@ public class Room {
         return gamelogic;
     }
 
-    public void setGamelogic(GameLogic gamelogic) {
+    public void setGamelogic(Caro gamelogic) {
         this.gamelogic = gamelogic;
     }
 

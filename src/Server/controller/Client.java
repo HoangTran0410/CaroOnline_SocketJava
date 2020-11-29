@@ -533,6 +533,9 @@ public class Client implements Runnable {
                                 + StreamData.Type.WIN + ";"
                                 + loginPlayer.getEmail();
 
+                        // stop game timer
+                        caroGame.cancelTimer();
+
                         // broadcast to all client in room
                         joinedRoom.broadcast(winData);
                     }

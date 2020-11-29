@@ -14,6 +14,8 @@ import java.awt.event.ActionEvent;
 import shared.constant.Avatar;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -36,8 +38,10 @@ public class InGame extends javax.swing.JFrame {
 
     // https://codelearn.io/sharing/lam-game-caro-don-gian-bang-java
     final int COLUMN = 16, ROW = 16;
+    final int turnTimeLimit = 20;
     JButton btnOnBoard[][];
     JButton lastMove = null;
+    Timer turnTimer;
 
     /**
      * Creates new form InGame
@@ -115,6 +119,20 @@ public class InGame extends javax.swing.JFrame {
             }
             JOptionPane.showMessageDialog(this, "Người chơi " + nameId + " đã thắng", "Kết quả", JOptionPane.INFORMATION_MESSAGE);
         }
+    }
+
+    public void restartTurnTimer() {
+        turnTimer.scheduleAtFixedRate(new TimerTask() {
+            int i = turnTimeLimit;
+
+            public void run() {
+                i--;
+                if (i < 0) {
+
+                }
+                pgbTurnTimer.setValue(i / turnTimeLimit);
+            }
+        }, 0, 1000);
     }
 
     // change turn sang cho email đầu vào

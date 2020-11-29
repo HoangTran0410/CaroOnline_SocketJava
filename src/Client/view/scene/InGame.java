@@ -8,7 +8,6 @@ package client.view.scene;
 import client.RunClient;
 import client.model.ChatItem;
 import client.model.PlayerInGame;
-import client.view.helper.ChatCellRenderer;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -47,11 +46,6 @@ public class InGame extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
 
-        // jlist chat
-        chatModel = new DefaultListModel<>();
-        lChatContainer.setModel(chatModel);
-        lChatContainer.setCellRenderer(new ChatCellRenderer(230));
-
         // list players (player + viewer)
         listPlayers = new ArrayList<>();
 
@@ -59,7 +53,7 @@ public class InGame extends javax.swing.JFrame {
         plBoardContainer.setLayout(new GridLayout(ROW, COLUMN));
         initBoard();
 
-        // close event
+        // close window event
         this.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
@@ -193,7 +187,7 @@ public class InGame extends javax.swing.JFrame {
         RunClient.socketHandler.move(row, column);
     }
 
-    private JButton createBoardButton(int row, int column) {
+    public JButton createBoardButton(int row, int column) {
         JButton b = new JButton();
         b.setFocusPainted(false);
         b.setBackground(new Color(180, 180, 180));
@@ -234,11 +228,7 @@ public class InGame extends javax.swing.JFrame {
     }
 
     public void addChat(ChatItem c) {
-        chatModel.addElement(c);
-
-        // scroll into view
-        lChatContainer.ensureIndexIsVisible(lChatContainer.getModel().getSize() - 1);
-        lChatContainer.repaint();
+        txaChat.setText(txaChat.getText() + "\n" + c.toString());
     }
 
     /**
@@ -273,11 +263,11 @@ public class InGame extends javax.swing.JFrame {
         pgbMatchTimer = new javax.swing.JProgressBar();
         tpChatAndViewerContainer = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        lChatContainer = new javax.swing.JList<>();
         jPanel7 = new javax.swing.JPanel();
         txChatInput = new javax.swing.JTextField();
         btnSendMessage = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        txaChat = new javax.swing.JTextArea();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
@@ -477,13 +467,6 @@ public class InGame extends javax.swing.JFrame {
                 .addComponent(plTimer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        lChatContainer.setFont(new java.awt.Font("Consolas", 0, 14)); // NOI18N
-        lChatContainer.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        lChatContainer.setOpaque(false);
-        lChatContainer.setSelectionBackground(new java.awt.Color(255, 255, 255));
-        lChatContainer.setSelectionForeground(new java.awt.Color(51, 51, 51));
-        jScrollPane1.setViewportView(lChatContainer);
-
         txChatInput.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txChatInputKeyPressed(evt);
@@ -506,7 +489,7 @@ public class InGame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(txChatInput, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSendMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnSendMessage, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
@@ -519,21 +502,26 @@ public class InGame extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        txaChat.setEditable(false);
+        txaChat.setColumns(20);
+        txaChat.setRows(5);
+        jScrollPane3.setViewportView(txaChat);
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
+                .addComponent(jScrollPane3)
                 .addContainerGap())
-            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -692,9 +680,8 @@ public class InGame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JList<ChatItem> lChatContainer;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lbActive1;
     private javax.swing.JLabel lbActive2;
     private javax.swing.JLabel lbAvatar1;
@@ -712,5 +699,6 @@ public class InGame extends javax.swing.JFrame {
     private javax.swing.JPanel plToolContainer;
     private javax.swing.JTabbedPane tpChatAndViewerContainer;
     private javax.swing.JTextField txChatInput;
+    private javax.swing.JTextArea txaChat;
     // End of variables declaration//GEN-END:variables
 }

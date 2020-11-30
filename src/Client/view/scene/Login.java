@@ -83,14 +83,11 @@ public class Login extends javax.swing.JFrame {
         jLabel1.setText("Email");
 
         txEmail.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        txEmail.setText("99.hoangtran@gmail.com");
         txEmail.setToolTipText("Email");
 
         jLabel2.setText("Mật khẩu");
 
         lbPassword.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_password_48px.png"))); // NOI18N
-
-        txPassword.setText("123456");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

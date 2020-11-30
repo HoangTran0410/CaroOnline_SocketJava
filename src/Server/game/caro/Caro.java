@@ -5,14 +5,8 @@
  */
 package server.game.caro;
 
+import shared.helper.CountDownTimer;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import shared.helper.Line;
 import shared.helper.Point;
 import server.game.GameLogic;
@@ -23,8 +17,8 @@ import server.game.GameLogic;
  */
 public class Caro extends GameLogic {
 
-    final int ROW = 16, COL = 16;
-    final int TURN_TIME_LIMIT = 15, MATCH_TIME_LIMIT = 10 * 60;
+    public static final int ROW = 16, COL = 16;
+    public static final int TURN_TIME_LIMIT = 30, MATCH_TIME_LIMIT = 10 * 60;
 
     ArrayList<History> history;
     History preMove;
@@ -53,6 +47,20 @@ public class Caro extends GameLogic {
         }
     }
 
+    public void restartTurnTimer() {
+        turnTimer.restart();
+    }
+
+    public void resumeTimer() {
+        turnTimer.resume();
+        matchTimer.resume();
+    }
+
+    public void pauseTimer() {
+        turnTimer.pause();
+        matchTimer.pause();
+    }
+
     public void cancelTimer() {
         if (turnTimer != null) {
             turnTimer.cancel();
@@ -63,15 +71,15 @@ public class Caro extends GameLogic {
         }
     }
 
-    public void addHistory(int row, int col, String playerId) {
-        History newHis = new History(row, col, playerId);
+    public void addHistory(int row, int col, String playerEmail) {
+        History newHis = new History(row, col, playerEmail);
         history.add(newHis);
         preMove = newHis;
     }
 
-    public boolean move(int row, int col, String playerId) {
+    public boolean move(int row, int col, String playerEmail) {
         // nếu người này đã đánh trước đó thì không cho đánh nữa
-        if (preMove != null && preMove.getPlayerId().equals(playerId)) {
+        if (preMove != null && preMove.getPlayerEmail().equals(playerEmail)) {
             return false;
         }
 
@@ -85,8 +93,8 @@ public class Caro extends GameLogic {
             return false;
         }
 
-        board[row][col] = playerId;
-        addHistory(row, col, playerId);
+        board[row][col] = playerEmail;
+        addHistory(row, col, playerEmail);
         return true;
     }
 
@@ -188,5 +196,17 @@ public class Caro extends GameLogic {
 
     public CountDownTimer getMatchTimer() {
         return matchTimer;
+    }
+
+    public String getLastMoveEmail() {
+        return history.get(history.size() - 1).getPlayerEmail();
+    }
+
+    public int getProgressTurnTimeValue() {
+        return 100 * turnTimer.getCurrentTick() / TURN_TIME_LIMIT;
+    }
+
+    public int getProgressMatchTimeValue() {
+        return 100 * matchTimer.getCurrentTick() / MATCH_TIME_LIMIT;
     }
 }

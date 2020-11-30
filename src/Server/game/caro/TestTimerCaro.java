@@ -30,7 +30,7 @@ public class TestTimerCaro {
             throw new Exception();
         };
 
-        caro.getTurnTimer().setTimerCallBack(endCallback, tickCallback);
+        caro.getTurnTimer().setTimerCallBack(endCallback, tickCallback, 1);
 
         //  thằng caro làm việc shutdown chương trình trở nên khó khăn...
         // chưa biết cách tắt thread do thằng caro callable tạo ra

@@ -396,15 +396,15 @@
                 </Component>
                 <Component class="javax.swing.JProgressBar" name="pgbTurnTimer">
                   <Properties>
-                    <Property name="value" type="int" value="40"/>
-                    <Property name="string" type="java.lang.String" value="00:20"/>
+                    <Property name="value" type="int" value="100"/>
+                    <Property name="string" type="java.lang.String" value="&#x110;ang &#x111;&#x1ee3;i n&#x1b0;&#x1edb;c &#x111;i &#x111;&#x1ea7;u ti&#xea;n.."/>
                     <Property name="stringPainted" type="boolean" value="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JProgressBar" name="pgbMatchTimer">
                   <Properties>
-                    <Property name="value" type="int" value="75"/>
-                    <Property name="string" type="java.lang.String" value="08:50"/>
+                    <Property name="value" type="int" value="100"/>
+                    <Property name="string" type="java.lang.String" value="&#x110;ang &#x111;&#x1ee3;i n&#x1b0;&#x1edb;c &#x111;i &#x111;&#x1ea7;u ti&#xea;n.."/>
                     <Property name="stringPainted" type="boolean" value="true"/>
                   </Properties>
                 </Component>

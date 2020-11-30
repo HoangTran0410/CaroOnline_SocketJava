@@ -15,12 +15,13 @@ import shared.constant.Avatar;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Timer;
-import java.util.TimerTask;
-import javax.swing.DefaultListModel;
+import java.util.concurrent.Callable;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.text.DefaultCaret;
+import shared.helper.CountDownTimer;
+import shared.helper.CustumDateTimeFormatter;
 
 /**
  *
@@ -28,21 +29,22 @@ import javax.swing.text.DefaultCaret;
  */
 public class InGame extends javax.swing.JFrame {
 
-    DefaultListModel<ChatItem> chatModel;
-    ArrayList<PlayerInGame> listPlayers;
-    PlayerInGame player1;
-    PlayerInGame player2;
-    int turn = 0;
-
     final ImageIcon p1Icon = new ImageIcon(Avatar.ASSET_PATH + "icons8_round_24px.png");
     final ImageIcon p2Icon = new ImageIcon(Avatar.ASSET_PATH + "icons8_delete_24px_1.png");
 
     // https://codelearn.io/sharing/lam-game-caro-don-gian-bang-java
     final int COLUMN = 16, ROW = 16;
-    final int turnTimeLimit = 20;
+
+    ArrayList<PlayerInGame> listPlayers;
+    PlayerInGame player1;
+    PlayerInGame player2;
+    int turn = 0;
+
     JButton btnOnBoard[][];
     JButton lastMove = null;
-    Timer turnTimer;
+
+    CountDownTimer turnTimer;
+    CountDownTimer matchTimer;
 
     /**
      * Creates new form InGame
@@ -103,6 +105,17 @@ public class InGame extends javax.swing.JFrame {
     }
 
     public void setWin(String winEmail) {
+        // pause timer
+        matchTimer.pause();
+        turnTimer.pause();
+
+        // tie
+        if (winEmail == null) {
+            JOptionPane.showMessageDialog(this, "Trận đấu kết thúc với tỉ số HÒA.", "HÒA", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        // get myEmail
         String myEmail = RunClient.socketHandler.getLoginEmail();
 
         if (winEmail.equals(myEmail)) {
@@ -125,23 +138,48 @@ public class InGame extends javax.swing.JFrame {
         }
     }
 
-    public void restartTurnTimer() {
-        turnTimer.scheduleAtFixedRate(new TimerTask() {
-            int i = turnTimeLimit;
+    public void startGame(int turnTimeLimit, int matchTimeLimit) {
+        turnTimer = new CountDownTimer(turnTimeLimit);
+        turnTimer.setTimerCallBack(
+                // end match callback
+                null,
+                // tick match callback
+                (Callable) () -> {
+                    pgbTurnTimer.setValue(100 * turnTimer.getCurrentTick() / turnTimer.getTimeLimit());
+                    pgbTurnTimer.setString(CustumDateTimeFormatter.secondsToMinutes(turnTimer.getCurrentTick()));
+                    return null;
+                },
+                // tick interval
+                1
+        );
 
-            public void run() {
-                i--;
-                if (i < 0) {
+        matchTimer = new CountDownTimer(matchTimeLimit);
+        matchTimer.setTimerCallBack(
+                // end match callback
+                null,
+                // tick match callback
+                (Callable) () -> {
+                    pgbMatchTimer.setValue(100 * matchTimer.getCurrentTick() / matchTimer.getTimeLimit());
+                    pgbMatchTimer.setString("" + CustumDateTimeFormatter.secondsToMinutes(matchTimer.getCurrentTick()));
+                    return null;
+                },
+                // tick interval
+                1
+        );
+    }
 
-                }
-                pgbTurnTimer.setValue(i / turnTimeLimit);
-            }
-        }, 0, 1000);
+    public void setProgressTurnTime(int percent, int value) {
+        turnTimer.setCurrentTick(value);
+    }
+
+    public void setProgressMatchTime(int percent, int value) {
+        matchTimer.setCurrentTick(value);
     }
 
     // change turn sang cho email đầu vào
     public void setTurn(String email) {
         if (player1.getEmail().equals(email)) {
+            turnTimer.restart();
             turn = 1;
             lbActive1.setVisible(true);
             lbActive2.setVisible(false);
@@ -150,6 +188,7 @@ public class InGame extends javax.swing.JFrame {
         }
 
         if (player2.getEmail().equals(email)) {
+            turnTimer.restart();
             turn = 2;
             lbActive1.setVisible(false);
             lbActive2.setVisible(true);
@@ -437,12 +476,12 @@ public class InGame extends javax.swing.JFrame {
 
         jLabel5.setText("Trận đấu");
 
-        pgbTurnTimer.setValue(40);
-        pgbTurnTimer.setString("00:20");
+        pgbTurnTimer.setValue(100);
+        pgbTurnTimer.setString("Đang đợi nước đi đầu tiên..");
         pgbTurnTimer.setStringPainted(true);
 
-        pgbMatchTimer.setValue(75);
-        pgbMatchTimer.setString("08:50");
+        pgbMatchTimer.setValue(100);
+        pgbMatchTimer.setString("Đang đợi nước đi đầu tiên..");
         pgbMatchTimer.setStringPainted(true);
 
         javax.swing.GroupLayout plTimerLayout = new javax.swing.GroupLayout(plTimer);

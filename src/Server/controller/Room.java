@@ -19,8 +19,9 @@ public class Room {
 
     String id;
     Caro gamelogic;
-    Client client1 = null, client2 = null; // TODO: tách người chơi và người xem
+    Client client1 = null, client2 = null;
     ArrayList<Client> clients = new ArrayList<>();
+    boolean gameStarted = false;
 
     public Room(String id) {
         // room id
@@ -30,39 +31,60 @@ public class Room {
         gamelogic = new Caro();
     }
 
+    public boolean isGameStarted() {
+        return gameStarted;
+    }
+
     public void startGame() {
+        gameStarted = true;
         gamelogic.getTurnTimer()
                 .setTimerCallBack(
                         // end turn callback
                         (Callable) () -> {
-                            broadcast(StreamData.Type.TURN_TIMER_END.name());
+                            // TURN_TIMER_END;<winner-email>
+                            broadcast(
+                                    StreamData.Type.GAME_EVENT + ";"
+                                    + StreamData.Type.TURN_TIMER_END.name() + ";"
+                                    + gamelogic.getLastMoveEmail()
+                            );
                             return null;
                         },
                         // tick turn callback
                         (Callable) () -> {
                             broadcast(
-                                    StreamData.Type.TURN_TICK.name() + ";"
+                                    StreamData.Type.GAME_EVENT + ";"
+                                    + StreamData.Type.TURN_TICK.name() + ";"
+                                    + gamelogic.getProgressTurnTimeValue() + ";"
                                     + gamelogic.getTurnTimer().getCurrentTick()
                             );
                             return null;
-                        }
+                        },
+                        // tick interval
+                        Caro.TURN_TIME_LIMIT / 10
                 );
 
         gamelogic.getMatchTimer()
                 .setTimerCallBack(
                         // end match callback
                         (Callable) () -> {
-                            broadcast(StreamData.Type.MATCH_TIMER_END.name());
+                            broadcast(
+                                    StreamData.Type.GAME_EVENT + ";"
+                                    + StreamData.Type.MATCH_TIMER_END.name()
+                            );
                             return null;
                         },
                         // tick match callback
                         (Callable) () -> {
                             broadcast(
-                                    StreamData.Type.MATCH_TICK.name() + ";"
+                                    StreamData.Type.GAME_EVENT + ";"
+                                    + StreamData.Type.MATCH_TICK.name() + ";"
+                                    + gamelogic.getProgressMatchTimeValue() + ";"
                                     + gamelogic.getMatchTimer().getCurrentTick()
                             );
                             return null;
-                        }
+                        },
+                        // tick interval
+                        Caro.MATCH_TIME_LIMIT / 10
                 );
     }
 

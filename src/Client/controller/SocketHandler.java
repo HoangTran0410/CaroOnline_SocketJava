@@ -10,7 +10,7 @@ import client.model.ChatItem;
 import client.model.PlayerInGame;
 import client.model.ProfileData;
 import client.view.scene.MainMenu;
-import shared.helper.Util;
+import shared.helper.MyHash;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -89,6 +89,8 @@ public class SocketHandler {
                 if (aes != null) {
                     received = aes.decrypt(received);
                 }
+
+                System.out.println("RECEIVED: " + received);
 
                 // process received data
                 StreamData.Type type = StreamData.getTypeFromData(received);
@@ -504,6 +506,13 @@ public class SocketHandler {
         StreamData.Type gameEventType = StreamData.getType(splitted[1]);
 
         switch (gameEventType) {
+            case START:
+                int turnTimeLimit = Integer.parseInt(splitted[2]);
+                int matchTimeLimit = Integer.parseInt(splitted[3]);
+
+                RunClient.inGameScene.startGame(turnTimeLimit, matchTimeLimit);
+                break;
+
             case MOVE:
                 int row = Integer.parseInt(splitted[2]);
                 int column = Integer.parseInt(splitted[3]);
@@ -519,7 +528,24 @@ public class SocketHandler {
                 break;
 
             case TURN_TICK:
+                int turnPercent = Integer.parseInt(splitted[2]);
+                int turnValue = Integer.parseInt(splitted[3]);
+                RunClient.inGameScene.setProgressTurnTime(turnPercent, turnValue);
+                break;
 
+            case TURN_TIMER_END:
+                String winnerEmail = splitted[2];
+                RunClient.inGameScene.setWin(winnerEmail);
+                break;
+
+            case MATCH_TICK:
+                int matchPercent = Integer.parseInt(splitted[2]);
+                int matchValue = Integer.parseInt(splitted[3]);
+                RunClient.inGameScene.setProgressMatchTime(matchPercent, matchValue);
+                break;
+
+            case MATCH_TIMER_END:
+                RunClient.inGameScene.setWin(null);
                 break;
         }
     }
@@ -543,7 +569,7 @@ public class SocketHandler {
 
     public void login(String email, String password) {
         // hasing password
-        String passwordHash = Util.hash(password);
+        String passwordHash = MyHash.hash(password);
 
         // prepare data
         String data = StreamData.Type.LOGIN.name() + ";" + email + ";" + passwordHash;
@@ -556,7 +582,7 @@ public class SocketHandler {
         // prepare data
         String data = StreamData.Type.SIGNUP.name() + ";"
                 + email + ";"
-                + Util.hash(password) + ";"
+                + MyHash.hash(password) + ";"
                 + avatar + ";"
                 + name + ";"
                 + gender + ";"
@@ -612,8 +638,8 @@ public class SocketHandler {
     // profile
     public void changePassword(String oldPassword, String newPassword) {
         // hasing password
-        String oldPasswordHash = Util.hash(oldPassword);
-        String newPasswordHash = Util.hash(newPassword);
+        String oldPasswordHash = MyHash.hash(oldPassword);
+        String newPasswordHash = MyHash.hash(newPassword);
 
         // prepare data
         String data = StreamData.Type.CHANGE_PASSWORD.name() + ";" + oldPasswordHash + ";" + newPasswordHash;

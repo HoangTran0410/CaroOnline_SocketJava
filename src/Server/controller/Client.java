@@ -511,33 +511,47 @@ public class Client implements Runnable {
 
         switch (gameEventType) {
             case MOVE:
+                // lượt đi đầu tiên sẽ bắt đầu game
+                if (!joinedRoom.isGameStarted()) {
+                    joinedRoom.startGame();
+                    joinedRoom.broadcast(
+                            StreamData.Type.GAME_EVENT + ";"
+                            + StreamData.Type.START + ";"
+                            + Caro.TURN_TIME_LIMIT + ";"
+                            + Caro.MATCH_TIME_LIMIT
+                    );
+                }
+
+                // get row/col data
                 int row = Integer.parseInt(splitted[2]);
                 int column = Integer.parseInt(splitted[3]);
 
+                // check move
                 if (caroGame.move(row, column, loginPlayer.getEmail())) {
-                    String moveData
-                            = StreamData.Type.GAME_EVENT + ";"
+                    // restart turn timer
+                    joinedRoom.gamelogic.restartTurnTimer();
+
+                    // broadcast to all client in room movedata
+                    joinedRoom.broadcast(
+                            StreamData.Type.GAME_EVENT + ";"
                             + StreamData.Type.MOVE + ";"
                             + row + ";"
                             + column + ";"
-                            + loginPlayer.getEmail();
-
-                    // broadcast to all client in room
-                    joinedRoom.broadcast(moveData);
+                            + loginPlayer.getEmail()
+                    );
 
                     // check win
                     Line winPath = caroGame.CheckWin(row, column);
                     if (winPath != null) {
-                        String winData
-                                = StreamData.Type.GAME_EVENT + ";"
-                                + StreamData.Type.WIN + ";"
-                                + loginPlayer.getEmail();
-
                         // stop game timer
                         caroGame.cancelTimer();
 
-                        // broadcast to all client in room
-                        joinedRoom.broadcast(winData);
+                        // broadcast to all client in room windata
+                        joinedRoom.broadcast(
+                                StreamData.Type.GAME_EVENT + ";"
+                                + StreamData.Type.WIN + ";"
+                                + loginPlayer.getEmail()
+                        );
                     }
                 } else {
                     // do nothing
@@ -548,6 +562,17 @@ public class Client implements Runnable {
             case UNDO_ACCEPT:
             case NEW_GAME:
             case NEW_GAME_ACCEPT:
+            case SURRENDER:
+                // stop game timer
+                caroGame.cancelTimer();
+
+                // broadcast to all client in room windata
+                joinedRoom.broadcast(
+                        StreamData.Type.GAME_EVENT + ";"
+                        + StreamData.Type.SURRENDER + ";"
+                        + loginPlayer.getEmail()
+                );
+                break;
         }
     }
 

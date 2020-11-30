@@ -52,11 +52,13 @@ public class StreamData {
         GAME_EVENT, //
 
         // caro game
+        START, // chức năng bắt đầu game (khi 1 trong 2 người chơi bắt đầu move) / server gửi broadcast tới room
         MOVE, // chức năng đánh caro tại 1 ô / vị trí ô / success thì broadcast vị trí ô cho mọi người trong phòng, failed khi vị trí không hợp lệ
         UNDO, // chức năng đánh lại / không cần dữ liệu thêm / gửi request broadcast (cho mọi người biết là muốn đánh lại, kể cả viewer)
         UNDO_ACCEPT, // chắc năng đồng ý đánh lại / đồng ý hay không / gửi result broadcast (cho mọi người biết người chơi có đồng ý cho đánh lại hay không)
         NEW_GAME, // chức năng tạo game mới / không cần dữ liệu thêm / nếu game chưa end thì gửi request accept tới đối thủ
         NEW_GAME_ACCEPT, // chức năng đồng ý tạo game mới / đồng ý hay không / gửi result broadcast làm mới trận
+        SURRENDER, // chức năng đầu hàng / không có dữ liệu thêm / gửi broadcast
         WIN, // chỉ có server mới gửi type này cho client
         TURN_TICK,
         MATCH_TICK,

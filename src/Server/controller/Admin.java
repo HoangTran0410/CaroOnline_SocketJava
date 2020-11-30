@@ -32,28 +32,31 @@ public class Admin implements Runnable {
         while (!RunServer.isShutDown) {
             System.out.print("AdminCommand> ");
             inp = s.nextLine();
+            try {
+                if (inp.equalsIgnoreCase("user-count")) {
+                    System.out.println("> " + RunServer.clientManager.getSize());
+                } else if (inp.equalsIgnoreCase("best-user")) {
+                    showBestPlayerInfo(getBestUser());
+                } else if (inp.equalsIgnoreCase("shortest-match")) {
+                    showShortestMatch(getShortestMatch());
+                } else if (inp.indexOf("block") == 0) {
+                    System.out.println(blockUser(inp.split(" ")[1]));
+                } else if (inp.indexOf("log") == 0) {
+                    showGameMatchDetails(inp.split(" ")[1]);
+                } else if (inp.equalsIgnoreCase("room-count")) {
+                    System.out.println("> " + RunServer.roomManager.getSize());
+                } else if (inp.equalsIgnoreCase("shutdown")) {
+                    System.out.println("shuting down...");
+                    RunServer.isShutDown = true;
 
-            if (inp.equalsIgnoreCase("user-count")) {
-                System.out.println("> " + RunServer.clientManager.getSize());
-            } else if (inp.equalsIgnoreCase("best-user")) {
-                showBestPlayerInfo(getBestUser());
-            } else if (inp.equalsIgnoreCase("shortest-match")) {
-                showShortestMatch(getShortestMatch());
-            } else if (inp.indexOf("block") == 0) {
-                System.out.println(blockUser(inp.split(" ")[1]));
-            } else if (inp.indexOf("log") == 0) {
-                showGameMatchDetails(inp.split(" ")[1]);
-            } else if (inp.equalsIgnoreCase("room-count")) {
-                System.out.println("> " + RunServer.roomManager.getSize());
-            } else if (inp.equalsIgnoreCase("shutdown")) {
-                System.out.println("shuting down...");
-                RunServer.isShutDown = true;
-
-                try {
-                    RunServer.ss.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
+                    try {
+                        RunServer.ss.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
+            }catch(ArrayIndexOutOfBoundsException e){
+                System.out.println("Thiếu tham số !!!");
             }
 
             if (inp.equalsIgnoreCase("help")) {

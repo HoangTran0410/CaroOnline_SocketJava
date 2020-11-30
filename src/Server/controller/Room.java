@@ -5,11 +5,15 @@
  */
 package server.controller;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import server.game.caro.Caro;
 import server.game.GameLogic;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 import server.RunServer;
+import server.db.layers.BUS.GameMatchBUS;
+import server.db.layers.DTO.GameMatch;
 import server.game.caro.History;
 import shared.constant.StreamData;
 
@@ -25,6 +29,8 @@ public class Room {
     ArrayList<Client> clients = new ArrayList<>();
     boolean gameStarted = false;
 
+    public LocalDateTime startedTime;
+
     public Room(String id) {
         // room id
         this.id = id;
@@ -38,6 +44,7 @@ public class Room {
     }
 
     public void startGame() {
+        startedTime = LocalDateTime.now();
         gameStarted = true;
         gamelogic.getTurnTimer()
                 .setTimerCallBack(
@@ -68,6 +75,17 @@ public class Room {
                 .setTimerCallBack(
                         // end match callback
                         (Callable) () -> {
+
+                            // tinh diem hoa
+                            new GameMatchBUS().add(new GameMatch(
+                                    client1.getLoginPlayer().getId(),
+                                    client1.getLoginPlayer().getId(),
+                                    -1,
+                                    gamelogic.getMatchTimer().getCurrentTick(),
+                                    gamelogic.getHistory().size(),
+                                    startedTime
+                            ));
+
                             broadcast(
                                     StreamData.Type.GAME_EVENT + ";"
                                     + StreamData.Type.MATCH_TIMER_END.name()

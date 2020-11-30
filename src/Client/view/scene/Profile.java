@@ -10,6 +10,7 @@ import client.model.ProfileData;
 import client.view.helper.Validation;
 import java.util.HashMap;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import shared.constant.Avatar;
@@ -569,9 +570,6 @@ public class Profile extends javax.swing.JFrame {
     }//GEN-LAST:event_btnProfileChangePassActionPerformed
 
     private void btnProfileSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProfileSaveActionPerformed
-        // loading
-        setProfileSaveLoading(true);
-
         // get data from form
         String email = txEmail.getText();
         String name = txName.getText();
@@ -580,6 +578,36 @@ public class Profile extends javax.swing.JFrame {
         String gender = cbGender.getSelectedItem().toString();
 
         // TODO validate data
+        if (!Validation.checkEmail(email)) {
+            JOptionPane.showMessageDialog(this, "Email không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            txEmail.requestFocus();
+            return;
+        }
+
+        if (!Validation.checkName(name)) {
+            JOptionPane.showMessageDialog(this, "Tên là tiếng việt không dấu và"
+                    + " không quá 15 ký tự", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            txName.requestFocus();
+            return;
+        }
+
+        int year;
+        try {
+            year = Integer.parseInt(yearOfBirth);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Năm sinh phải là số", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (!Validation.checkYearOfBirth(year)) {
+            JOptionPane.showMessageDialog(this, "Chưa sinh ra hoặc quá 100 tuổi vui lòng đừng chơi!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            txYearOfBirth.requestFocus();
+            return;
+        }
+
+        // loading
+        setProfileSaveLoading(true);
+
         // call sockethandler function
         RunClient.socketHandler.editProfile(email, name, avatar, yearOfBirth, gender);
     }//GEN-LAST:event_btnProfileSaveActionPerformed

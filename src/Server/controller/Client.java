@@ -9,11 +9,14 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import server.RunServer;
+import server.db.layers.BUS.GameMatchBUS;
 import server.db.layers.BUS.PlayerBUS;
+import server.db.layers.DTO.GameMatch;
 import server.db.layers.DTO.Player;
 import server.game.caro.Caro;
 import shared.constant.Code;
@@ -54,7 +57,7 @@ public class Client implements Runnable {
         String received;
         boolean running = true;
 
-        while (running) {
+        while (!RunServer.isShutDown) {
             try {
                 // receive the request from client
                 received = dis.readUTF();
@@ -210,8 +213,10 @@ public class Client implements Runnable {
         // check login
         String result = new PlayerBUS().checkLogin(email, password);
 
-        // set login email
-        this.loginPlayer = new PlayerBUS().getByEmail(email);
+        if (result.split(";")[0].equals("success")) {
+            // set login email
+            this.loginPlayer = new PlayerBUS().getByEmail(email);
+        }
 
         // send result
         sendData(StreamData.Type.LOGIN.name() + ";" + result);
@@ -347,6 +352,11 @@ public class Client implements Runnable {
 
         // if once say no
         if (requestResult.equals("no")) {
+            // TODO tru diem
+            this.loginPlayer.setScore(this.loginPlayer.getScore() - 1);
+            new PlayerBUS().update(this.loginPlayer);
+
+            // send data
             this.sendData(StreamData.Type.RESULT_PAIR_MATCH.name() + ";failed;" + Code.YOU_CHOOSE_NO);
             cCompetitor.sendData(StreamData.Type.RESULT_PAIR_MATCH.name() + ";failed;" + Code.COMPETITOR_CHOOSE_NO);
 
@@ -554,6 +564,27 @@ public class Client implements Runnable {
                     // check win
                     Line winPath = caroGame.CheckWin(row, column);
                     if (winPath != null) {
+
+                        PlayerBUS bus = new PlayerBUS();
+                        Player winner = loginPlayer;
+                        Player loser = cCompetitor.loginPlayer;
+
+                        // tinh diem
+                        winner.addScore(3);
+                        loser.addScore(-2);
+                        bus.update(winner);
+                        bus.update(loser);
+
+                        // TODO luu game match
+                        new GameMatchBUS().add(new GameMatch(
+                                winner.getId(),
+                                loser.getId(),
+                                winner.getId(),
+                                Caro.MATCH_TIME_LIMIT - ((Caro) joinedRoom.getGamelogic()).getMatchTimer().getCurrentTick(),
+                                ((Caro) joinedRoom.getGamelogic()).getHistory().size(),
+                                joinedRoom.startedTime
+                        ));
+
                         // stop game timer
                         caroGame.cancelTimer();
 
@@ -563,8 +594,7 @@ public class Client implements Runnable {
                                 + StreamData.Type.WIN + ";"
                                 + loginPlayer.getEmail()
                         );
-                        
-                        
+
                     }
                 } else {
                     // do nothing

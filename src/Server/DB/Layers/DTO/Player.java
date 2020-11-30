@@ -29,6 +29,10 @@ public class Player {
 
     }
 
+    public void addScore(int toAdd) {
+        this.score += toAdd;
+    }
+
     public Player(int id, String email, String password, String avatar, String name, String gender, int yearOfBirth, int score, int matchCount, int winCount, int loseCount, int currentStreak, boolean blocked) {
         this.id = id;
         this.email = email;

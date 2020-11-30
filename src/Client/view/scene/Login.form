@@ -180,7 +180,7 @@
         </Component>
         <Component class="javax.swing.JPasswordField" name="txPassword">
           <Properties>
-            <Property name="text" type="java.lang.String" value="123"/>
+            <Property name="text" type="java.lang.String" value="123456"/>
           </Properties>
         </Component>
       </SubComponents>

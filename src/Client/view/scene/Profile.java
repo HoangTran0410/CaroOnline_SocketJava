@@ -7,8 +7,11 @@ package client.view.scene;
 
 import client.RunClient;
 import client.model.ProfileData;
+import client.view.helper.Validation;
 import java.util.HashMap;
 import javax.swing.ImageIcon;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import shared.constant.Avatar;
 
 /**
@@ -33,6 +36,22 @@ public class Profile extends javax.swing.JFrame {
         // avatar combobox
         cbAvatar.setMaximumRowCount(5);
         setAvatar(Avatar.LIST);
+
+        // validation
+        txYearOfBirth.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent de) {
+                Validation.checkNumberInputChanged(txYearOfBirth);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent de) {
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent de) {
+            }
+        });
     }
 
     private void setAvatar(String[] avas) {

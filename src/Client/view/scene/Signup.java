@@ -6,6 +6,7 @@
 package client.view.scene;
 
 import client.RunClient;
+import client.view.helper.Validation;
 import shared.constant.Avatar;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -294,32 +295,32 @@ public class Signup extends javax.swing.JFrame {
             String avatar = getAvatar();
 
             // validate
+            if (!Validation.checkPassword(password)) {
+                JOptionPane.showMessageDialog(this, "Mật khẩu phải từ 6-30 ký tự", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                txPassword.requestFocus();
+                return;
+            }
             if (!rePass.equals(password)) {
                 JOptionPane.showMessageDialog(this, "Nhập lại mật khẩu chưa khớp", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 txRetypePassword.requestFocus();
                 return;
             }
-            if (email.trim().equals("")) {
-                JOptionPane.showMessageDialog(this, "Chưa nhập email", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            if (!Validation.checkEmail(email)) {
+                JOptionPane.showMessageDialog(this, "Email không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 txEmail.requestFocus();
                 return;
             }
-            if (password.equals("")) {
-                JOptionPane.showMessageDialog(this, "Chưa nhập mật khẩu", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                txPassword.requestFocus();
-                return;
-            }
-            if (name.trim().equals("")) {
-                JOptionPane.showMessageDialog(this, "Chưa nhập tên", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            if (!Validation.checkName(name)) {
+                JOptionPane.showMessageDialog(this, "Tên là tiếng việt không dấu và"
+                        + " không quá 15 ký tự", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 txName.requestFocus();
                 return;
             }
-            if (yearOfBirth < 1900 || yearOfBirth > 2020) {
-                JOptionPane.showMessageDialog(this, "Năm sinh quá sai", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            if (!Validation.checkYearOfBirth(yearOfBirth)) {
+                JOptionPane.showMessageDialog(this, "Chưa sinh ra hoặc quá 100 tuổi vui lòng đừng chơi!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 txYearOfBirth.requestFocus();
                 return;
             }
-            // TODO validate email
 
             // call signup from socket handler
             setLoading(true);

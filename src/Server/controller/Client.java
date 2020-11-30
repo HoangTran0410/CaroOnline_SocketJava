@@ -571,7 +571,9 @@ public class Client implements Runnable {
 
                         // tinh diem
                         winner.addScore(3);
+                        winner.setWinCount(winner.getWinCount() + 1);
                         loser.addScore(-2);
+                        loser.setLoseCount(loser.getLoseCount() - 1);
                         bus.update(winner);
                         bus.update(loser);
 

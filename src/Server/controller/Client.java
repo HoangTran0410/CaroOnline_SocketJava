@@ -388,9 +388,9 @@ public class Client implements Runnable {
         }
 
         // prepare data
-        String data = room.getClient12InGameData();
-        // TODO prepare more data: game data, viewer, chat, timer
+        String data = room.getFullData();
 
+        // TODO prepare more data: game data, viewer, chat, timer
         // send data
         sendData(StreamData.Type.DATA_ROOM.name() + ";success;" + data);
     }

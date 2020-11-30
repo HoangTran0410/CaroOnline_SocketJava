@@ -21,6 +21,11 @@ public class PlayerInGame {
         this.avatar = avatar;
     }
 
+    @Override
+    public String toString() {
+        return nameId;
+    }
+
     public String getEmail() {
         return email;
     }

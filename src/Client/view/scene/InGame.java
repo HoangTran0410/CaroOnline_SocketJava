@@ -8,16 +8,20 @@ package client.view.scene;
 import client.RunClient;
 import client.model.ChatItem;
 import client.model.PlayerInGame;
+import client.view.helper.PlayerInRoomCustomRenderer;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import shared.constant.Avatar;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Timer;
 import java.util.concurrent.Callable;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.text.DefaultCaret;
 import shared.helper.CountDownTimer;
@@ -35,7 +39,7 @@ public class InGame extends javax.swing.JFrame {
     // https://codelearn.io/sharing/lam-game-caro-don-gian-bang-java
     final int COLUMN = 16, ROW = 16;
 
-    ArrayList<PlayerInGame> listPlayers;
+    DefaultListModel<PlayerInGame> listPlayersModel;
     PlayerInGame player1;
     PlayerInGame player2;
     int turn = 0;
@@ -53,8 +57,24 @@ public class InGame extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
 
-        // list players (player + viewer)
-        listPlayers = new ArrayList<>();
+        // list user
+        listPlayersModel = new DefaultListModel<>();
+        lListUser.setModel(listPlayersModel);
+        lListUser.setCellRenderer(new PlayerInRoomCustomRenderer());
+        // https://stackoverflow.com/a/4344762
+        lListUser.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                JList list = (JList) evt.getSource();
+                if (evt.getClickCount() == 2) {
+                    // Double-click detected
+                    int index = list.locationToIndex(evt.getPoint());
+
+                    RunClient.openScene(RunClient.SceneName.PROFILE);
+                    RunClient.profileScene.loadProfileData(listPlayersModel.get(index).getEmail());
+                }
+            }
+        });
 
         // board
         plBoardContainer.setLayout(new GridLayout(ROW, COLUMN));
@@ -102,6 +122,14 @@ public class InGame extends javax.swing.JFrame {
         // reset turn
         lbActive1.setVisible(false);
         lbActive2.setVisible(false);
+    }
+
+    public void setListUser(ArrayList<PlayerInGame> list) {
+        listPlayersModel.clear();
+
+        for (PlayerInGame p : list) {
+            listPlayersModel.addElement(p);
+        }
     }
 
     public void setWin(String winEmail) {
@@ -331,7 +359,7 @@ public class InGame extends javax.swing.JFrame {
         txaChat = new javax.swing.JTextArea();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        lListUser = new javax.swing.JList<>();
         plBoardContainer = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -589,12 +617,7 @@ public class InGame extends javax.swing.JFrame {
 
         tpChatAndViewerContainer.addTab("Nhắn tin", jPanel3);
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Người 1", "Người 2", "Người 3", "Người 4" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane2.setViewportView(jList1);
+        jScrollPane2.setViewportView(lListUser);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -613,7 +636,7 @@ public class InGame extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        tpChatAndViewerContainer.addTab("Người xem", jPanel4);
+        tpChatAndViewerContainer.addTab("Người trong phòng", jPanel4);
 
         javax.swing.GroupLayout plRightContainerLayout = new javax.swing.GroupLayout(plRightContainer);
         plRightContainer.setLayout(plRightContainerLayout);
@@ -737,12 +760,12 @@ public class InGame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JList<PlayerInGame> lListUser;
     private javax.swing.JLabel lbActive1;
     private javax.swing.JLabel lbActive2;
     private javax.swing.JLabel lbAvatar1;

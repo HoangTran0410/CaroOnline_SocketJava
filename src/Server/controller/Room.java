@@ -123,7 +123,43 @@ public class Room {
         // TODO code here
     }
 
-    // gets sets
+    // get room data
+    public String getFullData() {
+        String data = "";
+
+        // player data
+        data += getClient12InGameData() + ";";
+        data += getListClientData() + ";";
+        // timer
+        data += getTimerData() + ";";
+        // board
+        data += getBoardData();
+
+        return data;
+    }
+
+    public String getTimerData() {
+        String data = "";
+
+        data += Caro.MATCH_TIME_LIMIT + ";" + gamelogic.getMatchTimer().getCurrentTick() + ";";
+        data += Caro.TURN_TIME_LIMIT + ";" + gamelogic.getTurnTimer().getCurrentTick();
+
+        return data;
+    }
+
+    public String getBoardData() {
+        String[][] board = gamelogic.getBoard();
+
+        String data = "";
+        for (String[] row : board) {
+            for (String cell : row) {
+                data += cell + ";";
+            }
+        }
+
+        return data.substring(0, data.length() - 1); // bỏ dấu ; ở cuối
+    }
+
     public String getClient12InGameData() {
         String data = "";
 
@@ -133,6 +169,19 @@ public class Room {
         return data;
     }
 
+    public String getListClientData() {
+        // kết quả trả về có dạng playerCount;player1_data;player2_data;...;playerN_data
+
+        String data = clients.size() + ";";
+
+        for (Client c : clients) {
+            data += c.getInGameData() + ";";
+        }
+
+        return data.substring(0, data.length() - 1); // bỏ dấu ; ở cuối
+    }
+
+    // gets sets
     public String getId() {
         return id;
     }

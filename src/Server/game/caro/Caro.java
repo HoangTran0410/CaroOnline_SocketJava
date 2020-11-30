@@ -209,4 +209,8 @@ public class Caro extends GameLogic {
     public int getProgressMatchTimeValue() {
         return 100 * matchTimer.getCurrentTick() / MATCH_TIME_LIMIT;
     }
+
+    public String[][] getBoard() {
+        return board;
+    }
 }

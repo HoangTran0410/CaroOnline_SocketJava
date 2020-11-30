@@ -7,10 +7,11 @@ package client.view.scene;
 
 import client.RunClient;
 import client.view.helper.LookAndFeel;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.Vector;
+import java.util.concurrent.Callable;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import shared.helper.CountDownTimer;
 
 /**
  *
@@ -25,8 +26,8 @@ public class MainMenu extends javax.swing.JFrame {
         WAITING_COMPETITOR_ACCEPT
     };
 
-    Timer acceptPairMatchTimer;
-    Timer waitingPairTimer;
+    CountDownTimer acceptPairMatchTimer;
+    CountDownTimer waitingPairTimer;
     final int acceptWaitingTime = 15;
 
     boolean pairAcceptChoosed = false;
@@ -59,26 +60,28 @@ public class MainMenu extends javax.swing.JFrame {
     }
 
     private void startAcceptPairMatchTimer() {
-        acceptPairMatchTimer = new Timer();
-
-        // https://docs.oracle.com/javase/8/docs/technotes/guides/lang/Countdown.java
-        acceptPairMatchTimer.scheduleAtFixedRate(new TimerTask() {
-            int i = acceptWaitingTime;
-
-            public void run() {
-                i--;
-                if (i < 0) {
-                    stopAcceptPairMatchTimer();
+        acceptPairMatchTimer = new CountDownTimer(acceptWaitingTime);
+        acceptPairMatchTimer.setTimerCallBack(
+                // end callback
+                (Callable) () -> {
+                    // reset acceptPairMatchTimer
+                    acceptPairMatchTimer.restart();
+                    acceptPairMatchTimer.pause();
 
                     // tự động từ chối nếu quá thời gian mà chưa chọn đồng ý
                     if (!pairAcceptChoosed) {
                         RunClient.socketHandler.declinePairMatch();
                     }
-                }
-
-                lbTimerPairMatch.setText(i + "s");
-            }
-        }, 0, 1000);
+                    return null;
+                },
+                // tick callback
+                (Callable) () -> {
+                    lbTimerPairMatch.setText(acceptPairMatchTimer.getCurrentTick() + "s");
+                    return null;
+                },
+                // tick interval
+                1
+        );
     }
 
     private void stopWaitingPairMatchTimer() {
@@ -88,15 +91,19 @@ public class MainMenu extends javax.swing.JFrame {
     }
 
     private void startWaitingPairMatchTimer() {
-        waitingPairTimer = new Timer();
-        waitingPairTimer.scheduleAtFixedRate(new TimerTask() {
-            int i = 0;
-
-            public void run() {
-                i++;
-                lbFindMatch.setText("Đang tìm trận.. " + i + "s");
-            }
-        }, 0, 1000);
+        waitingPairTimer = new CountDownTimer(5 * 60); // 5p
+        waitingPairTimer.setTimerCallBack(
+                (Callable) () -> {
+                    setDisplayState(State.DEFAULT);
+                    JOptionPane.showMessageDialog(this, "Mãi chả thấy ai tìm trận.. Xui");
+                    return null;
+                },
+                (Callable) () -> {
+                    lbFindMatch.setText("Đang tìm trận.. " + (5 * 60 - waitingPairTimer.getCurrentTick()) + "s");
+                    return null;
+                },
+                1
+        );
     }
 
     public void setDisplayState(State s) {
@@ -173,8 +180,10 @@ public class MainMenu extends javax.swing.JFrame {
         jProgressBar2 = new javax.swing.JProgressBar();
         btnCancelFindMatch = new javax.swing.JButton();
         tpRoomAndUser = new javax.swing.JTabbedPane();
+        jPanel5 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbListRoom = new javax.swing.JTable();
+        btnRefreshListRoom = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
@@ -229,6 +238,11 @@ public class MainMenu extends javax.swing.JFrame {
 
         btnWatch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_vision_24px.png"))); // NOI18N
         btnWatch.setText("Vào xem");
+        btnWatch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnWatchActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout plBtnsLayout = new javax.swing.GroupLayout(plBtns);
         plBtns.setLayout(plBtnsLayout);
@@ -357,7 +371,38 @@ public class MainMenu extends javax.swing.JFrame {
         tbListRoom.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(tbListRoom);
 
-        tpRoomAndUser.addTab("Danh sách phòng", jScrollPane1);
+        btnRefreshListRoom.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_replay_24px.png"))); // NOI18N
+        btnRefreshListRoom.setText("Làm mới");
+        btnRefreshListRoom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshListRoomActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnRefreshListRoom))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnRefreshListRoom)
+                .addContainerGap())
+        );
+
+        tpRoomAndUser.addTab("Danh sách phòng", jPanel5);
 
         jList1.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -456,7 +501,7 @@ public class MainMenu extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tpRoomAndUser, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(tpRoomAndUser, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(plFindingMatch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(plBtns, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -529,6 +574,20 @@ public class MainMenu extends javax.swing.JFrame {
         RunClient.socketHandler.acceptPairMatch();
     }//GEN-LAST:event_btnAcceptPairMatchActionPerformed
 
+    private void btnWatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnWatchActionPerformed
+        // https://stackoverflow.com/a/38981623
+        int column = 0;
+        int row = tbListRoom.getSelectedRow();
+        if (row >= 0) {
+            String roomId = tbListRoom.getModel().getValueAt(row, column).toString();
+            RunClient.socketHandler.watchRoom(roomId);
+        }
+    }//GEN-LAST:event_btnWatchActionPerformed
+
+    private void btnRefreshListRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshListRoomActionPerformed
+        RunClient.socketHandler.listRoom();
+    }//GEN-LAST:event_btnRefreshListRoomActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -574,6 +633,7 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JButton btnJoin;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnProfile;
+    private javax.swing.JButton btnRefreshListRoom;
     private javax.swing.JButton btnWatch;
     private javax.swing.JButton jButton1;
     private javax.swing.JList<String> jList1;
@@ -582,6 +642,7 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JProgressBar jProgressBar2;
     private javax.swing.JScrollPane jScrollPane1;

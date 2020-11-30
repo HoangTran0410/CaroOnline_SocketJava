@@ -8,17 +8,24 @@ package client.view.scene;
 import client.RunClient;
 import client.model.ChatItem;
 import client.model.PlayerInGame;
-import client.view.helper.ChatCellRenderer;
+import client.view.helper.PlayerInRoomCustomRenderer;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import shared.constant.Avatar;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.text.DefaultCaret;
+import shared.helper.CountDownTimer;
+import shared.helper.CustumDateTimeFormatter;
 
 /**
  *
@@ -26,15 +33,22 @@ import javax.swing.JOptionPane;
  */
 public class InGame extends javax.swing.JFrame {
 
-    DefaultListModel<ChatItem> chatModel;
-    ArrayList<PlayerInGame> listPlayers;
-    PlayerInGame player1;
-    PlayerInGame player2;
+    final ImageIcon p1Icon = new ImageIcon(Avatar.ASSET_PATH + "icons8_round_24px.png");
+    final ImageIcon p2Icon = new ImageIcon(Avatar.ASSET_PATH + "icons8_delete_24px_1.png");
 
     // https://codelearn.io/sharing/lam-game-caro-don-gian-bang-java
     final int COLUMN = 16, ROW = 16;
+
+    DefaultListModel<PlayerInGame> listPlayersModel;
+    PlayerInGame player1;
+    PlayerInGame player2;
+    int turn = 0;
+
     JButton btnOnBoard[][];
     JButton lastMove = null;
+
+    CountDownTimer turnTimer;
+    CountDownTimer matchTimer;
 
     /**
      * Creates new form InGame
@@ -43,17 +57,44 @@ public class InGame extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
 
-        // jlist chat
-        chatModel = new DefaultListModel<>();
-        lChatContainer.setModel(chatModel);
-        lChatContainer.setCellRenderer(new ChatCellRenderer(230));
+        // list user
+        listPlayersModel = new DefaultListModel<>();
+        lListUser.setModel(listPlayersModel);
+        lListUser.setCellRenderer(new PlayerInRoomCustomRenderer());
+        // https://stackoverflow.com/a/4344762
+        lListUser.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                JList list = (JList) evt.getSource();
+                if (evt.getClickCount() == 2) {
+                    // Double-click detected
+                    int index = list.locationToIndex(evt.getPoint());
 
-        // list players (player + viewer)
-        listPlayers = new ArrayList<>();
+                    RunClient.openScene(RunClient.SceneName.PROFILE);
+                    RunClient.profileScene.loadProfileData(listPlayersModel.get(index).getEmail());
+                }
+            }
+        });
 
         // board
         plBoardContainer.setLayout(new GridLayout(ROW, COLUMN));
         initBoard();
+
+        // https://stackoverflow.com/a/1627068
+        ((DefaultCaret) txaChat.getCaret()).setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+
+        // close window event
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                if (JOptionPane.showConfirmDialog(InGame.this,
+                        "Bạn có chắc muốn thoát phòng?", "Thoát phòng?",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                    RunClient.socketHandler.leaveRoom();
+                }
+            }
+        });
     }
 
     public void setPlayerInGame(PlayerInGame p1, PlayerInGame p2) {
@@ -83,15 +124,37 @@ public class InGame extends javax.swing.JFrame {
         lbActive2.setVisible(false);
     }
 
+    public void setListUser(ArrayList<PlayerInGame> list) {
+        listPlayersModel.clear();
+
+        for (PlayerInGame p : list) {
+            listPlayersModel.addElement(p);
+        }
+    }
+
     public void setWin(String winEmail) {
+        // pause timer
+        matchTimer.pause();
+        turnTimer.pause();
+
+        // tie
+        if (winEmail == null) {
+            addChat(new ChatItem("[]", "KẾT QUẢ", "HÒA"));
+            JOptionPane.showMessageDialog(this, "Trận đấu kết thúc với tỉ số HÒA.", "HÒA", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        // get myEmail
         String myEmail = RunClient.socketHandler.getLoginEmail();
 
         if (winEmail.equals(myEmail)) {
             // là email của mình thì win
+            addChat(new ChatItem("[]", "KẾT QUẢ", "Bạn đã thắng"));
             JOptionPane.showMessageDialog(this, "Chúc mừng. Bạn đã chiến thắng.", "Chiến thắng", JOptionPane.INFORMATION_MESSAGE);
 
         } else if (myEmail.equals(player1.getEmail()) || myEmail.equals(player2.getEmail())) {
             // nếu mình là 1 trong 2 người chơi, mà winEmail ko phải mình => thua
+            addChat(new ChatItem("[]", "KẾT QUẢ", "Bạn đã thua"));
             JOptionPane.showMessageDialog(this, "Rất tiếc. Bạn đã thua cuộc.", "Thua cuộc", JOptionPane.INFORMATION_MESSAGE);
 
         } else {
@@ -102,13 +165,58 @@ public class InGame extends javax.swing.JFrame {
             } else {
                 nameId = player2.getNameId();
             }
+            addChat(new ChatItem("[]", "KẾT QUẢ", "Người chơi " + nameId + " đã thắng"));
             JOptionPane.showMessageDialog(this, "Người chơi " + nameId + " đã thắng", "Kết quả", JOptionPane.INFORMATION_MESSAGE);
         }
+
+        // thoát phòng sau khi thua 
+        // TODO sau này sẽ cho tạo ván mới, hiện tại cho thoát để tránh lỗi
+        // RunClient.socketHandler.leaveRoom();
+    }
+
+    public void startGame(int turnTimeLimit, int matchTimeLimit) {
+        turnTimer = new CountDownTimer(turnTimeLimit);
+        turnTimer.setTimerCallBack(
+                // end match callback
+                null,
+                // tick match callback
+                (Callable) () -> {
+                    pgbTurnTimer.setValue(100 * turnTimer.getCurrentTick() / turnTimer.getTimeLimit());
+                    pgbTurnTimer.setString(CustumDateTimeFormatter.secondsToMinutes(turnTimer.getCurrentTick()));
+                    return null;
+                },
+                // tick interval
+                1
+        );
+
+        matchTimer = new CountDownTimer(matchTimeLimit);
+        matchTimer.setTimerCallBack(
+                // end match callback
+                null,
+                // tick match callback
+                (Callable) () -> {
+                    pgbMatchTimer.setValue(100 * matchTimer.getCurrentTick() / matchTimer.getTimeLimit());
+                    pgbMatchTimer.setString("" + CustumDateTimeFormatter.secondsToMinutes(matchTimer.getCurrentTick()));
+                    return null;
+                },
+                // tick interval
+                1
+        );
+    }
+
+    public void setTurnTimerTick(int value) {
+        turnTimer.setCurrentTick(value);
+    }
+
+    public void setMatchTimerTick(int value) {
+        matchTimer.setCurrentTick(value);
     }
 
     // change turn sang cho email đầu vào
     public void setTurn(String email) {
         if (player1.getEmail().equals(email)) {
+            turnTimer.restart();
+            turn = 1;
             lbActive1.setVisible(true);
             lbActive2.setVisible(false);
             lbAvatar1.setBorder(javax.swing.BorderFactory.createTitledBorder("Đang đánh.."));
@@ -116,6 +224,8 @@ public class InGame extends javax.swing.JFrame {
         }
 
         if (player2.getEmail().equals(email)) {
+            turnTimer.restart();
+            turn = 2;
             lbActive1.setVisible(false);
             lbActive2.setVisible(true);
             lbAvatar1.setBorder(javax.swing.BorderFactory.createTitledBorder("Chờ"));
@@ -155,26 +265,34 @@ public class InGame extends javax.swing.JFrame {
 
         lastMove = btnOnBoard[row][column];
         lastMove.setBackground(Color.yellow);
+        lastMove.setActionCommand(email); // save email as state
 
         if (email.equals(player1 != null ? player1.getEmail() : "")) {
-            lastMove.setIcon(new ImageIcon(Avatar.ASSET_PATH + "icons8_round_24px.png"));
+            lastMove.setIcon(p1Icon);
         } else {
-            lastMove.setIcon(new ImageIcon(Avatar.ASSET_PATH + "icons8_delete_24px_1.png"));
+            lastMove.setIcon(p2Icon);
         }
     }
 
     public void removePoint(int row, int column) {
-        btnOnBoard[row][column].setText("");
+        https://stackoverflow.com/a/2235596
+        btnOnBoard[row][column].setIcon(null);
+        btnOnBoard[row][column].setActionCommand("");
     }
 
     public void clickOnBoard(int row, int column) {
-        RunClient.socketHandler.move(row, column);
+        String myEmail = RunClient.socketHandler.getLoginEmail();
+
+        if (myEmail.equals(player1.getEmail()) || myEmail.equals(player2.getEmail())) {
+            RunClient.socketHandler.move(row, column);
+        }
     }
 
-    private JButton createBoardButton(int row, int column) {
+    public JButton createBoardButton(int row, int column) {
         JButton b = new JButton();
         b.setFocusPainted(false);
         b.setBackground(new Color(180, 180, 180));
+        b.setActionCommand("");
 
         b.addActionListener((ActionEvent e) -> {
             clickOnBoard(row, column);
@@ -183,15 +301,37 @@ public class InGame extends javax.swing.JFrame {
             // addPoint(row, column, "");
         });
 
+        // https://stackoverflow.com/a/22639054
+        b.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                if (b.getActionCommand().equals("")) {
+
+                    String myEmail = RunClient.socketHandler.getLoginEmail();
+
+                    if (myEmail.equals(player1.getEmail()) && (turn == 1 || turn == 0)) {
+                        b.setIcon(p1Icon);
+                    }
+
+                    if (myEmail.equals(player2.getEmail()) && (turn == 2 || turn == 0)) {
+                        b.setIcon(p2Icon);
+                    }
+                }
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                if (b.getActionCommand().equals("")) {
+                    b.setIcon(null);
+                }
+            }
+        });
+
         return b;
     }
 
     public void addChat(ChatItem c) {
-        chatModel.addElement(c);
-
-        // scroll into view
-        lChatContainer.ensureIndexIsVisible(lChatContainer.getModel().getSize() - 1);
-        lChatContainer.repaint();
+        txaChat.append(c.toString() + "\n");
     }
 
     /**
@@ -226,14 +366,14 @@ public class InGame extends javax.swing.JFrame {
         pgbMatchTimer = new javax.swing.JProgressBar();
         tpChatAndViewerContainer = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        lChatContainer = new javax.swing.JList<>();
         jPanel7 = new javax.swing.JPanel();
         txChatInput = new javax.swing.JTextField();
         btnSendMessage = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        txaChat = new javax.swing.JTextArea();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        lListUser = new javax.swing.JList<>();
         plBoardContainer = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -378,12 +518,12 @@ public class InGame extends javax.swing.JFrame {
 
         jLabel5.setText("Trận đấu");
 
-        pgbTurnTimer.setValue(40);
-        pgbTurnTimer.setString("00:20");
+        pgbTurnTimer.setValue(100);
+        pgbTurnTimer.setString("Đang đợi nước đi đầu tiên..");
         pgbTurnTimer.setStringPainted(true);
 
-        pgbMatchTimer.setValue(75);
-        pgbMatchTimer.setString("08:50");
+        pgbMatchTimer.setValue(100);
+        pgbMatchTimer.setString("Đang đợi nước đi đầu tiên..");
         pgbMatchTimer.setStringPainted(true);
 
         javax.swing.GroupLayout plTimerLayout = new javax.swing.GroupLayout(plTimer);
@@ -430,13 +570,6 @@ public class InGame extends javax.swing.JFrame {
                 .addComponent(plTimer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        lChatContainer.setFont(new java.awt.Font("Consolas", 0, 14)); // NOI18N
-        lChatContainer.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        lChatContainer.setOpaque(false);
-        lChatContainer.setSelectionBackground(new java.awt.Color(255, 255, 255));
-        lChatContainer.setSelectionForeground(new java.awt.Color(51, 51, 51));
-        jScrollPane1.setViewportView(lChatContainer);
-
         txChatInput.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txChatInputKeyPressed(evt);
@@ -459,7 +592,7 @@ public class InGame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(txChatInput, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSendMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnSendMessage, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
@@ -472,33 +605,33 @@ public class InGame extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        txaChat.setEditable(false);
+        txaChat.setColumns(20);
+        txaChat.setRows(5);
+        jScrollPane3.setViewportView(txaChat);
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
+                .addComponent(jScrollPane3)
                 .addContainerGap())
-            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         tpChatAndViewerContainer.addTab("Nhắn tin", jPanel3);
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Người 1", "Người 2", "Người 3", "Người 4" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane2.setViewportView(jList1);
+        jScrollPane2.setViewportView(lListUser);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -517,7 +650,7 @@ public class InGame extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        tpChatAndViewerContainer.addTab("Người xem", jPanel4);
+        tpChatAndViewerContainer.addTab("Người trong phòng", jPanel4);
 
         javax.swing.GroupLayout plRightContainerLayout = new javax.swing.GroupLayout(plRightContainer);
         plRightContainer.setLayout(plRightContainerLayout);
@@ -579,7 +712,13 @@ public class InGame extends javax.swing.JFrame {
     }//GEN-LAST:event_txChatInputKeyPressed
 
     private void btnLeaveRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLeaveRoomActionPerformed
-        RunClient.socketHandler.leaveRoom();
+        // https://stackoverflow.com/a/8689130
+        if (JOptionPane.showConfirmDialog(this,
+                "Bạn có chắc muốn thoát phòng?", "Warning",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+            RunClient.socketHandler.leaveRoom();
+        }
     }//GEN-LAST:event_btnLeaveRoomActionPerformed
 
     /**
@@ -635,13 +774,12 @@ public class InGame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JList<ChatItem> lChatContainer;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JList<PlayerInGame> lListUser;
     private javax.swing.JLabel lbActive1;
     private javax.swing.JLabel lbActive2;
     private javax.swing.JLabel lbAvatar1;
@@ -659,5 +797,6 @@ public class InGame extends javax.swing.JFrame {
     private javax.swing.JPanel plToolContainer;
     private javax.swing.JTabbedPane tpChatAndViewerContainer;
     private javax.swing.JTextField txChatInput;
+    private javax.swing.JTextArea txaChat;
     // End of variables declaration//GEN-END:variables
 }

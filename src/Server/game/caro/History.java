@@ -13,17 +13,17 @@ public class History {
 
     int row;
     int column;
-    String playerId;
+    String playerEmail;
 
-    public History(int row, int column, String playerId) {
+    public History(int row, int column, String playerEmail) {
         this.row = row;
         this.column = column;
-        this.playerId = playerId;
+        this.playerEmail = playerEmail;
     }
 
     @Override
     public String toString() {
-        return row + ";" + column + ";" + playerId;
+        return row + ";" + column + ";" + playerEmail;
     }
 
     public int getRow() {
@@ -42,11 +42,11 @@ public class History {
         this.column = column;
     }
 
-    public String getPlayerId() {
-        return playerId;
+    public String getPlayerEmail() {
+        return playerEmail;
     }
 
-    public void setPlayerId(String playerId) {
-        this.playerId = playerId;
+    public void setPlayerEmail(String playerId) {
+        this.playerEmail = playerId;
     }
 }

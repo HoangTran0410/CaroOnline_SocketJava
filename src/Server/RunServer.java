@@ -28,13 +28,15 @@ public class RunServer {
     public static volatile ClientManager clientManager;
     public static volatile RoomManager roomManager;
     public static volatile RSA serverSide;
+    public static boolean isShutDown = false;
+    public static ServerSocket ss;
 
     public RunServer() {
 
         try {
             int port = 5056;
 
-            ServerSocket ss = new ServerSocket(port);
+            ss = new ServerSocket(port);
             System.out.println("Created Server at port " + port + ".");
 
             // init rsa key
@@ -58,7 +60,7 @@ public class RunServer {
             executor.execute(new Admin());
 
             // server main loop - listen to client's connection
-            while (true) {
+            while (!isShutDown) {
                 try {
                     // socket object to receive incoming client requests
                     Socket s = ss.accept();
@@ -72,9 +74,14 @@ public class RunServer {
                     executor.execute(c);
 
                 } catch (IOException ex) {
-                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                    // Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                    isShutDown = true;
                 }
             }
+
+            System.out.println("shutingdown executor...");
+            executor.shutdownNow();
+
         } catch (IOException ex) {
             Logger.getLogger(RunServer.class.getName()).log(Level.SEVERE, null, ex);
         }

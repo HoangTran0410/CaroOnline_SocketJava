@@ -5,9 +5,17 @@
  */
 package server.controller;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import server.game.caro.Caro;
 import server.game.GameLogic;
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
+import server.RunServer;
+import server.db.layers.BUS.GameMatchBUS;
+import server.db.layers.DTO.GameMatch;
+import server.game.caro.History;
+import shared.constant.StreamData;
 
 /**
  *
@@ -16,9 +24,12 @@ import java.util.ArrayList;
 public class Room {
 
     String id;
-    GameLogic gamelogic;
-    Client client1 = null, client2 = null; // TODO: tách người chơi và người xem
+    Caro gamelogic;
+    Client client1 = null, client2 = null;
     ArrayList<Client> clients = new ArrayList<>();
+    boolean gameStarted = false;
+
+    public LocalDateTime startedTime;
 
     public Room(String id) {
         // room id
@@ -28,15 +39,84 @@ public class Room {
         gamelogic = new Caro();
     }
 
+    public boolean isGameStarted() {
+        return gameStarted;
+    }
+
+    public void startGame() {
+        startedTime = LocalDateTime.now();
+        gameStarted = true;
+        gamelogic.getTurnTimer()
+                .setTimerCallBack(
+                        // end turn callback
+                        (Callable) () -> {
+                            // TURN_TIMER_END;<winner-email>
+                            broadcast(
+                                    StreamData.Type.GAME_EVENT + ";"
+                                    + StreamData.Type.TURN_TIMER_END.name() + ";"
+                                    + gamelogic.getLastMoveEmail()
+                            );
+                            return null;
+                        },
+                        // tick turn callback
+                        (Callable) () -> {
+                            broadcast(
+                                    StreamData.Type.GAME_EVENT + ";"
+                                    + StreamData.Type.TURN_TICK.name() + ";"
+                                    + gamelogic.getTurnTimer().getCurrentTick()
+                            );
+                            return null;
+                        },
+                        // tick interval
+                        Caro.TURN_TIME_LIMIT / 10
+                );
+
+        gamelogic.getMatchTimer()
+                .setTimerCallBack(
+                        // end match callback
+                        (Callable) () -> {
+
+                            // tinh diem hoa
+                            new GameMatchBUS().add(new GameMatch(
+                                    client1.getLoginPlayer().getId(),
+                                    client1.getLoginPlayer().getId(),
+                                    -1,
+                                    gamelogic.getMatchTimer().getCurrentTick(),
+                                    gamelogic.getHistory().size(),
+                                    startedTime
+                            ));
+
+                            broadcast(
+                                    StreamData.Type.GAME_EVENT + ";"
+                                    + StreamData.Type.MATCH_TIMER_END.name()
+                            );
+                            return null;
+                        },
+                        // tick match callback
+                        (Callable) () -> {
+                            broadcast(
+                                    StreamData.Type.GAME_EVENT + ";"
+                                    + StreamData.Type.MATCH_TICK.name() + ";"
+                                    + gamelogic.getMatchTimer().getCurrentTick()
+                            );
+                            return null;
+                        },
+                        // tick interval
+                        Caro.MATCH_TIME_LIMIT / 10
+                );
+    }
+
     // add/remove client
-    public boolean addClient(Client c) {
+    public boolean addClient(Client c, boolean isWatcher) {
         if (!clients.contains(c)) {
             clients.add(c);
 
-            if (client1 == null) {
-                client1 = c;
-            } else if (client2 == null) {
-                client2 = c;
+            if (!isWatcher) {
+                if (client1 == null) {
+                    client1 = c;
+                } else if (client2 == null) {
+                    client2 = c;
+                }
             }
 
             return true;
@@ -58,12 +138,58 @@ public class Room {
             c.sendData(msg);
         });
     }
-    
-    public void close() {
-        // TODO code here
+
+    public void close(String reason) {
+        // notify all client in room
+        broadcast(StreamData.Type.CLOSE_ROOM.name() + ";" + reason);
+
+        // remove reference
+        clients.forEach((client) -> {
+            client.setJoinedRoom(null);
+        });
+
+        // remove all clients
+        clients.clear();
+
+        // remove room
+        RunServer.roomManager.remove(this);
     }
 
-    // gets sets
+    // get room data
+    public String getFullData() {
+        String data = "";
+
+        // player data
+        data += getClient12InGameData() + ";";
+        data += getListClientData() + ";";
+        // timer
+        data += getTimerData() + ";";
+        // board
+        data += getBoardData();
+
+        return data;
+    }
+
+    public String getTimerData() {
+        String data = "";
+
+        data += Caro.MATCH_TIME_LIMIT + ";" + gamelogic.getMatchTimer().getCurrentTick() + ";";
+        data += Caro.TURN_TIME_LIMIT + ";" + gamelogic.getTurnTimer().getCurrentTick();
+
+        return data;
+    }
+
+    public String getBoardData() {
+        ArrayList<History> history = gamelogic.getHistory();
+
+        String data = history.size() + ";";
+        for (History his : history) {
+            data += his.getRow() + ";" + his.getColumn() + ";" + his.getPlayerEmail() + ";";
+        }
+
+        return data.substring(0, data.length() - 1); // bỏ dấu ; ở cuối
+    }
+
     public String getClient12InGameData() {
         String data = "";
 
@@ -73,6 +199,19 @@ public class Room {
         return data;
     }
 
+    public String getListClientData() {
+        // kết quả trả về có dạng playerCount;player1_data;player2_data;...;playerN_data
+
+        String data = clients.size() + ";";
+
+        for (Client c : clients) {
+            data += c.getInGameData() + ";";
+        }
+
+        return data.substring(0, data.length() - 1); // bỏ dấu ; ở cuối
+    }
+
+    // gets sets
     public String getId() {
         return id;
     }
@@ -85,7 +224,7 @@ public class Room {
         return gamelogic;
     }
 
-    public void setGamelogic(GameLogic gamelogic) {
+    public void setGamelogic(Caro gamelogic) {
         this.gamelogic = gamelogic;
     }
 

@@ -42,6 +42,7 @@ public class StreamData {
         DATA_ROOM, // dữ liệu phòng khi vừa vào phòng / id phòng / dữ liệu phòng
         CHAT_ROOM, // chức năng chat phòng / dữ liệu chat / dữ liệu chat (gửi broadcast trong phòng)
         LEAVE_ROOM, // chức năng thoát phòng / không cần dữ liệu thêm / success hoặc failed
+        CLOSE_ROOM, // chức năng đóng phòng / chỉ có server gửi type này cho client
 
         // profile
         GET_PROFILE, // chức năng xem hồ sơ cá nhân / email user muốn xem thông tin / dữ liệu user
@@ -52,12 +53,18 @@ public class StreamData {
         GAME_EVENT, //
 
         // caro game
+        START, // chức năng bắt đầu game (khi 1 trong 2 người chơi bắt đầu move) / server gửi broadcast tới room
         MOVE, // chức năng đánh caro tại 1 ô / vị trí ô / success thì broadcast vị trí ô cho mọi người trong phòng, failed khi vị trí không hợp lệ
         UNDO, // chức năng đánh lại / không cần dữ liệu thêm / gửi request broadcast (cho mọi người biết là muốn đánh lại, kể cả viewer)
         UNDO_ACCEPT, // chắc năng đồng ý đánh lại / đồng ý hay không / gửi result broadcast (cho mọi người biết người chơi có đồng ý cho đánh lại hay không)
         NEW_GAME, // chức năng tạo game mới / không cần dữ liệu thêm / nếu game chưa end thì gửi request accept tới đối thủ
         NEW_GAME_ACCEPT, // chức năng đồng ý tạo game mới / đồng ý hay không / gửi result broadcast làm mới trận
+        SURRENDER, // chức năng đầu hàng / không có dữ liệu thêm / gửi broadcast
         WIN, // chỉ có server mới gửi type này cho client
+        TURN_TICK,
+        MATCH_TICK,
+        MATCH_TIMER_END, // hết giờ / server gửi tới client
+        TURN_TIMER_END, // hết thời gian turn / server gửi tới client
 
         // specific
         UNKNOW_TYPE, // khi client gửi type không xác định

@@ -21,6 +21,11 @@ public class ChatItem {
         this.content = content;
     }
 
+    @Override
+    public String toString() {
+        return "[" + time + "] " + owner + ": " + content;
+    }
+
     public String getTime() {
         return time;
     }

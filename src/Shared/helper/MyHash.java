@@ -21,7 +21,7 @@ import javax.crypto.spec.PBEKeySpec;
  *
  * @author Hoang Tran < hoang at 99.hoangtran@gmail.com >
  */
-public class Util {
+public class MyHash {
 
     // https://www.baeldung.com/java-password-hashing#2-implementing-pbkdf2-in-java
     // hàm này mỗi lần hash_sha_256 lại ra 1 chuỗi khác nhau, và không hiển thị trong console được, khó hiểu
@@ -39,7 +39,7 @@ public class Util {
             return new String(hash);
 
         } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
-            Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MyHash.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return "";
@@ -54,7 +54,7 @@ public class Util {
 
             return new String(hash);
         } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MyHash.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return "";

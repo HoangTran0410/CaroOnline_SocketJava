@@ -6,6 +6,8 @@
 package client.view.scene;
 
 import client.RunClient;
+import client.view.helper.Validation;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -81,14 +83,11 @@ public class Login extends javax.swing.JFrame {
         jLabel1.setText("Email");
 
         txEmail.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        txEmail.setText("99.hoangtran@gmail.com");
         txEmail.setToolTipText("Email");
 
         jLabel2.setText("Mật khẩu");
 
         lbPassword.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/view/asset/icons8_password_48px.png"))); // NOI18N
-
-        txPassword.setText("123");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -167,7 +166,17 @@ public class Login extends javax.swing.JFrame {
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         String email = txEmail.getText();
         String password = new String(txPassword.getPassword());
-        // TODO validate input
+
+        if (!Validation.checkEmail(email)) {
+            JOptionPane.showMessageDialog(this, "Email không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            txEmail.requestFocus();
+            return;
+        }
+        if (!Validation.checkPassword(password)) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu phải từ 6-30 ký tự", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            txPassword.requestFocus();
+            return;
+        }
 
         RunClient.socketHandler.login(email, password);
         setLoading(true);

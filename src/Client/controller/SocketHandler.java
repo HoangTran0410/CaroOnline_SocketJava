@@ -10,17 +10,19 @@ import client.model.ChatItem;
 import client.model.PlayerInGame;
 import client.model.ProfileData;
 import client.view.scene.MainMenu;
-import shared.helper.Util;
+import shared.helper.MyHash;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import server.game.caro.History;
 import shared.constant.StreamData;
 import shared.security.AES;
 import shared.security.RSA;
@@ -90,6 +92,8 @@ public class SocketHandler {
                     received = aes.decrypt(received);
                 }
 
+                System.out.println("RECEIVED: " + received);
+
                 // process received data
                 StreamData.Type type = StreamData.getTypeFromData(received);
 
@@ -156,6 +160,10 @@ public class SocketHandler {
 
                     case LEAVE_ROOM:
                         onReceiveLeaveRoom(received);
+                        break;
+
+                    case CLOSE_ROOM:
+                        onReceiveCloseRoom(received);
                         break;
 
                     case GET_PROFILE:
@@ -327,7 +335,16 @@ public class SocketHandler {
     }
 
     private void onReceiveWatchRoom(String received) {
+        String[] splitted = received.split(";");
+        String status = splitted[1];
 
+        if (status.equals("failed")) {
+            String failedMsg = splitted[2];
+            JOptionPane.showMessageDialog(RunClient.mainMenuScene, failedMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
+
+        } else if (status.equals("success")) {
+            onReceiveJoinRoom(received);
+        }
     }
 
     // pair match
@@ -393,11 +410,47 @@ public class SocketHandler {
             JOptionPane.showMessageDialog(RunClient.mainMenuScene, failedMsg, "Không lấy được dữ liệu phòng", JOptionPane.ERROR_MESSAGE);
 
         } else if (status.equals("success")) {
-            PlayerInGame p1 = new PlayerInGame(splitted[2], splitted[3], splitted[4]);
-            PlayerInGame p2 = new PlayerInGame(splitted[5], splitted[6], splitted[7]);
+            // vị trí đọc hiện tại (trong mảng splitted)
+            int index = 2;
 
-            // System.out.println(p1.getAvatar() + ", " + p2.getAvatar());
+            // player
+            PlayerInGame p1 = new PlayerInGame(splitted[index++], splitted[index++], splitted[index++]);
+            PlayerInGame p2 = new PlayerInGame(splitted[index++], splitted[index++], splitted[index++]);
             RunClient.inGameScene.setPlayerInGame(p1, p2);
+
+            // list player+viewer
+            int playersCount = Integer.parseInt(splitted[index++]);
+            ArrayList<PlayerInGame> listUser = new ArrayList<>();
+
+            for (int i = 0; i < playersCount; i++) {
+                listUser.add(new PlayerInGame(splitted[index++], splitted[index++], splitted[index++]));
+            }
+            RunClient.inGameScene.setListUser(listUser);
+
+            // timer data
+            int matchTimerLimit = Integer.parseInt(splitted[index++]);
+            int matchTimerTick = Integer.parseInt(splitted[index++]);
+            int turnTimerLimit = Integer.parseInt(splitted[index++]);
+            int turnTimerTick = Integer.parseInt(splitted[index++]);
+
+            RunClient.inGameScene.startGame(turnTimerLimit, matchTimerLimit);
+            RunClient.inGameScene.setTurnTimerTick(turnTimerTick);
+            RunClient.inGameScene.setMatchTimerTick(matchTimerTick);
+
+            // board data
+            // TODO array demension
+            int historyCount = Integer.parseInt(splitted[index++]);
+
+            for (int i = 0; i < historyCount; i++) {
+                RunClient.inGameScene.addPoint(
+                        Integer.parseInt(splitted[index++]),
+                        Integer.parseInt(splitted[index++]),
+                        splitted[index++]
+                );
+            }
+
+            // change turn
+            RunClient.inGameScene.changeTurnFrom(splitted[index - 1]);
         }
     }
 
@@ -424,6 +477,25 @@ public class SocketHandler {
         }
     }
 
+    private void onReceiveCloseRoom(String received) {
+        String[] splitted = received.split(";");
+        String reason = splitted[1];
+
+        // change scene
+        RunClient.closeScene(RunClient.SceneName.INGAME);
+        RunClient.openScene(RunClient.SceneName.MAINMENU);
+
+        // show noti
+        JOptionPane.showMessageDialog(
+                RunClient.profileScene,
+                "Phòng " + this.roomId + " đã đóng do " + reason, "Đóng",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+
+        // remove room id
+        this.roomId = null;
+    }
+
     // profile
     private void onReceiveGetProfile(String received) {
         String[] splitted = received.split(";");
@@ -438,43 +510,23 @@ public class SocketHandler {
 
         } else if (status.equals("success")) {
             // get player data from received
-            String idStr = splitted[2];
-            String email = splitted[3];
-            String name = splitted[4];
-            String avatar = splitted[5];
-            String gender = splitted[6];
-            String yearOfBirthStr = splitted[7];
-            String scoreStr = splitted[8];
-            String matchCountStr = splitted[9];
-            String winCountStr = splitted[10];
-            String tieCountStr = splitted[11];
-            String loseCountStr = splitted[12];
-            String currentStreakStr = splitted[13];
-            String winRateStr = splitted[14];
+            ProfileData p = new ProfileData(
+                    Integer.parseInt(splitted[2]), // id
+                    splitted[3], // email
+                    splitted[4], // name
+                    splitted[5], // avatar
+                    splitted[6], // gender
+                    Integer.parseInt(splitted[7]), // year of birth
+                    Integer.parseInt(splitted[8]), // score
+                    Integer.parseInt(splitted[9]), // match count
+                    Integer.parseInt(splitted[10]), // win count
+                    Integer.parseInt(splitted[11]), // tie count
+                    Integer.parseInt(splitted[12]), // lose count
+                    Integer.parseInt(splitted[13]), // current streak
+                    Float.parseFloat(splitted[14])); // win rate
 
-            // validate
-            try {
-                int id = Integer.parseInt(idStr);
-                int yearOfBirth = Integer.parseInt(yearOfBirthStr);
-                int score = Integer.parseInt(scoreStr);
-                int matchCount = Integer.parseInt(matchCountStr);
-                int winCount = Integer.parseInt(winCountStr);
-                int tieCount = Integer.parseInt(tieCountStr);
-                int loseCount = Integer.parseInt(loseCountStr);
-                int currentStreak = Integer.parseInt(currentStreakStr);
-                float winRate = Float.parseFloat(winRateStr);
-
-                ProfileData p = new ProfileData(id, email, name, avatar, gender, yearOfBirth, score, matchCount, winCount, tieCount, loseCount, currentStreak, winRate);
-
-                // show data to UI
-                RunClient.profileScene.setProfileData(p);
-
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(RunClient.profileScene, "Dữ liệu hồ sơ bị lỗi: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
-
-                // tự động đóng scene profile nếu có lỗi
-                RunClient.closeScene(RunClient.SceneName.PROFILE);
-            }
+            // show data to UI
+            RunClient.profileScene.setProfileData(p);
         }
     }
 
@@ -518,12 +570,19 @@ public class SocketHandler {
         }
     }
 
-    // game
+    // game events
     public void onReceiveGameEvent(String received) {
         String[] splitted = received.split(";");
         StreamData.Type gameEventType = StreamData.getType(splitted[1]);
 
         switch (gameEventType) {
+            case START:
+                int turnTimeLimit = Integer.parseInt(splitted[2]);
+                int matchTimeLimit = Integer.parseInt(splitted[3]);
+
+                RunClient.inGameScene.startGame(turnTimeLimit, matchTimeLimit);
+                break;
+
             case MOVE:
                 int row = Integer.parseInt(splitted[2]);
                 int column = Integer.parseInt(splitted[3]);
@@ -537,6 +596,25 @@ public class SocketHandler {
                 String winEmail = splitted[2];
                 RunClient.inGameScene.setWin(winEmail);
                 break;
+
+            case TURN_TICK:
+                int turnValue = Integer.parseInt(splitted[2]);
+                RunClient.inGameScene.setTurnTimerTick(turnValue);
+                break;
+
+            case TURN_TIMER_END:
+                String winnerEmail = splitted[2];
+                RunClient.inGameScene.setWin(winnerEmail);
+                break;
+
+            case MATCH_TICK:
+                int matchValue = Integer.parseInt(splitted[2]);
+                RunClient.inGameScene.setMatchTimerTick(matchValue);
+                break;
+
+            case MATCH_TIMER_END:
+                RunClient.inGameScene.setWin(null);
+                break;
         }
     }
 
@@ -548,7 +626,7 @@ public class SocketHandler {
 
         // encrypt aes key using rsa with server's public key 
         RSA clientSideRSA = new RSA()
-                .preparePublicKey("src/Server/rsa_keypair/publicKey");
+                .preparePublicKey("publicKey");
 
         String aesKey = aes.getSecretKey();
         String aesKeyEncrypted = clientSideRSA.encrypt(aesKey);
@@ -559,7 +637,7 @@ public class SocketHandler {
 
     public void login(String email, String password) {
         // hasing password
-        String passwordHash = Util.hash(password);
+        String passwordHash = MyHash.hash(password);
 
         // prepare data
         String data = StreamData.Type.LOGIN.name() + ";" + email + ";" + passwordHash;
@@ -572,7 +650,7 @@ public class SocketHandler {
         // prepare data
         String data = StreamData.Type.SIGNUP.name() + ";"
                 + email + ";"
-                + Util.hash(password) + ";"
+                + MyHash.hash(password) + ";"
                 + avatar + ";"
                 + name + ";"
                 + gender + ";"
@@ -593,6 +671,10 @@ public class SocketHandler {
     // main menu
     public void listRoom() {
         sendData(StreamData.Type.LIST_ROOM.name());
+    }
+
+    public void watchRoom(String roomId) {
+        sendData(StreamData.Type.WATCH_ROOM.name() + ";" + roomId);
     }
 
     // pair match
@@ -628,8 +710,8 @@ public class SocketHandler {
     // profile
     public void changePassword(String oldPassword, String newPassword) {
         // hasing password
-        String oldPasswordHash = Util.hash(oldPassword);
-        String newPasswordHash = Util.hash(newPassword);
+        String oldPasswordHash = MyHash.hash(oldPassword);
+        String newPasswordHash = MyHash.hash(newPassword);
 
         // prepare data
         String data = StreamData.Type.CHANGE_PASSWORD.name() + ";" + oldPasswordHash + ";" + newPasswordHash;

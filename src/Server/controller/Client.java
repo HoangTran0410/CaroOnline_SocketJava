@@ -9,11 +9,14 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import server.RunServer;
+import server.db.layers.BUS.GameMatchBUS;
 import server.db.layers.BUS.PlayerBUS;
+import server.db.layers.DTO.GameMatch;
 import server.db.layers.DTO.Player;
 import server.game.caro.Caro;
 import shared.constant.Code;
@@ -54,7 +57,7 @@ public class Client implements Runnable {
         String received;
         boolean running = true;
 
-        while (running) {
+        while (!RunServer.isShutDown) {
             try {
                 // receive the request from client
                 received = dis.readUTF();
@@ -210,8 +213,10 @@ public class Client implements Runnable {
         // check login
         String result = new PlayerBUS().checkLogin(email, password);
 
-        // set login email
-        this.loginPlayer = new PlayerBUS().getByEmail(email);
+        if (result.split(";")[0].equals("success")) {
+            // set login email
+            this.loginPlayer = new PlayerBUS().getByEmail(email);
+        }
 
         // send result
         sendData(StreamData.Type.LOGIN.name() + ";" + result);
@@ -258,7 +263,7 @@ public class Client implements Runnable {
             String pairData
                     = ((r.getClient1() != null) ? r.getClient1().getLoginPlayer().getNameId() : "_")
                     + " VS "
-                    + ((r.getClient1() != null) ? r.getClient2().getLoginPlayer().getNameId() : "_");
+                    + ((r.getClient2() != null) ? r.getClient2().getLoginPlayer().getNameId() : "_");
 
             result += r.getId() + ";"
                     + pairData + ";"
@@ -282,7 +287,12 @@ public class Client implements Runnable {
     }
 
     private void onReceiveWatchRoom(String received) {
+        String[] splitted = received.split(";");
+        String roomId = splitted[1];
 
+        String status = joinRoom(roomId, true);
+
+        sendData(StreamData.Type.WATCH_ROOM.name() + ";" + status);
     }
 
     // pair match
@@ -342,6 +352,11 @@ public class Client implements Runnable {
 
         // if once say no
         if (requestResult.equals("no")) {
+            // TODO tru diem
+            this.loginPlayer.setScore(this.loginPlayer.getScore() - 1);
+            new PlayerBUS().update(this.loginPlayer);
+
+            // send data
             this.sendData(StreamData.Type.RESULT_PAIR_MATCH.name() + ";failed;" + Code.YOU_CHOOSE_NO);
             cCompetitor.sendData(StreamData.Type.RESULT_PAIR_MATCH.name() + ";failed;" + Code.COMPETITOR_CHOOSE_NO);
 
@@ -360,12 +375,12 @@ public class Client implements Runnable {
             Room newRoom = RunServer.roomManager.createRoom();
 
             // join room
-            this.joinRoom(newRoom);
-            cCompetitor.joinRoom(newRoom);
+            String thisStatus = this.joinRoom(newRoom, false);
+            String competitorStatus = cCompetitor.joinRoom(newRoom, false);
 
             // send join room status to client
-            sendData(StreamData.Type.JOIN_ROOM.name() + ";success;" + newRoom.getId());
-            cCompetitor.sendData(StreamData.Type.JOIN_ROOM.name() + ";success;" + newRoom.getId());
+            sendData(StreamData.Type.JOIN_ROOM.name() + ";" + thisStatus);
+            cCompetitor.sendData(StreamData.Type.JOIN_ROOM.name() + ";" + competitorStatus);
 
             // TODO update list room to all client
             // reset acceptPairMatchStatus
@@ -388,8 +403,7 @@ public class Client implements Runnable {
         }
 
         // prepare data
-        String data = room.getClient12InGameData();
-        // TODO prepare more data: game data, viewer, chat, timer
+        String data = room.getFullData();
 
         // send data
         sendData(StreamData.Type.DATA_ROOM.name() + ";success;" + data);
@@ -409,8 +423,14 @@ public class Client implements Runnable {
     }
 
     private void onReceiveLeaveRoom(String received) {
-        if (joinedRoom == null || !joinedRoom.removeClient(this)) {
+        if (joinedRoom == null) {
             sendData(StreamData.Type.LEAVE_ROOM.name() + ";failed" + Code.CANT_LEAVE_ROOM);
+            return;
+        }
+
+        // nếu là người chơi thì đóng room luôn
+        if (joinedRoom.getClient1().equals(this) || joinedRoom.getClient2().equals(this)) {
+            joinedRoom.close("Người chơi " + this.loginPlayer.getNameId() + " đã thoát phòng.");
             return;
         }
 
@@ -422,6 +442,7 @@ public class Client implements Runnable {
         joinedRoom.broadcast(StreamData.Type.CHAT_ROOM + ";" + data);
 
         // delete refernce to room
+        joinedRoom.removeClient(this);
         joinedRoom = null;
 
         // TODO if this client is player -> close room
@@ -511,30 +532,71 @@ public class Client implements Runnable {
 
         switch (gameEventType) {
             case MOVE:
+                // lượt đi đầu tiên sẽ bắt đầu game
+                if (!joinedRoom.isGameStarted()) {
+                    joinedRoom.startGame();
+                    joinedRoom.broadcast(
+                            StreamData.Type.GAME_EVENT + ";"
+                            + StreamData.Type.START + ";"
+                            + Caro.TURN_TIME_LIMIT + ";"
+                            + Caro.MATCH_TIME_LIMIT
+                    );
+                }
+
+                // get row/col data
                 int row = Integer.parseInt(splitted[2]);
                 int column = Integer.parseInt(splitted[3]);
 
+                // check move
                 if (caroGame.move(row, column, loginPlayer.getEmail())) {
-                    String moveData
-                            = StreamData.Type.GAME_EVENT + ";"
+                    // restart turn timer
+                    joinedRoom.gamelogic.restartTurnTimer();
+
+                    // broadcast to all client in room movedata
+                    joinedRoom.broadcast(
+                            StreamData.Type.GAME_EVENT + ";"
                             + StreamData.Type.MOVE + ";"
                             + row + ";"
                             + column + ";"
-                            + loginPlayer.getEmail();
-
-                    // broadcast to all client in room
-                    joinedRoom.broadcast(moveData);
+                            + loginPlayer.getEmail()
+                    );
 
                     // check win
                     Line winPath = caroGame.CheckWin(row, column);
                     if (winPath != null) {
-                        String winData
-                                = StreamData.Type.GAME_EVENT + ";"
-                                + StreamData.Type.WIN + ";"
-                                + loginPlayer.getEmail();
 
-                        // broadcast to all client in room
-                        joinedRoom.broadcast(winData);
+                        PlayerBUS bus = new PlayerBUS();
+                        Player winner = loginPlayer;
+                        Player loser = cCompetitor.loginPlayer;
+
+                        // tinh diem
+                        winner.addScore(3);
+                        winner.setWinCount(winner.getWinCount() + 1);
+                        loser.addScore(-2);
+                        loser.setLoseCount(loser.getLoseCount() - 1);
+                        bus.update(winner);
+                        bus.update(loser);
+
+                        // TODO luu game match
+                        new GameMatchBUS().add(new GameMatch(
+                                winner.getId(),
+                                loser.getId(),
+                                winner.getId(),
+                                Caro.MATCH_TIME_LIMIT - ((Caro) joinedRoom.getGamelogic()).getMatchTimer().getCurrentTick(),
+                                ((Caro) joinedRoom.getGamelogic()).getHistory().size(),
+                                joinedRoom.startedTime
+                        ));
+
+                        // stop game timer
+                        caroGame.cancelTimer();
+
+                        // broadcast to all client in room windata
+                        joinedRoom.broadcast(
+                                StreamData.Type.GAME_EVENT + ";"
+                                + StreamData.Type.WIN + ";"
+                                + loginPlayer.getEmail()
+                        );
+
                     }
                 } else {
                     // do nothing
@@ -545,6 +607,17 @@ public class Client implements Runnable {
             case UNDO_ACCEPT:
             case NEW_GAME:
             case NEW_GAME_ACCEPT:
+            case SURRENDER:
+                // stop game timer
+                caroGame.cancelTimer();
+
+                // broadcast to all client in room windata
+                joinedRoom.broadcast(
+                        StreamData.Type.GAME_EVENT + ";"
+                        + StreamData.Type.SURRENDER + ";"
+                        + loginPlayer.getEmail()
+                );
+                break;
         }
     }
 
@@ -575,7 +648,7 @@ public class Client implements Runnable {
     }
 
     // room handlers
-    public String joinRoom(String id) {
+    public String joinRoom(String id, boolean isWatcher) {
         Room found = RunServer.roomManager.find(id);
 
         // không tìm thấy phòng cần join ?
@@ -583,19 +656,27 @@ public class Client implements Runnable {
             return "failed;Không tìm thấy phòng " + id;
         }
 
-        return joinRoom(found);
+        return joinRoom(found, isWatcher);
     }
 
-    public String joinRoom(Room room) {
+    public String joinRoom(Room room, boolean isWatcher) {
         // đang trong phòng rồi ?
         if (this.joinedRoom != null) {
             return "failed;" + Code.CANNOT_JOINROOM + Code.ALREADY_INROOM + " #" + this.joinedRoom.getId();
         }
 
         // join vào phòng thanh cong hay khong ?
-        if (room.addClient(this)) {
+        if (room.addClient(this, isWatcher)) {
             this.joinedRoom = room;
-            return "success";
+
+            // thông báo với mọi người trong phòng
+            this.joinedRoom.broadcast(StreamData.Type.CHAT_ROOM + ";"
+                    + CustumDateTimeFormatter.getCurrentTimeFormatted()
+                    + ";SERVER;"
+                    + loginPlayer.getNameId() + " đã vào phòng."
+            );
+
+            return "success;" + room.getId();
         }
 
         return "failed;" + Code.CANNOT_JOINROOM + " room.addClient trả về false";
@@ -641,11 +722,11 @@ public class Client implements Runnable {
         this.cCompetitor = cCompetitor;
     }
 
-    public Room getRoom() {
+    public Room getJoinedRoom() {
         return joinedRoom;
     }
 
-    public void setRoom(Room room) {
+    public void setJoinedRoom(Room room) {
         this.joinedRoom = room;
     }
 

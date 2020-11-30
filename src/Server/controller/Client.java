@@ -563,6 +563,8 @@ public class Client implements Runnable {
                                 + StreamData.Type.WIN + ";"
                                 + loginPlayer.getEmail()
                         );
+                        
+                        
                     }
                 } else {
                     // do nothing

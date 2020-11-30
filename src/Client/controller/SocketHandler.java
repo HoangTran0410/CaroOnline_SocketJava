@@ -626,7 +626,7 @@ public class SocketHandler {
 
         // encrypt aes key using rsa with server's public key 
         RSA clientSideRSA = new RSA()
-                .preparePublicKey("src/Server/rsa_keypair/publicKey");
+                .preparePublicKey("publicKey");
 
         String aesKey = aes.getSecretKey();
         String aesKeyEncrypted = clientSideRSA.encrypt(aesKey);

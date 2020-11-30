@@ -258,7 +258,7 @@ public class Client implements Runnable {
             String pairData
                     = ((r.getClient1() != null) ? r.getClient1().getLoginPlayer().getNameId() : "_")
                     + " VS "
-                    + ((r.getClient1() != null) ? r.getClient2().getLoginPlayer().getNameId() : "_");
+                    + ((r.getClient2() != null) ? r.getClient2().getLoginPlayer().getNameId() : "_");
 
             result += r.getId() + ";"
                     + pairData + ";"
@@ -282,7 +282,12 @@ public class Client implements Runnable {
     }
 
     private void onReceiveWatchRoom(String received) {
+        String[] splitted = received.split(";");
+        String roomId = splitted[1];
 
+        String status = joinRoom(roomId, true);
+
+        sendData(StreamData.Type.WATCH_ROOM.name() + ";" + status);
     }
 
     // pair match
@@ -360,12 +365,12 @@ public class Client implements Runnable {
             Room newRoom = RunServer.roomManager.createRoom();
 
             // join room
-            this.joinRoom(newRoom);
-            cCompetitor.joinRoom(newRoom);
+            String thisStatus = this.joinRoom(newRoom, false);
+            String competitorStatus = cCompetitor.joinRoom(newRoom, false);
 
             // send join room status to client
-            sendData(StreamData.Type.JOIN_ROOM.name() + ";success;" + newRoom.getId());
-            cCompetitor.sendData(StreamData.Type.JOIN_ROOM.name() + ";success;" + newRoom.getId());
+            sendData(StreamData.Type.JOIN_ROOM.name() + ";" + thisStatus);
+            cCompetitor.sendData(StreamData.Type.JOIN_ROOM.name() + ";" + competitorStatus);
 
             // TODO update list room to all client
             // reset acceptPairMatchStatus
@@ -390,7 +395,6 @@ public class Client implements Runnable {
         // prepare data
         String data = room.getFullData();
 
-        // TODO prepare more data: game data, viewer, chat, timer
         // send data
         sendData(StreamData.Type.DATA_ROOM.name() + ";success;" + data);
     }
@@ -409,8 +413,14 @@ public class Client implements Runnable {
     }
 
     private void onReceiveLeaveRoom(String received) {
-        if (joinedRoom == null || !joinedRoom.removeClient(this)) {
+        if (joinedRoom == null) {
             sendData(StreamData.Type.LEAVE_ROOM.name() + ";failed" + Code.CANT_LEAVE_ROOM);
+            return;
+        }
+
+        // nếu là người chơi thì đóng room luôn
+        if (joinedRoom.getClient1().equals(this) || joinedRoom.getClient2().equals(this)) {
+            joinedRoom.close("Người chơi " + this.loginPlayer.getNameId() + " đã thoát phòng.");
             return;
         }
 
@@ -422,6 +432,7 @@ public class Client implements Runnable {
         joinedRoom.broadcast(StreamData.Type.CHAT_ROOM + ";" + data);
 
         // delete refernce to room
+        joinedRoom.removeClient(this);
         joinedRoom = null;
 
         // TODO if this client is player -> close room
@@ -603,7 +614,7 @@ public class Client implements Runnable {
     }
 
     // room handlers
-    public String joinRoom(String id) {
+    public String joinRoom(String id, boolean isWatcher) {
         Room found = RunServer.roomManager.find(id);
 
         // không tìm thấy phòng cần join ?
@@ -611,19 +622,27 @@ public class Client implements Runnable {
             return "failed;Không tìm thấy phòng " + id;
         }
 
-        return joinRoom(found);
+        return joinRoom(found, isWatcher);
     }
 
-    public String joinRoom(Room room) {
+    public String joinRoom(Room room, boolean isWatcher) {
         // đang trong phòng rồi ?
         if (this.joinedRoom != null) {
             return "failed;" + Code.CANNOT_JOINROOM + Code.ALREADY_INROOM + " #" + this.joinedRoom.getId();
         }
 
         // join vào phòng thanh cong hay khong ?
-        if (room.addClient(this)) {
+        if (room.addClient(this, isWatcher)) {
             this.joinedRoom = room;
-            return "success";
+
+            // thông báo với mọi người trong phòng
+            this.joinedRoom.broadcast(StreamData.Type.CHAT_ROOM + ";"
+                    + CustumDateTimeFormatter.getCurrentTimeFormatted()
+                    + ";SERVER;"
+                    + loginPlayer.getNameId() + " đã vào phòng."
+            );
+
+            return "success;" + room.getId();
         }
 
         return "failed;" + Code.CANNOT_JOINROOM + " room.addClient trả về false";
@@ -669,11 +688,11 @@ public class Client implements Runnable {
         this.cCompetitor = cCompetitor;
     }
 
-    public Room getRoom() {
+    public Room getJoinedRoom() {
         return joinedRoom;
     }
 
-    public void setRoom(Room room) {
+    public void setJoinedRoom(Room room) {
         this.joinedRoom = room;
     }
 

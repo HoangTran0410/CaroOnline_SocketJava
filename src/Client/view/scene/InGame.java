@@ -139,6 +139,7 @@ public class InGame extends javax.swing.JFrame {
 
         // tie
         if (winEmail == null) {
+            addChat(new ChatItem("[]", "KẾT QUẢ", "HÒA"));
             JOptionPane.showMessageDialog(this, "Trận đấu kết thúc với tỉ số HÒA.", "HÒA", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
@@ -148,10 +149,12 @@ public class InGame extends javax.swing.JFrame {
 
         if (winEmail.equals(myEmail)) {
             // là email của mình thì win
+            addChat(new ChatItem("[]", "KẾT QUẢ", "Bạn đã thắng"));
             JOptionPane.showMessageDialog(this, "Chúc mừng. Bạn đã chiến thắng.", "Chiến thắng", JOptionPane.INFORMATION_MESSAGE);
 
         } else if (myEmail.equals(player1.getEmail()) || myEmail.equals(player2.getEmail())) {
             // nếu mình là 1 trong 2 người chơi, mà winEmail ko phải mình => thua
+            addChat(new ChatItem("[]", "KẾT QUẢ", "Bạn đã thua"));
             JOptionPane.showMessageDialog(this, "Rất tiếc. Bạn đã thua cuộc.", "Thua cuộc", JOptionPane.INFORMATION_MESSAGE);
 
         } else {
@@ -162,8 +165,13 @@ public class InGame extends javax.swing.JFrame {
             } else {
                 nameId = player2.getNameId();
             }
+            addChat(new ChatItem("[]", "KẾT QUẢ", "Người chơi " + nameId + " đã thắng"));
             JOptionPane.showMessageDialog(this, "Người chơi " + nameId + " đã thắng", "Kết quả", JOptionPane.INFORMATION_MESSAGE);
         }
+
+        // thoát phòng sau khi thua 
+        // TODO sau này sẽ cho tạo ván mới, hiện tại cho thoát để tránh lỗi
+        // RunClient.socketHandler.leaveRoom();
     }
 
     public void startGame(int turnTimeLimit, int matchTimeLimit) {
@@ -196,11 +204,11 @@ public class InGame extends javax.swing.JFrame {
         );
     }
 
-    public void setProgressTurnTime(int percent, int value) {
+    public void setTurnTimerTick(int value) {
         turnTimer.setCurrentTick(value);
     }
 
-    public void setProgressMatchTime(int percent, int value) {
+    public void setMatchTimerTick(int value) {
         matchTimer.setCurrentTick(value);
     }
 
@@ -273,7 +281,11 @@ public class InGame extends javax.swing.JFrame {
     }
 
     public void clickOnBoard(int row, int column) {
-        RunClient.socketHandler.move(row, column);
+        String myEmail = RunClient.socketHandler.getLoginEmail();
+
+        if (myEmail.equals(player1.getEmail()) || myEmail.equals(player2.getEmail())) {
+            RunClient.socketHandler.move(row, column);
+        }
     }
 
     public JButton createBoardButton(int row, int column) {
@@ -291,6 +303,7 @@ public class InGame extends javax.swing.JFrame {
 
         // https://stackoverflow.com/a/22639054
         b.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 if (b.getActionCommand().equals("")) {
 
@@ -306,6 +319,7 @@ public class InGame extends javax.swing.JFrame {
                 }
             }
 
+            @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 if (b.getActionCommand().equals("")) {
                     b.setIcon(null);

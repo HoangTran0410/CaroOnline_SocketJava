@@ -22,6 +22,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import server.game.caro.History;
 import shared.constant.StreamData;
 import shared.security.AES;
 import shared.security.RSA;
@@ -159,6 +160,10 @@ public class SocketHandler {
 
                     case LEAVE_ROOM:
                         onReceiveLeaveRoom(received);
+                        break;
+
+                    case CLOSE_ROOM:
+                        onReceiveCloseRoom(received);
                         break;
 
                     case GET_PROFILE:
@@ -330,7 +335,16 @@ public class SocketHandler {
     }
 
     private void onReceiveWatchRoom(String received) {
+        String[] splitted = received.split(";");
+        String status = splitted[1];
 
+        if (status.equals("failed")) {
+            String failedMsg = splitted[2];
+            JOptionPane.showMessageDialog(RunClient.mainMenuScene, failedMsg, "Lỗi", JOptionPane.ERROR_MESSAGE);
+
+        } else if (status.equals("success")) {
+            onReceiveJoinRoom(received);
+        }
     }
 
     // pair match
@@ -396,18 +410,47 @@ public class SocketHandler {
             JOptionPane.showMessageDialog(RunClient.mainMenuScene, failedMsg, "Không lấy được dữ liệu phòng", JOptionPane.ERROR_MESSAGE);
 
         } else if (status.equals("success")) {
+            // vị trí đọc hiện tại (trong mảng splitted)
+            int index = 2;
+
             // player
-            PlayerInGame p1 = new PlayerInGame(splitted[2], splitted[3], splitted[4]);
-            PlayerInGame p2 = new PlayerInGame(splitted[5], splitted[6], splitted[7]);
+            PlayerInGame p1 = new PlayerInGame(splitted[index++], splitted[index++], splitted[index++]);
+            PlayerInGame p2 = new PlayerInGame(splitted[index++], splitted[index++], splitted[index++]);
             RunClient.inGameScene.setPlayerInGame(p1, p2);
 
             // list player+viewer
-            int count = Integer.parseInt(splitted[8]);
+            int playersCount = Integer.parseInt(splitted[index++]);
             ArrayList<PlayerInGame> listUser = new ArrayList<>();
-            for (int i = 0; i < count; i++) {
-                listUser.add(new PlayerInGame(splitted[9 + i * 3], splitted[9 + i * 3 + 1], splitted[9 + i * 3 + 2]));
+
+            for (int i = 0; i < playersCount; i++) {
+                listUser.add(new PlayerInGame(splitted[index++], splitted[index++], splitted[index++]));
             }
             RunClient.inGameScene.setListUser(listUser);
+
+            // timer data
+            int matchTimerLimit = Integer.parseInt(splitted[index++]);
+            int matchTimerTick = Integer.parseInt(splitted[index++]);
+            int turnTimerLimit = Integer.parseInt(splitted[index++]);
+            int turnTimerTick = Integer.parseInt(splitted[index++]);
+
+            RunClient.inGameScene.startGame(turnTimerLimit, matchTimerLimit);
+            RunClient.inGameScene.setTurnTimerTick(turnTimerTick);
+            RunClient.inGameScene.setMatchTimerTick(matchTimerTick);
+
+            // board data
+            // TODO array demension
+            int historyCount = Integer.parseInt(splitted[index++]);
+
+            for (int i = 0; i < historyCount; i++) {
+                RunClient.inGameScene.addPoint(
+                        Integer.parseInt(splitted[index++]),
+                        Integer.parseInt(splitted[index++]),
+                        splitted[index++]
+                );
+            }
+
+            // change turn
+            RunClient.inGameScene.changeTurnFrom(splitted[index - 1]);
         }
     }
 
@@ -432,6 +475,25 @@ public class SocketHandler {
             // get list room again
             listRoom();
         }
+    }
+
+    private void onReceiveCloseRoom(String received) {
+        String[] splitted = received.split(";");
+        String reason = splitted[1];
+
+        // change scene
+        RunClient.closeScene(RunClient.SceneName.INGAME);
+        RunClient.openScene(RunClient.SceneName.MAINMENU);
+
+        // show noti
+        JOptionPane.showMessageDialog(
+                RunClient.profileScene,
+                "Phòng " + this.roomId + " đã đóng do " + reason, "Đóng",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+
+        // remove room id
+        this.roomId = null;
     }
 
     // profile
@@ -536,9 +598,8 @@ public class SocketHandler {
                 break;
 
             case TURN_TICK:
-                int turnPercent = Integer.parseInt(splitted[2]);
-                int turnValue = Integer.parseInt(splitted[3]);
-                RunClient.inGameScene.setProgressTurnTime(turnPercent, turnValue);
+                int turnValue = Integer.parseInt(splitted[2]);
+                RunClient.inGameScene.setTurnTimerTick(turnValue);
                 break;
 
             case TURN_TIMER_END:
@@ -547,9 +608,8 @@ public class SocketHandler {
                 break;
 
             case MATCH_TICK:
-                int matchPercent = Integer.parseInt(splitted[2]);
-                int matchValue = Integer.parseInt(splitted[3]);
-                RunClient.inGameScene.setProgressMatchTime(matchPercent, matchValue);
+                int matchValue = Integer.parseInt(splitted[2]);
+                RunClient.inGameScene.setMatchTimerTick(matchValue);
                 break;
 
             case MATCH_TIMER_END:
@@ -611,6 +671,10 @@ public class SocketHandler {
     // main menu
     public void listRoom() {
         sendData(StreamData.Type.LIST_ROOM.name());
+    }
+
+    public void watchRoom(String roomId) {
+        sendData(StreamData.Type.WATCH_ROOM.name() + ";" + roomId);
     }
 
     // pair match

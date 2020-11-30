@@ -9,6 +9,8 @@ import server.game.caro.Caro;
 import server.game.GameLogic;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
+import server.RunServer;
+import server.game.caro.History;
 import shared.constant.StreamData;
 
 /**
@@ -54,7 +56,6 @@ public class Room {
                             broadcast(
                                     StreamData.Type.GAME_EVENT + ";"
                                     + StreamData.Type.TURN_TICK.name() + ";"
-                                    + gamelogic.getProgressTurnTimeValue() + ";"
                                     + gamelogic.getTurnTimer().getCurrentTick()
                             );
                             return null;
@@ -78,7 +79,6 @@ public class Room {
                             broadcast(
                                     StreamData.Type.GAME_EVENT + ";"
                                     + StreamData.Type.MATCH_TICK.name() + ";"
-                                    + gamelogic.getProgressMatchTimeValue() + ";"
                                     + gamelogic.getMatchTimer().getCurrentTick()
                             );
                             return null;
@@ -89,14 +89,16 @@ public class Room {
     }
 
     // add/remove client
-    public boolean addClient(Client c) {
+    public boolean addClient(Client c, boolean isWatcher) {
         if (!clients.contains(c)) {
             clients.add(c);
 
-            if (client1 == null) {
-                client1 = c;
-            } else if (client2 == null) {
-                client2 = c;
+            if (!isWatcher) {
+                if (client1 == null) {
+                    client1 = c;
+                } else if (client2 == null) {
+                    client2 = c;
+                }
             }
 
             return true;
@@ -119,8 +121,20 @@ public class Room {
         });
     }
 
-    public void close() {
-        // TODO code here
+    public void close(String reason) {
+        // notify all client in room
+        broadcast(StreamData.Type.CLOSE_ROOM.name() + ";" + reason);
+
+        // remove reference
+        clients.forEach((client) -> {
+            client.setJoinedRoom(null);
+        });
+
+        // remove all clients
+        clients.clear();
+
+        // remove room
+        RunServer.roomManager.remove(this);
     }
 
     // get room data
@@ -148,13 +162,11 @@ public class Room {
     }
 
     public String getBoardData() {
-        String[][] board = gamelogic.getBoard();
+        ArrayList<History> history = gamelogic.getHistory();
 
-        String data = "";
-        for (String[] row : board) {
-            for (String cell : row) {
-                data += cell + ";";
-            }
+        String data = history.size() + ";";
+        for (History his : history) {
+            data += his.getRow() + ";" + his.getColumn() + ";" + his.getPlayerEmail() + ";";
         }
 
         return data.substring(0, data.length() - 1); // bỏ dấu ; ở cuối

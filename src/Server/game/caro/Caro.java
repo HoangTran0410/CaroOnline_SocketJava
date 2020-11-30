@@ -77,6 +77,10 @@ public class Caro extends GameLogic {
         preMove = newHis;
     }
 
+    public ArrayList<History> getHistory() {
+        return history;
+    }
+
     public boolean move(int row, int col, String playerEmail) {
         // nếu người này đã đánh trước đó thì không cho đánh nữa
         if (preMove != null && preMove.getPlayerEmail().equals(playerEmail)) {
@@ -208,9 +212,5 @@ public class Caro extends GameLogic {
 
     public int getProgressMatchTimeValue() {
         return 100 * matchTimer.getCurrentTick() / MATCH_TIME_LIMIT;
-    }
-
-    public String[][] getBoard() {
-        return board;
     }
 }

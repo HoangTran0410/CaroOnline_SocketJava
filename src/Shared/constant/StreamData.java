@@ -42,6 +42,7 @@ public class StreamData {
         DATA_ROOM, // dữ liệu phòng khi vừa vào phòng / id phòng / dữ liệu phòng
         CHAT_ROOM, // chức năng chat phòng / dữ liệu chat / dữ liệu chat (gửi broadcast trong phòng)
         LEAVE_ROOM, // chức năng thoát phòng / không cần dữ liệu thêm / success hoặc failed
+        CLOSE_ROOM, // chức năng đóng phòng / chỉ có server gửi type này cho client
 
         // profile
         GET_PROFILE, // chức năng xem hồ sơ cá nhân / email user muốn xem thông tin / dữ liệu user

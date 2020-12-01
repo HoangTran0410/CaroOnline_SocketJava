@@ -6,46 +6,46 @@
 
 #### - Admin Console
 
-![admin.png](./screenshots/admin.png =100x100)
+<img src="./screenshots/admin.png" style="width:600px;"/>
 
 ### Client
 
 #### - Connect to server
 
-![connect-server.png](screenshots/connect-server.png =100x100)
+<img src="./screenshots/connect-server.png" style="width:200px;"/>
 
 #### - Login
 
-![login.png](screenshots/login.png =100x100)
+<img src="./screenshots/login.png" style="width:250px;"/>
 
 #### - Signup
 
-![signup.png](screenshots/signup.png =100x100)
+<img src="./screenshots/signup.png" style="width:350px;"/>
 
 #### - Select custom avatar
 
-![choose-avatar.png](screenshots/choose-avatar.png =100x100)
+<img src="./screenshots/choose-avatar.png" style="width:350px;"/>
 
 #### - Main menu
 
-![main-menu.png](screenshots/main-menu.png =100x100)
+<img src="./screenshots/main-menu.png" style="width:350px;"/>
 
 #### - Profile
 
-![profile.png](screenshots/profile.png =100x100)
+<img src="./screenshots/profile.png" style="width:250px;"/>
 
 #### - Find game match
 
-![find-match.png](screenshots/find-match.png =100x100)
+<img src="./screenshots/find-match.png" style="width:350px;"/>
 
 #### - Pair game match
 
-![pair-match.png](screenshots/pair-match.png =100x100)
+<img src="./screenshots/pair-match.png" style="width:350px;"/>
 
 #### - In-game  Caro
 
-![ingame.png](screenshots/ingame.png =100x100)
+<img src="./screenshots/ingame.png" style="width:600px;"/>
 
 #### - In-game Caro right panel
 
-![ingame-infopane.png](screenshots/ingame-infopane.png =100x100)
+<img src="./screenshots/ingame-infopane.png" style="width:200px;"/>

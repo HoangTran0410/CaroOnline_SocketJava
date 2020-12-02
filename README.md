@@ -1,6 +1,12 @@
-# Welcome to Caro Online Game Java Socket Client Server bla bla ....
+# Welcome to Caro Online Game Java Socket Client Server bla bla
 
-## Screenshots
+## 1. Yêu cầu
+
+<img src="./screenshots/debai.png" style="width:600px;"/>
+
+- yêu cầu một vài chỗ có vẻ không thân thiện người dùng như việc tự ghép trận, tự xem trận khi vào game ... nên mình đã làm khác tí, là tạo chức năng tìm trận và ghép cặp riêng với chức năng xem trận, người dùng sẽ có thể lựa chọn theo sở thích.
+
+## 2. Screenshots
 
 ### Server
 

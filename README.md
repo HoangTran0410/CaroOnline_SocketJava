@@ -6,7 +6,17 @@
 
 - yêu cầu một vài chỗ có vẻ không thân thiện người dùng như việc tự ghép trận, tự xem trận khi vào game ... nên mình đã làm khác tí, là tạo chức năng tìm trận và ghép cặp riêng với chức năng xem trận, người dùng sẽ có thể lựa chọn theo sở thích.
 
-## 2. Screenshots
+## 2. Cài đặt
+
+Hướng dẫn setup:
+- Cài mysql (mình dùng xampp), IDE (mình dùng Netbean 8.2)
+- Thêm cơ sở dữ liệu [src/Server/DB/carodb.sql](src/Server/DB/carodb.sql) vào mysql, đặt tên csdl là "carodb"
+- Chạy Server [src/Server/RunServer.java](src/Server/RunServer.java) mặc định sẽ chạy ở port  5056
+- Chạy Client [src/Client/RunClient.java](src/Client/RunClient.java)
+- Nhập IP, port tới Server (mặc định mình đã ghi sẵn ip server local rồi)
+- Ấn Kết nối và Chơi
+
+## 3. Screenshots
 
 ### Server
 

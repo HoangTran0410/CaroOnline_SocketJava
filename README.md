@@ -13,7 +13,7 @@ Hướng dẫn setup:
 - Thêm cơ sở dữ liệu [src/Server/DB/carodb.sql](src/Server/DB/carodb.sql) vào mysql, đặt tên csdl là "carodb"
 - Chạy Server [src/Server/RunServer.java](src/Server/RunServer.java) mặc định sẽ chạy ở port  5056
 - Chạy Client [src/Client/RunClient.java](src/Client/RunClient.java)
-- Nhập IP, port tới Server (mặc định mình đã ghi sẵn ip server local rồi)
+- Giao diện Connect Server hiện lên. Nhập IP, port tới Server (mặc định mình đã ghi sẵn ip server local rồi)
 - Ấn Kết nối và Chơi
 
 ## 3. Screenshots

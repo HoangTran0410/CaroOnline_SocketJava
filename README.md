@@ -1,5 +1,9 @@
 # Welcome to Caro Online Game Java Socket Client Server bla bla
 
+## 0. Giới thiệu
+
+Link [Facebook stt] (https://www.facebook.com/groups/j2team.community/permalink/1462938307371618)
+
 ## 1. Yêu cầu
 
 <img src="./screenshots/debai.png" style="width:600px;"/>

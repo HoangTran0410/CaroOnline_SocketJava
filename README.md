@@ -2,7 +2,7 @@
 
 ## 0. Giới thiệu
 
-Link [Facebook stt](https://www.facebook.com/groups/j2team.community/permalink/1462938307371618)
+Link [Facebook post](https://www.facebook.com/groups/j2team.community/permalink/1462938307371618)
 
 ## 1. Yêu cầu
 

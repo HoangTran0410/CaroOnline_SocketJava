@@ -292,7 +292,7 @@ public class SocketHandler {
 
             // i += 3: 3 là số cột trong bảng
             // i = 3; i < roomCount + 3: dữ liệu phòng bắt đầu từ index 3 trong mảng splitted
-            for (int i = 3; i < roomCount + 3; i += 3) {
+            for (int i = 3; i <= roomCount * 3; i += 3) {
 
                 String roomId = splitted[i];
                 String title = splitted[i + 1];
